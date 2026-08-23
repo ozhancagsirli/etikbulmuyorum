@@ -20,7 +20,16 @@ const app = express();
 const PORT = process.env.PORT || 4000;
 
 app.use(helmet());
-app.use(cors({ origin: process.env.FRONTEND_URL || 'http://localhost:3000', credentials: true }));
+app.use(cors({ origin: (origin, callback) => {
+  const allowed = [
+    process.env.FRONTEND_URL,
+    'https://etikbulmuyorum.com',
+    'https://www.etikbulmuyorum.com',
+    'http://localhost:3000',
+  ].filter(Boolean);
+  if (!origin || allowed.includes(origin)) callback(null, true);
+  else callback(new Error('CORS hatası'));
+}, || 'http://localhost:3000', credentials: true }));
 app.use(express.json({ limit: '1mb' }));
 app.use(morgan('combined'));
 app.use(rateLimit({ windowMs: 15 * 60 * 1000, max: 200, standardHeaders: true, legacyHeaders: false }));
