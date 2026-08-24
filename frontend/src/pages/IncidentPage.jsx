@@ -89,9 +89,12 @@ export default function IncidentPage() {
             <span style={{ fontSize: 12, color: '#9ca3af' }}>
               {formatDistanceToNow(new Date(incident.created_at), { locale: tr, addSuffix: true })}
             </span>
-            <button onClick={report} style={{ marginLeft: 'auto', display: 'inline-flex', alignItems: 'center', gap: 4, background: 'none', border: 'none', cursor: 'pointer', fontSize: 12, color: '#d1d5db' }}>
-              <Flag size={13} /> Şikayet
-            </button>
+            <div style={{ marginLeft: 'auto', display: 'flex', alignItems: 'center', gap: 8 }}>
+              <ShareButton title={incident.title} url={'/olay/' + id} />
+              <button onClick={report} style={{ display: 'inline-flex', alignItems: 'center', gap: 4, background: 'none', border: 'none', cursor: 'pointer', fontSize: 12, color: '#d1d5db' }}>
+                <Flag size={13} /> Şikayet
+              </button>
+            </div>
           </div>
 
           {/* Başlık */}
@@ -126,7 +129,6 @@ export default function IncidentPage() {
                 {votingActive ? 'Oylama bitiyor: ' + format(votingEnds, 'd MMM HH:mm', { locale: tr }) : 'Oylama tamamlandı'}
               </span>
             )}
-            <ShareButton title={incident.title} url={'/olay/' + id} />
           </div>
 
           {/* Açıklama */}
