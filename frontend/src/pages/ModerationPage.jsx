@@ -88,7 +88,7 @@ export default function ModerationPage() {
       </div>
 
       {/* Sekmeler */}
-      <div style={{ background: 'white', borderRadius: 12, border: '1px solid #e5e7eb', marginBottom: 16, display: 'flex', overflowX: 'auto' }}>
+      <div style={{ background: 'white', borderRadius: 12, border: '1px solid #e5e7eb', marginBottom: 16, display: 'flex', overflowX: 'auto', WebkitOverflowScrolling: 'touch', scrollbarWidth: 'none' }}>
         {tabs.map(t => (
           <button key={t.key} onClick={() => setTab(t.key)} style={{
             padding: '12px 14px', border: 'none', background: 'none', cursor: 'pointer',
