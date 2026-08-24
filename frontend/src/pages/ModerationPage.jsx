@@ -28,7 +28,10 @@ export default function ModerationPage() {
   async function fetchData() {
     setLoading(true);
     try {
-      if (tab === 'pending' || tab === 'approved' || tab === 'rejected') {
+      if (tab === 'pending') {
+        const data = await apiFetch('/moderation/pending');
+        setIncidents(data);
+      } else if (tab === 'approved' || tab === 'rejected') {
         const data = await apiFetch('/moderation/incidents?status=' + tab);
         setIncidents(data);
       } else if (tab === 'stats') {
