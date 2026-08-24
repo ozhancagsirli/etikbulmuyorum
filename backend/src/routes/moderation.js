@@ -27,11 +27,13 @@ router.get('/pending', async (req, res, next) => {
 
 router.post('/incidents/:id/approve', [param('id').isUUID()], validate, async (req, res, next) => {
   try {
+    const { rows: incRows } = await pool.query('SELECT author_id, title FROM incidents WHERE id = $1', [req.params.id]);
     await pool.query("UPDATE incidents SET status = 'approved', updated_at = NOW() WHERE id = $1", [req.params.id]);
-    const { rows } = await pool.query('SELECT author_id FROM incidents WHERE id = $1', [req.params.id]);
-    if (rows[0]?.author_id) {
-      await pool.query("INSERT INTO notifications (user_id, type, payload) VALUES ($1, 'incident_approved', $2)",
-        [rows[0].author_id, JSON.stringify({ incidentId: req.params.id })]);
+    if (incRows[0]?.author_id) {
+      await pool.query(
+        "INSERT INTO notifications (user_id, type, title, body, link) VALUES ($1, 'approved', $2, $3, $4)",
+        [incRows[0].author_id, '✅ Olayınız onaylandı!', incRows[0].title + ' yayınlandı.', '/olay/' + req.params.id]
+      );
     }
     res.json({ message: 'Olay onaylandı.' });
   } catch (err) { next(err); }
