@@ -153,9 +153,9 @@ export default function IncidentPage() {
         {tags.length > 0 && (
           <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap', padding: '0 20px', marginBottom: 16 }}>
             {tags.map(tag => (
-              <span key={tag} style={{ display: 'inline-flex', alignItems: 'center', gap: 4, fontSize: 12, color: '#3b82f6', background: '#eff6ff', padding: '3px 10px', borderRadius: 20, fontWeight: 500 }}>
+              <Link key={tag} to={'/?search=' + encodeURIComponent('#' + tag)} style={{ display: 'inline-flex', alignItems: 'center', gap: 4, fontSize: 12, color: '#3b82f6', background: '#eff6ff', padding: '3px 10px', borderRadius: 20, fontWeight: 500 }}>
                 <Tag size={11} /> {tag}
-              </span>
+              </Link>
             ))}
           </div>
         )}
