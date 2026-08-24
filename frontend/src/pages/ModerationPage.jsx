@@ -69,12 +69,12 @@ export default function ModerationPage() {
   if (!user || (user.role !== 'moderator' && user.role !== 'admin')) return null;
 
   const tabs = [
-    { key: 'pending',     label: '⏳ Bekleyenler', icon: <Shield size={15} /> },
-    { key: 'approved',    label: '✅ Onaylananlar', icon: <CheckCircle size={15} /> },
-    { key: 'rejected',    label: '❌ Reddedilenler', icon: <XCircle size={15} /> },
-    { key: 'stats',       label: '📊 İstatistikler', icon: <BarChart2 size={15} /> },
-    { key: 'leaderboard', label: '🏆 Liderboard',    icon: <Trophy size={15} /> },
-    { key: 'users',       label: '👥 Kullanıcılar',  icon: <Users size={15} /> },
+    { key: 'pending',     label: 'Bekleyen' },
+    { key: 'approved',    label: 'Onaylı' },
+    { key: 'rejected',    label: 'Reddedilen' },
+    { key: 'stats',       label: 'İstatistik' },
+    { key: 'leaderboard', label: 'Lider' },
+    { key: 'users',       label: 'Kullanıcı' },
   ];
 
   return (
@@ -91,14 +91,13 @@ export default function ModerationPage() {
       <div style={{ background: 'white', borderRadius: 12, border: '1px solid #e5e7eb', marginBottom: 16, display: 'flex', overflowX: 'auto' }}>
         {tabs.map(t => (
           <button key={t.key} onClick={() => setTab(t.key)} style={{
-            display: 'flex', alignItems: 'center', gap: 6,
-            padding: '12px 18px', border: 'none', background: 'none', cursor: 'pointer',
+            padding: '12px 14px', border: 'none', background: 'none', cursor: 'pointer',
             fontSize: 13, fontWeight: tab === t.key ? 700 : 400,
             color: tab === t.key ? '#FF4500' : '#6b7280',
             borderBottom: tab === t.key ? '2px solid #FF4500' : '2px solid transparent',
             whiteSpace: 'nowrap',
           }}>
-            {t.icon} {t.label}
+            {t.label}
           </button>
         ))}
       </div>
