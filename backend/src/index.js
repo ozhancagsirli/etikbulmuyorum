@@ -7,7 +7,6 @@ import rateLimit from 'express-rate-limit';
 import { testConnection } from './db/pool.js';
 import { startAutoApprove } from './autoApprove.js';
 import { startVerdictChecker } from './verdictChecker.js';
-import { spamFilter } from './spamFilter.js';
 import authRoutes from './routes/auth.js';
 import incidentRoutes from './routes/incidents.js';
 import voteRoutes from './routes/votes.js';
@@ -18,6 +17,8 @@ import userRoutes from './routes/users.js';
 import uploadRoutes from './routes/upload.js';
 import sitemapRoutes from './routes/sitemap.js';
 import statsRoutes from './routes/stats.js';
+import notificationRoutes from './routes/notifications.js';
+import leaderboardRoutes from './routes/leaderboard.js';
 
 const app = express();
 const PORT = process.env.PORT || 4000;
@@ -37,6 +38,8 @@ app.use('/api/moderation', moderationRoutes);
 app.use('/api/users', userRoutes);
 app.use('/api/upload', uploadRoutes);
 app.use('/api/stats', statsRoutes);
+app.use('/api/notifications', notificationRoutes);
+app.use('/api/leaderboard', leaderboardRoutes);
 app.use('/', sitemapRoutes);
 
 app.get('/api/health', (_req, res) => res.json({ status: 'ok', ts: new Date() }));

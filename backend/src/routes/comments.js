@@ -1,55 +1,57 @@
 import { Router } from 'express';
-import { body, param, query, validationResult } from 'express-validator';
 import pool from '../db/pool.js';
 import { authenticate, optionalAuth } from '../middleware/auth.js';
 
 const router = Router();
-const validate = (req, res, next) => {
-  const errors = validationResult(req);
-  if (!errors.isEmpty()) return res.status(422).json({ errors: errors.array() });
-  next();
-};
 
-router.get('/', optionalAuth, [query('incidentId').isUUID()], validate, async (req, res, next) => {
+// GET /api/comments?incidentId=xxx
+router.get('/', optionalAuth, async (req, res, next) => {
   try {
+    const { incidentId } = req.query;
+    if (!incidentId) return res.status(400).json({ error: 'incidentId gerekli.' });
     const { rows } = await pool.query(`
-      SELECT c.id, c.parent_id, c.content, c.is_removed, c.is_anonymous, c.created_at,
+      SELECT c.id, c.content, c.is_anonymous, c.is_removed, c.created_at, c.like_count,
         CASE WHEN c.is_anonymous THEN NULL ELSE u.name END AS author_name,
-        CASE WHEN c.is_anonymous THEN NULL ELSE u.avatar_url END AS author_avatar
-      FROM comments c LEFT JOIN users u ON u.id = c.author_id
-      WHERE c.incident_id = $1 ORDER BY c.created_at ASC
-    `, [req.query.incidentId]);
-    const sanitized = rows.map(r => r.is_removed ? { ...r, content: '[Bu yorum kaldırıldı]', author_name: null, author_avatar: null } : r);
-    res.json(sanitized);
+        CASE WHEN c.is_anonymous THEN NULL ELSE u.avatar_url END AS author_avatar,
+        ${req.user ? `EXISTS(SELECT 1 FROM comment_likes cl WHERE cl.comment_id = c.id AND cl.user_id = $2) AS liked_by_me` : 'false AS liked_by_me'}
+      FROM comments c
+      LEFT JOIN users u ON u.id = c.author_id
+      WHERE c.incident_id = $1 AND NOT c.is_removed
+      ORDER BY c.created_at ASC
+    `, req.user ? [incidentId, req.user.id] : [incidentId]);
+    res.json(rows);
   } catch (err) { next(err); }
 });
 
-router.post('/', authenticate, [
-  body('incidentId').isUUID(),
-  body('content').isString().trim().isLength({ min: 1, max: 2000 }),
-  body('isAnonymous').optional().isBoolean().toBoolean(),
-], validate, async (req, res, next) => {
+// POST /api/comments
+router.post('/', authenticate, async (req, res, next) => {
   try {
-    const { incidentId, content, parentId, isAnonymous } = req.body;
-    const { rows: inc } = await pool.query("SELECT id FROM incidents WHERE id = $1 AND status = 'approved'", [incidentId]);
-    if (!inc.length) return res.status(404).json({ error: 'Olay bulunamadı.' });
+    const { incidentId, content, isAnonymous } = req.body;
+    if (!incidentId || !content?.trim()) return res.status(400).json({ error: 'incidentId ve içerik gerekli.' });
+    if (content.trim().length < 3) return res.status(400).json({ error: 'Yorum en az 3 karakter olmalı.' });
     const { rows } = await pool.query(
-      'INSERT INTO comments (incident_id, author_id, parent_id, content, is_anonymous) VALUES ($1, $2, $3, $4, $5) RETURNING id, parent_id, content, is_anonymous, created_at',
-      [incidentId, req.user.id, parentId || null, content, isAnonymous || false]
+      'INSERT INTO comments (incident_id, author_id, content, is_anonymous) VALUES ($1,$2,$3,$4) RETURNING *',
+      [incidentId, req.user.id, content.trim(), isAnonymous || false]
     );
     res.status(201).json(rows[0]);
   } catch (err) { next(err); }
 });
 
-router.delete('/:id', authenticate, [param('id').isUUID()], validate, async (req, res, next) => {
+// POST /api/comments/:id/like
+router.post('/:id/like', authenticate, async (req, res, next) => {
   try {
-    const { rows } = await pool.query('SELECT author_id FROM comments WHERE id = $1', [req.params.id]);
-    if (!rows.length) return res.status(404).json({ error: 'Yorum bulunamadı.' });
-    if (rows[0].author_id !== req.user.id && req.user.role === 'user') {
-      return res.status(403).json({ error: 'Bu yorumu silme yetkiniz yok.' });
+    const { id } = req.params;
+    const existing = await pool.query('SELECT id FROM comment_likes WHERE comment_id=$1 AND user_id=$2', [id, req.user.id]);
+    if (existing.rows.length) {
+      await pool.query('DELETE FROM comment_likes WHERE comment_id=$1 AND user_id=$2', [id, req.user.id]);
+      await pool.query('UPDATE comments SET like_count = GREATEST(0, like_count - 1) WHERE id=$1', [id]);
+      const { rows } = await pool.query('SELECT like_count FROM comments WHERE id=$1', [id]);
+      return res.json({ liked: false, likeCount: rows[0].like_count });
     }
-    await pool.query('UPDATE comments SET is_removed = TRUE, updated_at = NOW() WHERE id = $1', [req.params.id]);
-    res.json({ message: 'Yorum kaldırıldı.' });
+    await pool.query('INSERT INTO comment_likes (comment_id, user_id) VALUES ($1,$2)', [id, req.user.id]);
+    await pool.query('UPDATE comments SET like_count = like_count + 1 WHERE id=$1', [id]);
+    const { rows } = await pool.query('SELECT like_count FROM comments WHERE id=$1', [id]);
+    res.json({ liked: true, likeCount: rows[0].like_count });
   } catch (err) { next(err); }
 });
 
