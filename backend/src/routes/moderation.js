@@ -76,3 +76,26 @@ router.post('/reports/:id/resolve', [param('id').isUUID()], validate, async (req
 });
 
 export default router;
+
+// GET /api/moderation/incidents?status=approved|rejected
+router.get('/incidents', async (req, res, next) => {
+  try {
+    const { status } = req.query;
+    if (!['approved', 'rejected', 'pending'].includes(status)) {
+      return res.status(400).json({ error: 'Geçersiz status.' });
+    }
+    const { rows } = await pool.query(`
+      SELECT i.id, i.title, i.description, i.status, i.reject_reason, i.created_at,
+        i.vote_ethical, i.vote_unethical, i.view_count, i.subject,
+        c.name_tr AS category_name, c.icon AS category_icon,
+        CASE WHEN i.is_anonymous THEN NULL ELSE u.name END AS author_name
+      FROM incidents i
+      LEFT JOIN categories c ON c.id = i.category_id
+      LEFT JOIN users u ON u.id = i.author_id
+      WHERE i.status = $1
+      ORDER BY i.created_at DESC
+      LIMIT 50
+    `, [status]);
+    res.json(rows);
+  } catch (err) { next(err); }
+});
