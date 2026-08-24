@@ -1,3 +1,4 @@
+import ShareButton from '../components/ShareButton';
 import { useState, useEffect } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import { format, formatDistanceToNow } from 'date-fns';
@@ -89,6 +90,7 @@ export default function IncidentPage() {
               {formatDistanceToNow(new Date(incident.created_at), { locale: tr, addSuffix: true })}
             </span>
             <button onClick={report} style={{ marginLeft: 'auto', display: 'inline-flex', alignItems: 'center', gap: 4, background: 'none', border: 'none', cursor: 'pointer', fontSize: 12, color: '#d1d5db' }}>
+<ShareButton title={incident.title} url={'/olay/' + id} />
               <Flag size={13} /> Şikayet
             </button>
           </div>
