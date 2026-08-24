@@ -89,18 +89,19 @@ export default function IncidentPage() {
             <span style={{ fontSize: 12, color: '#9ca3af' }}>
               {formatDistanceToNow(new Date(incident.created_at), { locale: tr, addSuffix: true })}
             </span>
-            <div style={{ marginLeft: 'auto', display: 'flex', alignItems: 'center', gap: 8 }}>
-              <ShareButton title={incident.title} url={'/olay/' + id} />
-              <button onClick={report} style={{ display: 'inline-flex', alignItems: 'center', gap: 4, background: 'none', border: 'none', cursor: 'pointer', fontSize: 12, color: '#d1d5db' }}>
-                <Flag size={13} /> Şikayet
-              </button>
-            </div>
+            <button onClick={report} style={{ marginLeft: 'auto', display: 'inline-flex', alignItems: 'center', gap: 4, background: 'none', border: 'none', cursor: 'pointer', fontSize: 12, color: '#d1d5db' }}>
+              <Flag size={13} /> Şikayet
+            </button>
           </div>
 
           {/* Başlık */}
           <h1 style={{ fontSize: 20, fontWeight: 800, margin: '0 0 14px', lineHeight: 1.4, color: '#111827', letterSpacing: -0.3 }}>
             {incident.title}
           </h1>
+
+          <div style={{ marginBottom: 16 }}>
+            <ShareButton title={incident.title} url={'/olay/' + id} />
+          </div>
 
           {/* Yazar + meta */}
           <div style={{ display: 'flex', gap: 14, fontSize: 13, color: '#6b7280', marginBottom: 18, flexWrap: 'wrap', alignItems: 'center', paddingBottom: 16, borderBottom: '1px solid #f3f4f6' }}>
