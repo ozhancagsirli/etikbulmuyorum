@@ -99,3 +99,37 @@ router.get('/incidents', async (req, res, next) => {
     res.json(rows);
   } catch (err) { next(err); }
 });
+
+// GET /api/moderation/users
+router.get('/users', async (req, res, next) => {
+  try {
+    const { rows } = await pool.query(`
+      SELECT u.id, u.name, u.email, u.role, u.is_banned, u.created_at,
+        COUNT(i.id)::INT AS incident_count
+      FROM users u
+      LEFT JOIN incidents i ON i.author_id = u.id AND i.status = 'approved'
+      GROUP BY u.id
+      ORDER BY u.created_at DESC
+    `);
+    res.json(rows);
+  } catch (err) { next(err); }
+});
+
+// POST /api/moderation/users/:id/ban
+router.post('/users/:id/ban', async (req, res, next) => {
+  try {
+    await pool.query('UPDATE users SET is_banned = NOT is_banned WHERE id = $1', [req.params.id]);
+    const { rows } = await pool.query('SELECT is_banned FROM users WHERE id = $1', [req.params.id]);
+    res.json({ is_banned: rows[0].is_banned });
+  } catch (err) { next(err); }
+});
+
+// POST /api/moderation/users/:id/role
+router.post('/users/:id/role', async (req, res, next) => {
+  try {
+    const { role } = req.body;
+    if (!['user', 'moderator', 'admin'].includes(role)) return res.status(400).json({ error: 'Geçersiz rol.' });
+    await pool.query('UPDATE users SET role = $1 WHERE id = $2', [role, req.params.id]);
+    res.json({ role });
+  } catch (err) { next(err); }
+});
