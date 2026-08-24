@@ -1,3 +1,4 @@
+import LikeButton from '../components/LikeButton';
 import ShareButton from '../components/ShareButton';
 import { useState, useEffect } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
@@ -255,6 +256,7 @@ export default function IncidentPage() {
                       <p style={{ margin: 0, fontSize: 14, color: c.is_removed ? '#9ca3af' : '#374151', lineHeight: 1.6, fontStyle: c.is_removed ? 'italic' : 'normal' }}>
                         {c.content}
                       </p>
+                      <LikeButton commentId={c.id} initialCount={c.like_count || 0} initialLiked={c.liked_by_me} />
                     </div>
                   </div>
                 </div>

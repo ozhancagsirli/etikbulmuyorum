@@ -2,15 +2,16 @@ import { useEffect } from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { Toaster } from 'react-hot-toast';
 import { useAuthStore } from './lib/authStore';
-import Navbar         from './components/Navbar';
-import HomePage       from './pages/HomePage';
-import IncidentPage   from './pages/IncidentPage';
-import SubmitPage     from './pages/SubmitPage';
-import ProfilePage    from './pages/ProfilePage';
-import ModerationPage from './pages/ModerationPage';
-import SubjectPage    from './pages/SubjectPage';
-import AuthPage       from './pages/AuthPage';
-import StatsPage      from './pages/StatsPage';
+import Navbar           from './components/Navbar';
+import HomePage         from './pages/HomePage';
+import IncidentPage     from './pages/IncidentPage';
+import SubmitPage       from './pages/SubmitPage';
+import ProfilePage      from './pages/ProfilePage';
+import ModerationPage   from './pages/ModerationPage';
+import SubjectPage      from './pages/SubjectPage';
+import AuthPage         from './pages/AuthPage';
+import StatsPage        from './pages/StatsPage';
+import LeaderboardPage  from './pages/LeaderboardPage';
 
 export default function App() {
   const fetchMe = useAuthStore(s => s.fetchMe);
@@ -30,6 +31,7 @@ export default function App() {
           <Route path="/konu/:name"   element={<SubjectPage />} />
           <Route path="/giris"        element={<AuthPage />} />
           <Route path="/istatistik"   element={<StatsPage />} />
+          <Route path="/liderboard"   element={<LeaderboardPage />} />
         </Routes>
       </div>
     </BrowserRouter>

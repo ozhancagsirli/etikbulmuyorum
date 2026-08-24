@@ -3,6 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { Search, Menu, X, Scale, Plus, Shield, LogOut, User, ChevronDown } from 'lucide-react';
 import toast from 'react-hot-toast';
 import { useAuthStore } from '../lib/authStore';
+import NotificationBell from './NotificationBell';
 
 const GOOGLE_CLIENT_ID = import.meta.env.VITE_GOOGLE_CLIENT_ID;
 
@@ -74,6 +75,7 @@ export default function Navbar() {
                 <Link to="/bildir" style={{ display: 'flex', alignItems: 'center', gap: 5, background: '#FF4500', color: 'white', padding: '6px 12px', borderRadius: 20, fontWeight: 700, fontSize: 12, flexShrink: 0 }}>
                   <Plus size={14} /> Bildir
                 </Link>
+                <NotificationBell />
                 <div style={{ position: 'relative' }}>
                   <button onClick={() => setMenuOpen(m => !m)} style={{ display: 'flex', alignItems: 'center', gap: 6, background: 'white', border: '1.5px solid #e5e7eb', borderRadius: 20, padding: '4px 10px 4px 4px', cursor: 'pointer' }}>
                     {user.avatarUrl
