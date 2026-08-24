@@ -1,3 +1,4 @@
+import { spamFilter } from '../spamFilter.js';
 import { Router } from 'express';
 import { body, param, validationResult } from 'express-validator';
 import pool from '../db/pool.js';
@@ -97,7 +98,7 @@ router.get('/:id', optionalAuth, async (req, res, next) => {
   } catch (err) { next(err); }
 });
 
-router.post('/', authenticate, async (req, res, next) => {
+router.post('/', authenticate, spamFilter, async (req, res, next) => {
   try {
     const { title, description, categoryId, location, incidentDate, isAnonymous, images, tags, subject, votingDays } = req.body;
     if (!title || title.length < 3) return res.status(422).json({ error: 'Başlık en az 3 karakter olmalı.' });
