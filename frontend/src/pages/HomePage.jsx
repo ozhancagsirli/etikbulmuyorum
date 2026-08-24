@@ -202,12 +202,6 @@ function IncidentCard({ incident: inc, onVote }) {
 
   return (
     <div style={{ background: 'white', borderRadius: 12, border: isUnethical ? '1.5px solid #f85149' : '1px solid #e0e0e0', overflow: 'hidden' }}>
-      {images.length > 0 && (
-        <Link to={'/olay/' + inc.id}>
-          <img src={images[0]} alt="" style={{ width: '100%', height: 180, objectFit: 'cover', display: 'block' }} />
-        </Link>
-      )}
-
       <div style={{ padding: '12px 14px' }}>
         <div style={{ display: 'flex', gap: 6, marginBottom: 8, flexWrap: 'wrap', alignItems: 'center' }}>
           {isUnethical && <span style={{ fontSize: 11, background: '#ffeef0', color: '#cf222e', padding: '2px 8px', borderRadius: 20, fontWeight: 700 }}>❌ Etik Dışı</span>}
@@ -223,6 +217,12 @@ function IncidentCard({ incident: inc, onVote }) {
         <p style={{ fontSize: 13, color: '#666', marginBottom: 8, lineHeight: 1.55, display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>
           {inc.description}
         </p>
+
+        {images.length > 0 && (
+          <Link to={'/olay/' + inc.id}>
+            <img src={images[0]} alt="" style={{ width: '100%', height: 180, objectFit: 'cover', display: 'block', borderRadius: 8, marginBottom: 10 }} />
+          </Link>
+        )}
 
         {(inc.subject || tags.length > 0) && (
           <div style={{ display: 'flex', gap: 5, flexWrap: 'wrap', marginBottom: 10 }}>
