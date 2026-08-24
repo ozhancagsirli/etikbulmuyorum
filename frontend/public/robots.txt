@@ -1,0 +1,7 @@
+User-agent: *
+Allow: /
+Disallow: /moderasyon
+Disallow: /profil
+Disallow: /giris
+
+Sitemap: https://etikbulmuyorum.com/sitemap.xml
