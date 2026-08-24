@@ -1,235 +1,248 @@
 import { useState, useEffect } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
+import { formatDistanceToNow } from 'date-fns';
+import { tr } from 'date-fns/locale';
+import { Shield, CheckCircle, XCircle, BarChart2, Trophy, Users, FileText, ThumbsUp, Eye, Building2 } from 'lucide-react';
 import toast from 'react-hot-toast';
 import { apiFetch } from '../lib/api';
 import { useAuthStore } from '../lib/authStore';
 
 export default function ModerationPage() {
   const user = useAuthStore(s => s.user);
+  const navigate = useNavigate();
   const [tab, setTab] = useState('pending');
-  const [pending, setPending] = useState([]);
-  const [reports, setReports] = useState([]);
+  const [incidents, setIncidents] = useState([]);
+  const [stats, setStats] = useState(null);
+  const [leaders, setLeaders] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [rejectId, setRejectId] = useState(null);
-  const [rejectReason, setRejectReason] = useState('');
-  const [expanded, setExpanded] = useState(null);
+  const [rejectReason, setRejectReason] = useState({});
 
-  useEffect(() => { loadData(); }, []);
+  useEffect(() => {
+    if (!user || (user.role !== 'moderator' && user.role !== 'admin')) {
+      navigate('/');
+      return;
+    }
+    fetchData();
+  }, [user, tab]);
 
-  async function loadData() {
+  async function fetchData() {
     setLoading(true);
     try {
-      const [p, r] = await Promise.all([
-        apiFetch('/moderation/pending'),
-        apiFetch('/moderation/reports'),
-      ]);
-      setPending(p);
-      setReports(r);
+      if (tab === 'pending' || tab === 'approved' || tab === 'rejected') {
+        const data = await apiFetch('/moderation/incidents?status=' + tab);
+        setIncidents(data);
+      } else if (tab === 'stats') {
+        const data = await apiFetch('/stats');
+        setStats(data);
+      } else if (tab === 'leaderboard') {
+        const data = await apiFetch('/leaderboard');
+        setLeaders(data);
+      }
     } catch (e) { toast.error(e.message); }
     finally { setLoading(false); }
-  }
-
-  if (!user || (user.role !== 'moderator' && user.role !== 'admin')) {
-    return (
-      <div style={{ background: 'white', borderRadius: 12, padding: 48, textAlign: 'center', border: '1px solid #e0e0e0' }}>
-        <div style={{ fontSize: 48, marginBottom: 16 }}>🚫</div>
-        <p style={{ color: '#555' }}>Bu sayfaya erisim yetkiniz yok.</p>
-      </div>
-    );
   }
 
   async function approve(id) {
     try {
       await apiFetch('/moderation/incidents/' + id + '/approve', { method: 'POST' });
-      setPending(p => p.filter(i => i.id !== id));
-      toast.success('Olay onaylandi ve yayinlandi.');
+      setIncidents(prev => prev.filter(i => i.id !== id));
+      toast.success('Olay onaylandı.');
     } catch (e) { toast.error(e.message); }
   }
 
   async function reject(id) {
-    if (!rejectReason.trim()) return toast.error('Red sebebi yazin.');
+    const reason = rejectReason[id] || '';
     try {
-      await apiFetch('/moderation/incidents/' + id + '/reject', {
-        method: 'POST',
-        body: JSON.stringify({ reason: rejectReason }),
-      });
-      setPending(p => p.filter(i => i.id !== id));
-      setRejectId(null);
-      setRejectReason('');
+      await apiFetch('/moderation/incidents/' + id + '/reject', { method: 'POST', body: JSON.stringify({ reason }) });
+      setIncidents(prev => prev.filter(i => i.id !== id));
       toast.success('Olay reddedildi.');
     } catch (e) { toast.error(e.message); }
   }
 
-  async function resolveReport(id) {
-    try {
-      await apiFetch('/moderation/reports/' + id + '/resolve', { method: 'POST' });
-      setReports(r => r.filter(x => x.id !== id));
-      toast.success('Sikayet cozumlendi.');
-    } catch (e) { toast.error(e.message); }
-  }
+  if (!user || (user.role !== 'moderator' && user.role !== 'admin')) return null;
+
+  const tabs = [
+    { key: 'pending',     label: '⏳ Bekleyenler', icon: <Shield size={15} /> },
+    { key: 'approved',    label: '✅ Onaylananlar', icon: <CheckCircle size={15} /> },
+    { key: 'rejected',    label: '❌ Reddedilenler', icon: <XCircle size={15} /> },
+    { key: 'stats',       label: '📊 İstatistikler', icon: <BarChart2 size={15} /> },
+    { key: 'leaderboard', label: '🏆 Liderboard',    icon: <Trophy size={15} /> },
+  ];
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
-
-      <div style={{ background: 'white', borderRadius: 12, border: '1px solid #e0e0e0', padding: '20px 24px' }}>
-        <h1 style={{ fontSize: 20, fontWeight: 700, margin: 0 }}>Moderasyon Paneli</h1>
-        <p style={{ color: '#888', fontSize: 13, margin: '4px 0 0' }}>
-          {user.role === 'admin' ? 'Admin' : 'Moderator'} olarak giris yapildi.
-        </p>
-      </div>
-
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10 }}>
-        <div style={{ background: 'white', borderRadius: 10, border: '1px solid #e0e0e0', padding: '16px 20px', textAlign: 'center', cursor: 'pointer', borderColor: tab === 'pending' ? '#FF4500' : '#e0e0e0' }}
-          onClick={() => setTab('pending')}>
-          <div style={{ fontSize: 28, fontWeight: 700, color: '#FF4500' }}>{pending.length}</div>
-          <div style={{ fontSize: 13, color: '#666', marginTop: 2 }}>Bekleyen Olay</div>
-        </div>
-        <div style={{ background: 'white', borderRadius: 10, border: '1px solid #e0e0e0', padding: '16px 20px', textAlign: 'center', cursor: 'pointer', borderColor: tab === 'reports' ? '#FF4500' : '#e0e0e0' }}
-          onClick={() => setTab('reports')}>
-          <div style={{ fontSize: 28, fontWeight: 700, color: '#f85149' }}>{reports.length}</div>
-          <div style={{ fontSize: 13, color: '#666', marginTop: 2 }}>Acik Sikayet</div>
+    <div style={{ maxWidth: 900, margin: '0 auto' }}>
+      <div style={{ background: 'white', borderRadius: 16, border: '1px solid #e5e7eb', padding: '20px 24px', marginBottom: 16, display: 'flex', alignItems: 'center', gap: 10 }}>
+        <Shield size={22} color="#FF4500" />
+        <div>
+          <h1 style={{ fontSize: 20, fontWeight: 800, margin: 0 }}>Moderasyon Paneli</h1>
+          <p style={{ color: '#9ca3af', fontSize: 13, margin: 0 }}>Admin görünümü</p>
         </div>
       </div>
 
-      <div style={{ background: 'white', borderRadius: 12, border: '1px solid #e0e0e0', overflow: 'hidden' }}>
-        <div style={{ display: 'flex', borderBottom: '1px solid #eee' }}>
-          {[
-            { key: 'pending', label: 'Bekleyen Olaylar', count: pending.length },
-            { key: 'reports', label: 'Sikayetler',        count: reports.length },
-          ].map(t => (
-            <button key={t.key} onClick={() => setTab(t.key)} style={{
-              flex: 1, padding: '14px', border: 'none', background: 'none', cursor: 'pointer',
-              fontSize: 14, fontWeight: tab === t.key ? 600 : 400,
-              color: tab === t.key ? '#FF4500' : '#666',
-              borderBottom: tab === t.key ? '2px solid #FF4500' : '2px solid transparent',
-              display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8,
-            }}>
-              {t.label}
-              <span style={{
-                fontSize: 12, padding: '2px 8px', borderRadius: 20,
-                background: tab === t.key ? '#FF4500' : '#f0f0f0',
-                color: tab === t.key ? 'white' : '#888',
-              }}>{t.count}</span>
-            </button>
-          ))}
-        </div>
+      {/* Sekmeler */}
+      <div style={{ background: 'white', borderRadius: 12, border: '1px solid #e5e7eb', marginBottom: 16, display: 'flex', overflowX: 'auto' }}>
+        {tabs.map(t => (
+          <button key={t.key} onClick={() => setTab(t.key)} style={{
+            display: 'flex', alignItems: 'center', gap: 6,
+            padding: '12px 18px', border: 'none', background: 'none', cursor: 'pointer',
+            fontSize: 13, fontWeight: tab === t.key ? 700 : 400,
+            color: tab === t.key ? '#FF4500' : '#6b7280',
+            borderBottom: tab === t.key ? '2px solid #FF4500' : '2px solid transparent',
+            whiteSpace: 'nowrap',
+          }}>
+            {t.icon} {t.label}
+          </button>
+        ))}
+      </div>
 
-        <div style={{ padding: '16px' }}>
-          {loading ? (
-            <div style={{ textAlign: 'center', padding: 40, color: '#888' }}>Yukleniyor...</div>
-          ) : tab === 'pending' ? (
-            pending.length === 0 ? (
-              <div style={{ textAlign: 'center', padding: 40 }}>
-                <div style={{ fontSize: 40, marginBottom: 10 }}>✅</div>
-                <div style={{ color: '#888' }}>Inceleme bekleyen olay yok!</div>
+      {loading ? (
+        <div style={{ background: 'white', borderRadius: 12, padding: 48, textAlign: 'center', color: '#9ca3af' }}>Yükleniyor...</div>
+      ) : (
+
+        /* Olay listesi */
+        (tab === 'pending' || tab === 'approved' || tab === 'rejected') ? (
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+            {incidents.length === 0 ? (
+              <div style={{ background: 'white', borderRadius: 12, padding: 40, textAlign: 'center', color: '#9ca3af', border: '1px solid #e5e7eb' }}>
+                Bu kategoride olay yok.
               </div>
-            ) : (
-              <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
-                {pending.map(inc => (
-                  <div key={inc.id} style={{ borderRadius: 10, border: '1px solid #eee', overflow: 'hidden' }}>
-                    <div style={{ padding: '14px 16px', background: '#fafafa' }}>
-                      <div style={{ display: 'flex', gap: 8, marginBottom: 8, fontSize: 12, color: '#888', flexWrap: 'wrap' }}>
-                        {inc.category_name && <span style={{ background: '#f0f0f0', padding: '2px 8px', borderRadius: 20 }}>{inc.category_name}</span>}
-                        <span>Gonderen: <strong style={{ color: '#333' }}>{inc.author_name}</strong></span>
-                        <span>{inc.author_email}</span>
-                      </div>
-
-                      <h3 style={{ fontSize: 16, fontWeight: 600, margin: '0 0 8px', color: '#1c1c1c' }}>{inc.title}</h3>
-
-                      <div style={{ fontSize: 14, color: '#555', lineHeight: 1.6,
-                        maxHeight: expanded === inc.id ? 'none' : 80,
-                        overflow: 'hidden', position: 'relative' }}>
-                        {inc.description}
-                      </div>
-                      {inc.description?.length > 200 && (
-                        <button onClick={() => setExpanded(expanded === inc.id ? null : inc.id)}
-                          style={{ background: 'none', border: 'none', color: '#FF4500', cursor: 'pointer', fontSize: 13, padding: '4px 0', marginTop: 4 }}>
-                          {expanded === inc.id ? 'Daha az goster' : 'Tamamini goster'}
-                        </button>
-                      )}
-                    </div>
-
-                    <div style={{ padding: '12px 16px', borderTop: '1px solid #eee', background: 'white' }}>
-                      {rejectId === inc.id ? (
-                        <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
-                          <textarea
-                            value={rejectReason}
-                            onChange={e => setRejectReason(e.target.value)}
-                            placeholder="Red sebebini yazin..."
-                            rows={2}
-                            style={{ width: '100%', padding: '8px 12px', borderRadius: 8, border: '1px solid #ddd', fontSize: 13, fontFamily: 'inherit', boxSizing: 'border-box', resize: 'none' }}
-                          />
-                          <div style={{ display: 'flex', gap: 8 }}>
-                            <button onClick={() => reject(inc.id)} style={{
-                              flex: 1, padding: '8px', borderRadius: 8, border: 'none',
-                              background: '#f85149', color: 'white', fontWeight: 600, cursor: 'pointer', fontSize: 13,
-                            }}>Reddet</button>
-                            <button onClick={() => { setRejectId(null); setRejectReason(''); }} style={{
-                              flex: 1, padding: '8px', borderRadius: 8, border: '1px solid #ddd',
-                              background: 'white', color: '#555', cursor: 'pointer', fontSize: 13,
-                            }}>Iptal</button>
-                          </div>
-                        </div>
-                      ) : (
-                        <div style={{ display: 'flex', gap: 8 }}>
-                          <button onClick={() => approve(inc.id)} style={{
-                            flex: 1, padding: '9px', borderRadius: 8, border: 'none',
-                            background: '#46d160', color: 'white', fontWeight: 600, cursor: 'pointer', fontSize: 14,
-                          }}>
-                            Onayla ve Yayinla
-                          </button>
-                          <button onClick={() => setRejectId(inc.id)} style={{
-                            flex: 1, padding: '9px', borderRadius: 8, border: '1px solid #f85149',
-                            background: 'white', color: '#f85149', fontWeight: 600, cursor: 'pointer', fontSize: 14,
-                          }}>
-                            Reddet
-                          </button>
-                        </div>
-                      )}
-                    </div>
-                  </div>
-                ))}
-              </div>
-            )
-          ) : (
-            reports.length === 0 ? (
-              <div style={{ textAlign: 'center', padding: 40 }}>
-                <div style={{ fontSize: 40, marginBottom: 10 }}>✅</div>
-                <div style={{ color: '#888' }}>Acik sikayet yok!</div>
-              </div>
-            ) : (
-              <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
-                {reports.map(r => (
-                  <div key={r.id} style={{ padding: '14px 16px', borderRadius: 10, border: '1px solid #eee', background: '#fafafa' }}>
-                    <div style={{ display: 'flex', gap: 8, marginBottom: 8, fontSize: 12, color: '#888', flexWrap: 'wrap' }}>
-                      <span style={{ background: '#ffeef0', color: '#cf222e', padding: '2px 8px', borderRadius: 20, fontWeight: 600 }}>
-                        {r.reason}
-                      </span>
-                      <span>Sikayet eden: <strong style={{ color: '#333' }}>{r.reporter_name}</strong></span>
-                    </div>
-                    {r.incident_title && (
-                      <div style={{ fontSize: 14, fontWeight: 600, marginBottom: 4 }}>Olay: {r.incident_title}</div>
-                    )}
-                    {r.comment_content && (
-                      <div style={{ fontSize: 13, color: '#555', background: '#f8f9fa', padding: '8px 12px', borderRadius: 6, marginBottom: 8 }}>
-                        Yorum: {r.comment_content}
-                      </div>
-                    )}
-                    {r.details && (
-                      <div style={{ fontSize: 13, color: '#666', marginBottom: 8 }}>Not: {r.details}</div>
-                    )}
-                    <button onClick={() => resolveReport(r.id)} style={{
-                      padding: '7px 16px', borderRadius: 20, border: '1px solid #ddd',
-                      background: 'white', color: '#555', cursor: 'pointer', fontSize: 13,
-                    }}>
-                      Cozumlendi olarak isaretle
+            ) : incidents.map(inc => (
+              <div key={inc.id} style={{ background: 'white', borderRadius: 12, border: '1px solid #e5e7eb', padding: '16px 20px' }}>
+                <div style={{ display: 'flex', gap: 8, marginBottom: 8, flexWrap: 'wrap', alignItems: 'center' }}>
+                  {inc.category_name && <span style={{ fontSize: 11, background: '#fff5f0', color: '#FF4500', padding: '2px 8px', borderRadius: 20, fontWeight: 600 }}>{inc.category_icon} {inc.category_name}</span>}
+                  {inc.subject && <span style={{ fontSize: 11, background: '#eff6ff', color: '#3b82f6', padding: '2px 8px', borderRadius: 20 }}>📌 {inc.subject}</span>}
+                  <span style={{ fontSize: 11, color: '#9ca3af', marginLeft: 'auto' }}>{formatDistanceToNow(new Date(inc.created_at), { locale: tr, addSuffix: true })}</span>
+                </div>
+                <Link to={'/olay/' + inc.id}>
+                  <h3 style={{ fontSize: 15, fontWeight: 700, margin: '0 0 6px', color: '#111827' }}>{inc.title}</h3>
+                </Link>
+                <p style={{ fontSize: 13, color: '#6b7280', margin: '0 0 12px', lineHeight: 1.5, display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>
+                  {inc.description}
+                </p>
+                <div style={{ fontSize: 12, color: '#9ca3af', marginBottom: 10 }}>
+                  👤 {inc.author_name || 'Anonim'} · {inc.vote_ethical + inc.vote_unethical} oy · 👁 {inc.view_count}
+                </div>
+                {tab === 'pending' && (
+                  <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
+                    <input
+                      placeholder="Red sebebi (isteğe bağlı)..."
+                      value={rejectReason[inc.id] || ''}
+                      onChange={e => setRejectReason(r => ({ ...r, [inc.id]: e.target.value }))}
+                      style={{ flex: 1, padding: '7px 12px', borderRadius: 8, border: '1px solid #e5e7eb', fontSize: 13, minWidth: 150 }}
+                    />
+                    <button onClick={() => approve(inc.id)} style={{ display: 'flex', alignItems: 'center', gap: 5, padding: '7px 16px', borderRadius: 8, border: 'none', background: '#dcfce7', color: '#16a34a', fontWeight: 600, fontSize: 13, cursor: 'pointer' }}>
+                      <CheckCircle size={14} /> Onayla
+                    </button>
+                    <button onClick={() => reject(inc.id)} style={{ display: 'flex', alignItems: 'center', gap: 5, padding: '7px 16px', borderRadius: 8, border: 'none', background: '#fef2f2', color: '#dc2626', fontWeight: 600, fontSize: 13, cursor: 'pointer' }}>
+                      <XCircle size={14} /> Reddet
                     </button>
                   </div>
-                ))}
+                )}
+                {tab === 'rejected' && inc.reject_reason && (
+                  <div style={{ fontSize: 12, color: '#dc2626', background: '#fef2f2', padding: '6px 10px', borderRadius: 6 }}>
+                    Red sebebi: {inc.reject_reason}
+                  </div>
+                )}
               </div>
-            )
-          )}
-        </div>
-      </div>
+            ))}
+          </div>
+        ) :
+
+        /* İstatistikler */
+        tab === 'stats' && stats ? (
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 10 }}>
+              {[
+                { label: 'Toplam Olay', value: stats.totals.total_incidents, color: '#FF4500', icon: <FileText size={20} /> },
+                { label: 'Bu Hafta', value: stats.totals.incidents_this_week, color: '#3b82f6', icon: <BarChart2 size={20} /> },
+                { label: 'Toplam Oy', value: stats.totals.total_votes, color: '#22c55e', icon: <ThumbsUp size={20} /> },
+                { label: 'Kullanıcı', value: stats.totals.total_users, color: '#f59e0b', icon: <Users size={20} /> },
+              ].map(s => (
+                <div key={s.label} style={{ background: 'white', borderRadius: 12, border: '1px solid #e5e7eb', padding: '18px', display: 'flex', alignItems: 'center', gap: 12 }}>
+                  <div style={{ width: 44, height: 44, borderRadius: 12, background: s.color + '15', display: 'flex', alignItems: 'center', justifyContent: 'center', color: s.color }}>{s.icon}</div>
+                  <div>
+                    <div style={{ fontSize: 26, fontWeight: 800, color: '#111827' }}>{Number(s.value).toLocaleString('tr')}</div>
+                    <div style={{ fontSize: 13, color: '#9ca3af' }}>{s.label}</div>
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            {stats.topSubjects.length > 0 && (
+              <div style={{ background: 'white', borderRadius: 12, border: '1px solid #e5e7eb', overflow: 'hidden' }}>
+                <div style={{ padding: '14px 20px', borderBottom: '1px solid #f3f4f6', fontWeight: 700, fontSize: 15, display: 'flex', alignItems: 'center', gap: 8 }}>
+                  <Building2 size={16} color="#FF4500" /> En Çok Şikayet Edilen
+                </div>
+                {stats.topSubjects.map((s, idx) => {
+                  const total = Number(s.ethical) + Number(s.unethical);
+                  const ethPct = total ? Math.round((Number(s.ethical) / total) * 100) : null;
+                  return (
+                    <Link key={s.subject} to={'/konu/' + encodeURIComponent(s.subject)} style={{ display: 'flex', alignItems: 'center', gap: 14, padding: '12px 20px', borderBottom: '1px solid #f9fafb', color: 'inherit' }}>
+                      <span style={{ fontSize: 16, fontWeight: 800, color: '#e5e7eb', minWidth: 24 }}>#{idx + 1}</span>
+                      <div style={{ flex: 1 }}>
+                        <div style={{ fontWeight: 600, fontSize: 14 }}>{s.subject}</div>
+                        {ethPct !== null && <div style={{ fontSize: 12, color: ethPct >= 50 ? '#16a34a' : '#dc2626' }}>{ethPct}% Etik</div>}
+                      </div>
+                      <span style={{ fontSize: 13, color: '#9ca3af' }}>{s.count} olay</span>
+                    </Link>
+                  );
+                })}
+              </div>
+            )}
+
+            <div style={{ background: 'white', borderRadius: 12, border: '1px solid #e5e7eb', overflow: 'hidden' }}>
+              <div style={{ padding: '14px 20px', borderBottom: '1px solid #f3f4f6', fontWeight: 700, fontSize: 15 }}>📂 Kategorilere Göre</div>
+              <div style={{ padding: '16px 20px', display: 'flex', flexDirection: 'column', gap: 10 }}>
+                {stats.topCategories.map(c => {
+                  const maxCount = Math.max(...stats.topCategories.map(x => Number(x.count)));
+                  const pct = maxCount ? Math.round((Number(c.count) / maxCount) * 100) : 0;
+                  return (
+                    <div key={c.name_tr} style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+                      <span style={{ fontSize: 20, width: 28 }}>{c.icon}</span>
+                      <div style={{ flex: 1 }}>
+                        <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 4 }}>
+                          <span style={{ fontSize: 13, fontWeight: 500 }}>{c.name_tr}</span>
+                          <span style={{ fontSize: 12, color: '#9ca3af' }}>{c.count} olay</span>
+                        </div>
+                        <div style={{ height: 6, background: '#f3f4f6', borderRadius: 3, overflow: 'hidden' }}>
+                          <div style={{ width: pct + '%', height: '100%', background: '#FF4500', borderRadius: 3 }} />
+                        </div>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+          </div>
+        ) :
+
+        /* Liderboard */
+        tab === 'leaderboard' ? (
+          <div style={{ background: 'white', borderRadius: 12, border: '1px solid #e5e7eb', overflow: 'hidden' }}>
+            {leaders.length === 0 ? (
+              <div style={{ padding: 40, textAlign: 'center', color: '#9ca3af' }}>Henüz kullanıcı yok.</div>
+            ) : leaders.map((u, idx) => (
+              <div key={u.id} style={{ display: 'flex', alignItems: 'center', gap: 14, padding: '14px 20px', borderBottom: idx < leaders.length - 1 ? '1px solid #f9fafb' : 'none', background: idx === 0 ? '#fffbeb' : 'white' }}>
+                <span style={{ fontSize: idx < 3 ? 22 : 14, fontWeight: 700, color: '#d1d5db', minWidth: 30, textAlign: 'center' }}>
+                  {idx === 0 ? '🥇' : idx === 1 ? '🥈' : idx === 2 ? '🥉' : idx + 1}
+                </span>
+                <div style={{ width: 38, height: 38, borderRadius: '50%', background: '#f3f4f6', overflow: 'hidden', flexShrink: 0, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                  {u.avatar_url ? <img src={u.avatar_url} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover' }} /> : <span style={{ fontWeight: 700, color: '#FF4500' }}>{u.name?.[0]?.toUpperCase()}</span>}
+                </div>
+                <div style={{ flex: 1 }}>
+                  <div style={{ fontWeight: 600, fontSize: 14 }}>{u.name}</div>
+                  <div style={{ display: 'flex', gap: 10, fontSize: 12, color: '#9ca3af', marginTop: 2 }}>
+                    <span><FileText size={11} style={{ display: 'inline' }} /> {u.incident_count} olay</span>
+                    <span><ThumbsUp size={11} style={{ display: 'inline' }} /> {u.total_votes} oy</span>
+                    <span><Eye size={11} style={{ display: 'inline' }} /> {u.total_views} görüntülenme</span>
+                  </div>
+                </div>
+                <div style={{ fontWeight: 800, fontSize: 18, color: '#FF4500' }}>{u.total_votes}</div>
+              </div>
+            ))}
+          </div>
+        ) : null
+      )}
     </div>
   );
 }
