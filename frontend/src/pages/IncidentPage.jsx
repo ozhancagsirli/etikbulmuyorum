@@ -3,7 +3,6 @@ import { useState, useEffect } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import { format, formatDistanceToNow } from 'date-fns';
 import { tr } from 'date-fns/locale';
-import ShareButton from '../components/ShareButton';
 import { MapPin, Calendar, Eye, ArrowLeft, Flag, MessageCircle, Clock, Building2, Tag, X } from 'lucide-react';
 import toast from 'react-hot-toast';
 import { apiFetch } from '../lib/api';
