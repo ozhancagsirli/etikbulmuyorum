@@ -1,3 +1,4 @@
+import SEO from '../components/SEO';
 import { useState, useEffect } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import { format, formatDistanceToNow } from 'date-fns';
@@ -80,6 +81,12 @@ export default function IncidentPage() {
   const votingActive = votingEnds && votingEnds > new Date();
 
   return (
+<SEO
+  title={incident?.title}
+  description={incident?.description?.slice(0, 160)}
+  url={'/olay/' + id}
+  image={incident?.images?.[0]}
+/>
     <div style={{ maxWidth: 740, margin: '0 auto', display: 'flex', flexDirection: 'column', gap: 12 }}>
 
       <Link to="/" style={{ color: '#FF4500', fontSize: 13, display: 'inline-flex', alignItems: 'center', gap: 4 }}>
