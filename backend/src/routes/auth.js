@@ -1,4 +1,5 @@
 import { Router } from 'express';
+import bcrypt from 'bcrypt';
 import { OAuth2Client } from 'google-auth-library';
 import jwt from 'jsonwebtoken';
 import rateLimit from 'express-rate-limit';
@@ -112,7 +113,6 @@ router.get('/me', authenticate, async (req, res, next) => {
 export default router;
 
 // POST /api/auth/register
-import bcrypt from 'bcrypt';
 
 router.post('/register', authLimiter, async (req, res, next) => {
   try {
