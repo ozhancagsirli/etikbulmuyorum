@@ -226,7 +226,8 @@ function IncidentCard({ incident: inc, onVote }) {
 
         {(inc.subject || tags.length > 0) && (
           <div style={{ display: 'flex', gap: 5, flexWrap: 'wrap', marginBottom: 10 }}>
-            {inc.subject && <span style={{ fontSize: 11, background: '#f0f0f0', color: '#555', padding: '2px 8px', borderRadius: 20, fontWeight: 500 }}>📌 {inc.subject}</span>}
+          {inc.subject && <Link to={'/konu/' + encodeURIComponent(inc.subject)} style={{ fontSize: 11, background: '#f0f0f0', color: '#555', padding: '2px 8px', borderRadius: 20, fontWeight: 500 }}>📌 {inc.subject}</Link>}  
+}>📌 {inc.subject}</Link>}
             {tags.map(tag => <span key={tag} style={{ fontSize: 11, color: '#378ADD', background: '#e8f4fd', padding: '2px 8px', borderRadius: 20, fontWeight: 500 }}>#{tag}</span>)}
           </div>
         )}
