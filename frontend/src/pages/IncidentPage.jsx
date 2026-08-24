@@ -3,6 +3,7 @@ import { useState, useEffect } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import { format, formatDistanceToNow } from 'date-fns';
 import { tr } from 'date-fns/locale';
+import ShareButton from '../components/ShareButton';
 import { MapPin, Calendar, Eye, ArrowLeft, Flag, MessageCircle, Clock, Building2, Tag, X } from 'lucide-react';
 import toast from 'react-hot-toast';
 import { apiFetch } from '../lib/api';
@@ -89,8 +90,8 @@ export default function IncidentPage() {
             <span style={{ fontSize: 12, color: '#9ca3af' }}>
               {formatDistanceToNow(new Date(incident.created_at), { locale: tr, addSuffix: true })}
             </span>
+            <ShareButton title={incident.title} url={'/olay/' + id} />
             <button onClick={report} style={{ marginLeft: 'auto', display: 'inline-flex', alignItems: 'center', gap: 4, background: 'none', border: 'none', cursor: 'pointer', fontSize: 12, color: '#d1d5db' }}>
-<ShareButton title={incident.title} url={'/olay/' + id} />
               <Flag size={13} /> Şikayet
             </button>
           </div>
