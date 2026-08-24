@@ -14,6 +14,7 @@ export default function ModerationPage() {
   const [incidents, setIncidents] = useState([]);
   const [stats, setStats] = useState(null);
   const [leaders, setLeaders] = useState([]);
+  const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
   const [rejectReason, setRejectReason] = useState({});
 
@@ -40,6 +41,9 @@ export default function ModerationPage() {
       } else if (tab === 'leaderboard') {
         const data = await apiFetch('/leaderboard');
         setLeaders(data);
+      } else if (tab === 'users') {
+        const data = await apiFetch('/moderation/users');
+        setUsers(data);
       }
     } catch (e) { toast.error(e.message); }
     finally { setLoading(false); }
@@ -70,6 +74,7 @@ export default function ModerationPage() {
     { key: 'rejected',    label: '❌ Reddedilenler', icon: <XCircle size={15} /> },
     { key: 'stats',       label: '📊 İstatistikler', icon: <BarChart2 size={15} /> },
     { key: 'leaderboard', label: '🏆 Liderboard',    icon: <Trophy size={15} /> },
+    { key: 'users',       label: '👥 Kullanıcılar',  icon: <Users size={15} /> },
   ];
 
   return (
@@ -241,6 +246,60 @@ export default function ModerationPage() {
                   </div>
                 </div>
                 <div style={{ fontWeight: 800, fontSize: 18, color: '#FF4500' }}>{u.total_votes}</div>
+              </div>
+            ))}
+          </div>
+        ) :
+
+        /* Kullanıcılar */
+        tab === 'users' ? (
+          <div style={{ background: 'white', borderRadius: 12, border: '1px solid #e5e7eb', overflow: 'hidden' }}>
+            {users.length === 0 ? (
+              <div style={{ padding: 40, textAlign: 'center', color: '#9ca3af' }}>Kullanıcı bulunamadı.</div>
+            ) : users.map((u, idx) => (
+              <div key={u.id} style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '12px 20px', borderBottom: idx < users.length - 1 ? '1px solid #f9fafb' : 'none', background: u.is_banned ? '#fef2f2' : 'white' }}>
+                <div style={{ width: 36, height: 36, borderRadius: '50%', background: '#f3f4f6', flexShrink: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 700, color: '#FF4500' }}>
+                  {u.name?.[0]?.toUpperCase()}
+                </div>
+                <div style={{ flex: 1, minWidth: 0 }}>
+                  <div style={{ fontWeight: 600, fontSize: 14, display: 'flex', alignItems: 'center', gap: 8 }}>
+                    {u.name}
+                    <span style={{ fontSize: 11, padding: '1px 8px', borderRadius: 20, fontWeight: 600, background: u.role === 'admin' ? '#fff7ed' : u.role === 'moderator' ? '#f0fdf4' : '#f3f4f6', color: u.role === 'admin' ? '#c2410c' : u.role === 'moderator' ? '#15803d' : '#6b7280' }}>
+                      {u.role === 'admin' ? '👑 Admin' : u.role === 'moderator' ? '🛡 Mod' : '👤 Üye'}
+                    </span>
+                    {u.is_banned && <span style={{ fontSize: 11, padding: '1px 8px', borderRadius: 20, background: '#fef2f2', color: '#dc2626', fontWeight: 600 }}>🚫 Banlı</span>}
+                  </div>
+                  <div style={{ fontSize: 12, color: '#9ca3af' }}>{u.email} · {u.incident_count} olay</div>
+                </div>
+                <div style={{ display: 'flex', gap: 6, flexShrink: 0 }}>
+                  <select
+                    value={u.role}
+                    onChange={async e => {
+                      try {
+                        await apiFetch('/moderation/users/' + u.id + '/role', { method: 'POST', body: JSON.stringify({ role: e.target.value }) });
+                        setUsers(prev => prev.map(x => x.id === u.id ? { ...x, role: e.target.value } : x));
+                        toast.success('Rol güncellendi.');
+                      } catch (err) { toast.error(err.message); }
+                    }}
+                    style={{ padding: '5px 8px', borderRadius: 8, border: '1px solid #e5e7eb', fontSize: 12, cursor: 'pointer' }}
+                  >
+                    <option value="user">Üye</option>
+                    <option value="moderator">Moderatör</option>
+                    <option value="admin">Admin</option>
+                  </select>
+                  <button
+                    onClick={async () => {
+                      try {
+                        const data = await apiFetch('/moderation/users/' + u.id + '/ban', { method: 'POST' });
+                        setUsers(prev => prev.map(x => x.id === u.id ? { ...x, is_banned: data.is_banned } : x));
+                        toast.success(data.is_banned ? 'Kullanıcı banlandı.' : 'Ban kaldırıldı.');
+                      } catch (err) { toast.error(err.message); }
+                    }}
+                    style={{ padding: '5px 12px', borderRadius: 8, border: 'none', fontSize: 12, cursor: 'pointer', fontWeight: 600, background: u.is_banned ? '#dcfce7' : '#fef2f2', color: u.is_banned ? '#16a34a' : '#dc2626' }}
+                  >
+                    {u.is_banned ? 'Banı Kaldır' : 'Banla'}
+                  </button>
+                </div>
               </div>
             ))}
           </div>
