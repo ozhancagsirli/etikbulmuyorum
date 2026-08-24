@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Share2, Copy, Check, Twitter, MessageCircle } from 'lucide-react';
+import { Share2, Copy, Check, MessageCircle } from 'lucide-react';
 import toast from 'react-hot-toast';
 
 export default function ShareButton({ title, url }) {
@@ -61,7 +61,7 @@ export default function ShareButton({ title, url }) {
             <MessageCircle size={16} color="#25d366" /> WhatsApp
           </button>
           <button onClick={shareTwitter} style={{ display: 'flex', alignItems: 'center', gap: 10, width: '100%', padding: '11px 16px', border: 'none', background: 'none', cursor: 'pointer', fontSize: 13, color: '#374151' }}>
-            <Twitter size={16} color="#1da1f2" /> Twitter/X
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="#000"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg> Twitter/X
           </button>
         </div>
       )}
