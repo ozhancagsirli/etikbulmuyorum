@@ -149,6 +149,11 @@ export default function HomePage() {
       <style>{`
         @media (min-width: 768px) {
           .sidebar { display: flex !important; }
+          #mobile-cats { display: none !important; }
+        }
+        @media (max-width: 767px) {
+          .sidebar { display: none !important; }
+          #mobile-cats { display: flex !important; }
         }
       `}</style>
     </div>
