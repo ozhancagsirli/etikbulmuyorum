@@ -1,15 +1,22 @@
 import { useState } from 'react';
-import { ThumbsUp, ThumbsDown, RotateCcw } from 'lucide-react';
+import { ThumbsUp, ThumbsDown, Minus, HelpCircle } from 'lucide-react';
 import toast from 'react-hot-toast';
 import { apiFetch } from '../lib/api';
 import { useAuthStore } from '../lib/authStore';
 
-export default function VoteBar({ incidentId, initialEthical, initialUnethical, initialMyVote }) {
+const VOTES = [
+  { key: 'correct',      label: 'Doğru',           icon: <ThumbsUp size={16} />,    color: '#16a34a', bg: '#f0fdf4', border: '#22c55e' },
+  { key: 'wrong',        label: 'Yanlış',           icon: <ThumbsDown size={16} />,  color: '#dc2626', bg: '#fef2f2', border: '#ef4444' },
+  { key: 'neutral',      label: 'Nötr',             icon: <Minus size={16} />,       color: '#6b7280', bg: '#f9fafb', border: '#d1d5db' },
+  { key: 'insufficient', label: 'Yetersiz Bilgi',   icon: <HelpCircle size={16} />,  color: '#d97706', bg: '#fffbeb', border: '#fbbf24' },
+];
+
+export default function VoteBar({ incidentId, initialVotes, initialMyVote }) {
   const user = useAuthStore(s => s.user);
-  const [ethical,   setEthical]   = useState(initialEthical);
-  const [unethical, setUnethical] = useState(initialUnethical);
-  const [myVote,    setMyVote]    = useState(initialMyVote || null);
-  const [loading,   setLoading]   = useState(false);
+  const [votes, setVotes] = useState(initialVotes || { correct: 0, wrong: 0, neutral: 0, insufficient: 0 });
+  const [myVote, setMyVote] = useState(initialMyVote || null);
+  const [trustScore, setTrustScore] = useState(initialVotes?.trustScore || 0);
+  const [loading, setLoading] = useState(false);
 
   async function vote(verdict) {
     if (!user) return toast.error('Oy vermek için giriş yapın.');
@@ -18,39 +25,60 @@ export default function VoteBar({ incidentId, initialEthical, initialUnethical, 
     try {
       if (myVote === verdict) {
         const data = await apiFetch('/votes/' + incidentId, { method: 'DELETE' });
-        setEthical(data.voteEthical); setUnethical(data.voteUnethical); setMyVote(null);
+        setVotes({ correct: data.voteCorrect, wrong: data.voteWrong, neutral: data.voteNeutral, insufficient: data.voteInsufficient });
+        setTrustScore(data.trustScore);
+        setMyVote(null);
       } else {
         const data = await apiFetch('/votes/' + incidentId, { method: 'POST', body: JSON.stringify({ verdict }) });
-        setEthical(data.voteEthical); setUnethical(data.voteUnethical); setMyVote(verdict);
+        setVotes({ correct: data.voteCorrect, wrong: data.voteWrong, neutral: data.voteNeutral, insufficient: data.voteInsufficient });
+        setTrustScore(data.trustScore);
+        setMyVote(verdict);
       }
     } catch (e) { toast.error(e.message); }
     finally { setLoading(false); }
   }
 
+  const total = votes.correct + votes.wrong + votes.neutral + votes.insufficient;
+
   return (
-    <div style={{ display: 'flex', gap: 10, marginTop: 8 }}>
-      <button onClick={() => vote('ethical')} disabled={loading} style={{
-        flex: 1, padding: '11px', borderRadius: 10, cursor: 'pointer', fontWeight: 600, fontSize: 14,
-        border: myVote === 'ethical' ? '2px solid #22c55e' : '1.5px solid #e5e7eb',
-        background: myVote === 'ethical' ? '#f0fdf4' : 'white',
-        color: myVote === 'ethical' ? '#16a34a' : '#374151',
-        display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8,
-        transition: 'all 0.15s',
-      }}>
-        <ThumbsUp size={18} strokeWidth={myVote === 'ethical' ? 2.5 : 2} />
-        {myVote === 'ethical' ? 'Güvenilir Oyladınız' : 'Etik'}
-      </button>
-      <button onClick={() => vote('unethical')} disabled={loading} style={{
-        flex: 1, padding: '11px', borderRadius: 10, cursor: 'pointer', fontWeight: 600, fontSize: 14,
-        border: myVote === 'unethical' ? '2px solid #ef4444' : '1.5px solid #e5e7eb',
-        background: myVote === 'unethical' ? '#fef2f2' : 'white',
-        color: myVote === 'unethical' ? '#dc2626' : '#374151',
-        display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8,
-        transition: 'all 0.15s',
-      }}>
-        <ThumbsDown size={18} strokeWidth={myVote === 'unethical' ? 2.5 : 2} />
-        {myVote === 'unethical' ? 'Güvenilmez Oyladınız' : 'Güvenilmez'}
-      </button>
+    <div>
+      {/* Güven Skoru */}
+      {total > 0 && (
+        <div style={{ padding: '12px 16px', background: '#f9fafb', borderRadius: 10, marginBottom: 12, textAlign: 'center' }}>
+          <div style={{ fontSize: 28, fontWeight: 800, color: trustScore >= 50 ? '#16a34a' : trustScore >= -10 ? '#d97706' : '#dc2626' }}>
+            {trustScore > 0 ? '+' : ''}{trustScore}
+          </div>
+          <div style={{ fontSize: 12, color: '#6b7280', marginTop: 2 }}>
+            Güven Skoru · {total} değerlendirme
+          </div>
+          <div style={{ fontSize: 13, fontWeight: 700, marginTop: 4, color: trustScore >= 50 ? '#16a34a' : trustScore >= -10 ? '#d97706' : '#dc2626' }}>
+            {trustScore >= 50 ? '🟢 Güvenilir' : trustScore >= -10 ? '🟡 Dikkatli Ol' : '🔴 Güvenilmez'}
+          </div>
+        </div>
+      )}
+
+      {/* Oy butonları */}
+      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 8 }}>
+        {VOTES.map(v => (
+          <button key={v.key} onClick={() => vote(v.key)} disabled={loading} style={{
+            display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8,
+            padding: '10px', borderRadius: 10, cursor: 'pointer', fontWeight: 600, fontSize: 13,
+            border: `1.5px solid ${myVote === v.key ? v.border : '#e5e7eb'}`,
+            background: myVote === v.key ? v.bg : 'white',
+            color: myVote === v.key ? v.color : '#374151',
+            transition: 'all 0.15s',
+          }}>
+            {v.icon} {v.label}
+            {votes[v.key] > 0 && <span style={{ fontSize: 11, color: '#9ca3af' }}>({votes[v.key]})</span>}
+          </button>
+        ))}
+      </div>
+
+      {myVote && (
+        <button onClick={() => vote(myVote)} style={{ marginTop: 8, width: '100%', background: 'none', border: 'none', color: '#9ca3af', fontSize: 12, cursor: 'pointer', textDecoration: 'underline' }}>
+          Oyumu geri al
+        </button>
+      )}
     </div>
   );
 }

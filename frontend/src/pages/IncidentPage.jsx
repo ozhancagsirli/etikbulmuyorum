@@ -183,7 +183,7 @@ export default function IncidentPage() {
         {/* Oy butonları */}
         <div style={{ padding: '16px 20px' }}>
           {votingActive ? (
-            <VoteBar incidentId={id} initialEthical={incident.vote_ethical} initialUnethical={incident.vote_unethical} initialMyVote={incident.my_vote} />
+            <VoteBar incidentId={id} initialVotes={{ correct: incident.vote_correct || 0, wrong: incident.vote_wrong || 0, neutral: incident.vote_neutral || 0, insufficient: incident.vote_insufficient || 0, trustScore: incident.trust_score || 0 }} initialMyVote={incident.my_vote} />
           ) : votingEnds ? (
             <div style={{ padding: '12px 16px', background: '#f9fafb', borderRadius: 10, textAlign: 'center', fontSize: 13, color: '#6b7280' }}>
               Oylama süresi doldu. {incident.verdict === 'ethical' ? '✅ Güvenilir bulundu.' : incident.verdict === 'unethical' ? '❌ Güvenilmez bulundu.' : ''}

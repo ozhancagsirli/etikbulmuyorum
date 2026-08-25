@@ -164,8 +164,8 @@ function IncidentCard({ incident: inc, onVote }) {
   const user = useAuthStore(s => s.user);
   const [voting, setVoting] = useState(false);
 
-  const total = inc.vote_ethical + inc.vote_unethical;
-  const ethPct = total ? Math.round((inc.vote_ethical / total) * 100) : null;
+  const total = (inc.vote_correct || 0) + (inc.vote_wrong || 0) + (inc.vote_neutral || 0) + (inc.vote_insufficient || 0);
+  const trustScore = inc.trust_score || 0;
   const hasVoted = inc.my_vote !== null && inc.my_vote !== undefined;
   const images = inc.images || [];
   const tags = inc.tags || [];
@@ -181,10 +181,10 @@ function IncidentCard({ incident: inc, onVote }) {
     try {
       if (inc.my_vote === verdict) {
         const data = await apiFetch('/votes/' + inc.id, { method: 'DELETE' });
-        onVote(inc.id, data.voteEthical, data.voteUnethical, null);
+        onVote(inc.id, data, null);
       } else {
         const data = await apiFetch('/votes/' + inc.id, { method: 'POST', body: JSON.stringify({ verdict }) });
-        onVote(inc.id, data.voteEthical, data.voteUnethical, verdict);
+        onVote(inc.id, data, verdict);
       }
     } catch (e) { toast.error(e.message); }
     finally { setVoting(false); }
