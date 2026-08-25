@@ -129,6 +129,18 @@ export default function ModerationPage() {
                 <div style={{ fontSize: 12, color: '#9ca3af', marginBottom: 10 }}>
                   👤 {inc.author_name || 'Anonim'} · {inc.vote_ethical + inc.vote_unethical} oy · 👁 {inc.view_count}
                 </div>
+                {(tab === 'approved' || tab === 'rejected') && (
+                  <button onClick={async () => {
+                    if (!window.confirm('Bu şikayeti silmek istediğinize emin misiniz?')) return;
+                    try {
+                      await apiFetch('/incidents/' + inc.id, { method: 'DELETE' });
+                      setIncidents(prev => prev.filter(i => i.id !== inc.id));
+                      toast.success('Şikayet silindi.');
+                    } catch (e) { toast.error(e.message); }
+                  }} style={{ display: 'flex', alignItems: 'center', gap: 5, padding: '7px 14px', borderRadius: 8, border: 'none', background: '#fef2f2', color: '#dc2626', fontWeight: 600, fontSize: 13, cursor: 'pointer' }}>
+                    <XCircle size={14} /> Sil
+                  </button>
+                )}
                 {tab === 'pending' && (
                   <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
                     <input

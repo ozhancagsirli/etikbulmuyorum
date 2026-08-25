@@ -1,8 +1,10 @@
+import toast from 'react-hot-toast';
 import { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { formatDistanceToNow } from 'date-fns';
 import { tr } from 'date-fns/locale';
 import { LogOut, Plus, CheckCircle, Clock, XCircle, Trash2, BarChart2 } from 'lucide-react';
+import { apiFetch } from '../lib/api';
 import { apiFetch } from '../lib/api';
 import { useAuthStore } from '../lib/authStore';
 
@@ -19,6 +21,15 @@ export default function ProfilePage() {
   const [incidents, setIncidents] = useState([]);
   const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState('all');
+
+  async function deleteIncident(id) {
+    if (!window.confirm('Bu şikayeti silmek istediğinize emin misiniz?')) return;
+    try {
+      await apiFetch('/incidents/' + id, { method: 'DELETE' });
+      setIncidents(prev => prev.filter(i => i.id !== id));
+      toast.success('Şikayet silindi.');
+    } catch (e) { toast.error(e.message); }
+  }
 
   useEffect(() => {
     if (!user) return;
@@ -143,9 +154,12 @@ export default function ProfilePage() {
                         : <div style={{ fontWeight: 600, fontSize: 15, marginBottom: 4 }}>{inc.title}</div>
                       }
                       {inc.reject_reason && <div style={{ fontSize: 12, color: '#dc2626', background: '#fef2f2', padding: '6px 10px', borderRadius: 6, marginTop: 4 }}>Red: {inc.reject_reason}</div>}
-                      <div style={{ display: 'flex', gap: 12, fontSize: 12, color: '#9ca3af', marginTop: 6 }}>
+                      <div style={{ display: 'flex', gap: 12, fontSize: 12, color: '#9ca3af', marginTop: 6, alignItems: 'center' }}>
                         <span>{total} oy</span>
-                        {ethPct !== null && <span style={{ color: ethPct >= 50 ? '#16a34a' : '#dc2626' }}>{ethPct}% Etik</span>}
+                        {ethPct !== null && <span style={{ color: ethPct >= 50 ? '#16a34a' : '#dc2626' }}>{ethPct}% Güvenilir</span>}
+                        <button onClick={() => deleteIncident(inc.id)} style={{ marginLeft: 'auto', display: 'flex', alignItems: 'center', gap: 4, background: 'none', border: 'none', color: '#dc2626', cursor: 'pointer', fontSize: 12, padding: '4px 8px', borderRadius: 6 }}>
+                          <Trash2 size={13} /> Sil
+                        </button>
                       </div>
                     </div>
                   </div>
