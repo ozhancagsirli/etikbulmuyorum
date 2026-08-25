@@ -1,8 +1,8 @@
 import { Helmet } from 'react-helmet-async';
 
 export default function SEO({ title, description, url, image }) {
-  const fullTitle = title ? `${title} — EtikBulmuyorum` : 'EtikBulmuyorum — Etik mi, değil mi? Sen karar ver.';
-  const fullDesc = description || 'Gerçek hayattan etik dışı davranışları paylaş, toplumun kararını gör.';
+  const fullTitle = title ? `${title} — EtikBulmuyorum` : 'EtikBulmuyorum — Güvenilir mi, değil mi? Toplum karar versin.';
+  const fullDesc = description || 'Güvenilmez kişi ve firmaları ifşa et, başkalarını koru.';
   const fullUrl = url ? `https://etikbulmuyorum.com${url}` : 'https://etikbulmuyorum.com';
   const fullImage = image || 'https://etikbulmuyorum.com/og-image.png';
 

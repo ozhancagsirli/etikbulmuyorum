@@ -245,7 +245,7 @@ function IncidentCard({ incident: inc, onVote }) {
               <span style={{ color: '#f85149', fontWeight: 700 }}>❌ {100-ethPct}%</span>
             </div>
             <div style={{ display: 'flex', gap: 8, alignItems: 'center', flexWrap: 'wrap' }}>
-              {hasVoted && <span style={{ fontSize: 12, color: '#888' }}>Oyunuz: <strong style={{ color: inc.my_vote === 'ethical' ? '#46d160' : '#f85149' }}>{inc.my_vote === 'ethical' ? 'Etik' : 'Etik Değil'}</strong> · {total} oy</span>}
+              {hasVoted && <span style={{ fontSize: 12, color: '#888' }}>Oyunuz: <strong style={{ color: inc.my_vote === 'ethical' ? '#46d160' : '#f85149' }}>{inc.my_vote === 'ethical' ? 'Güvenilir' : 'Güvenilmez'}</strong> · {total} oy</span>}
               {hasVoted && votingActive && <button onClick={() => vote(inc.my_vote)} style={{ fontSize: 11, color: '#bbb', background: 'none', border: 'none', cursor: 'pointer', textDecoration: 'underline' }}>geri al</button>}
               <Link to={'/olay/' + inc.id} style={{ fontSize: 12, color: '#aaa', marginLeft: 'auto' }}>💬 {inc.comment_count}</Link>
             </div>

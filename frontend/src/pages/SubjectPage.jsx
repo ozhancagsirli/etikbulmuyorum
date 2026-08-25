@@ -48,7 +48,7 @@ export default function SubjectPage() {
         <div style={{ background: 'white', borderRadius: 12, padding: 40, textAlign: 'center', border: '1px solid #e0e0e0' }}>
           <div style={{ fontSize: 40, marginBottom: 12 }}>🔍</div>
           <p style={{ color: '#888' }}>Bu konu hakkında henüz olay yok.</p>
-          <Link to="/bildir" style={{ color: '#FF4500', fontWeight: 600 }}>Olay Bildir →</Link>
+          <Link to="/bildir" style={{ color: '#FF4500', fontWeight: 600 }}>Şikayet Ekle →</Link>
         </div>
       ) : (
         <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
@@ -86,7 +86,7 @@ export default function SubjectPage() {
                 {ethPct !== null && (
                   <div style={{ fontSize: 12, display: 'flex', gap: 8 }}>
                     <span style={{ color: '#46d160', fontWeight: 600 }}>✅ {ethPct}% Etik</span>
-                    <span style={{ color: '#f85149', fontWeight: 600 }}>❌ {100-ethPct}% Etik Değil</span>
+                    <span style={{ color: '#f85149', fontWeight: 600 }}>❌ {100-ethPct}% Güvenilmez</span>
                     <span style={{ color: '#aaa' }}>· {total} oy</span>
                   </div>
                 )}

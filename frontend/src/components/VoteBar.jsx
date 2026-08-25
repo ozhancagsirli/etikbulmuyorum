@@ -49,7 +49,7 @@ export default function VoteBar({ incidentId, initialEthical, initialUnethical, 
         transition: 'all 0.15s',
       }}>
         <ThumbsDown size={18} strokeWidth={myVote === 'unethical' ? 2.5 : 2} />
-        {myVote === 'unethical' ? 'Güvenilmez Oyladınız' : 'Etik Değil'}
+        {myVote === 'unethical' ? 'Güvenilmez Oyladınız' : 'Güvenilmez'}
       </button>
     </div>
   );
