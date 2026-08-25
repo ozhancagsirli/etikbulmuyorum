@@ -69,7 +69,7 @@ export default function SubmitPage() {
   function nextStep() {
     if (step === 1) {
       if (!form.categoryId) return toast.error('Lütfen bir kategori seçin.');
-      if (form.title.length < 3) return toast.error('Kişi/Firma Adı ve Yaşananlar en az 3 karakter olmalı.');
+      if (form.title.length < 3) return toast.error('Şahıs/Firma Adı en az 3 karakter olmalı.');
     }
     if (step === 2) {
       if (form.description.length < 50) return toast.error('Ne Yaşandı? en az 50 karakter olmalı.');
@@ -135,7 +135,7 @@ export default function SubmitPage() {
 
       <div style={{ background: 'white', borderRadius: 12, border: '1px solid #e0e0e0', padding: '24px 28px' }}>
 
-        {/* ADIM 1 — Kategori + Kişi/Firma Adı ve Yaşananlar + Şirket/Kişi/Marka */}
+        {/* ADIM 1 — Kategori + Şahıs/Firma Adı + Şirket/Kişi/Marka */}
         {step === 1 && (
           <div style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
             <div>
@@ -161,13 +161,13 @@ export default function SubmitPage() {
 
             <div>
               <label style={{ display: 'block', fontWeight: 600, fontSize: 13, marginBottom: 8 }}>
-                Kişi/Firma Adı ve Yaşananlar <span style={{ color: '#FF4500' }}>*</span>
+                Şahıs/Firma Adı <span style={{ color: '#FF4500' }}>*</span>
               </label>
               <input
                 value={form.title}
                 onChange={set('title')}
                 maxLength={500}
-                placeholder="Kimin hakkında şikayet ediyorsunuz?"
+                placeholder="Şahıs veya firma adını girin..."
                 style={inp}
               />
               <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: 4 }}>
@@ -181,17 +181,17 @@ export default function SubmitPage() {
             {/* Şirket / Kişi / Marka — autocomplete */}
             <div ref={subjectRef} style={{ position: 'relative' }}>
               <label style={{ display: 'block', fontWeight: 600, fontSize: 13, marginBottom: 8 }}>
-                🏢 Şirket / Kişi / Marka <span style={{ color: '#888', fontWeight: 400 }}>(isteğe bağlı)</span>
+                🏢 Sektör / Meslek <span style={{ color: '#FF4500' }}>*</span>
               </label>
               <input
                 value={form.subject}
                 onChange={handleSubjectChange}
                 onFocus={() => form.subject.length >= 2 && setShowSuggestions(subjectSuggestions.length > 0)}
-                placeholder="ör. Migros, Turkcell, Ali Yılmaz..."
+                placeholder="ör. Usta, Avukat, Müteahhit, Emlakçı..."
                 style={inp}
               />
               <div style={{ fontSize: 11, color: '#aaa', marginTop: 4 }}>
-                Daha önce girilen isimler önerilecek, yeni isim de yazabilirsiniz.
+                Kişinin mesleğini veya faaliyet alanını girin.
               </div>
               {showSuggestions && (
                 <div style={{
