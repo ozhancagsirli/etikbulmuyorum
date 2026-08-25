@@ -198,7 +198,7 @@ function IncidentCard({ incident: inc, onVote }) {
           <Link to={'/olay/' + inc.id}>
             <span style={{ fontSize: 14, fontWeight: 600, color: '#1a7f37', lineHeight: 1.4, display: 'block' }}>{inc.title}</span>
           </Link>
-          <div style={{ fontSize: 11, color: '#86efac', marginTop: 2 }}>Güvenilir bulundu · {ethPct}% · {total} oy</div>
+          <div style={{ fontSize: 11, color: '#86efac', marginTop: 2 }}>Güvenilir bulundu · {total} oy</div>
         </div>
         {inc.category_icon && <span style={{ fontSize: 16, opacity: 0.5, flexShrink: 0 }}>{inc.category_icon}</span>}
       </div>
@@ -246,8 +246,7 @@ function IncidentCard({ incident: inc, onVote }) {
         {hasVoted || isUnethical ? (
           <div>
             <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 12, marginBottom: 4 }}>
-              <span style={{ color: '#46d160', fontWeight: 700 }}>✅ {ethPct}%</span>
-              <span style={{ color: '#f85149', fontWeight: 700 }}>❌ {100-ethPct}%</span>
+              <span style={{ color: trustScore >= 50 ? '#16a34a' : trustScore >= -10 ? '#d97706' : '#dc2626', fontWeight: 700 }}>Güven Skoru: {trustScore > 0 ? '+' : ''}{trustScore}</span>
             </div>
             <div style={{ display: 'flex', gap: 8, alignItems: 'center', flexWrap: 'wrap' }}>
               {hasVoted && <span style={{ fontSize: 12, color: '#888' }}>Oyunuz: <strong style={{ color: inc.my_vote === 'ethical' ? '#46d160' : '#f85149' }}>{inc.my_vote === 'ethical' ? 'Güvenilir' : 'Güvenilmez'}</strong> · {total} oy</span>}
