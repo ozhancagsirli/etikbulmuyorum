@@ -38,7 +38,7 @@ export default function VoteBar({ incidentId, initialEthical, initialUnethical, 
         transition: 'all 0.15s',
       }}>
         <ThumbsUp size={18} strokeWidth={myVote === 'ethical' ? 2.5 : 2} />
-        {myVote === 'ethical' ? 'Etik Oyladınız' : 'Etik'}
+        {myVote === 'ethical' ? 'Güvenilir Oyladınız' : 'Etik'}
       </button>
       <button onClick={() => vote('unethical')} disabled={loading} style={{
         flex: 1, padding: '11px', borderRadius: 10, cursor: 'pointer', fontWeight: 600, fontSize: 14,
@@ -49,7 +49,7 @@ export default function VoteBar({ incidentId, initialEthical, initialUnethical, 
         transition: 'all 0.15s',
       }}>
         <ThumbsDown size={18} strokeWidth={myVote === 'unethical' ? 2.5 : 2} />
-        {myVote === 'unethical' ? 'Etik Değil Oyladınız' : 'Etik Değil'}
+        {myVote === 'unethical' ? 'Güvenilmez Oyladınız' : 'Etik Değil'}
       </button>
     </div>
   );

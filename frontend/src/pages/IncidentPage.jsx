@@ -170,8 +170,8 @@ export default function IncidentPage() {
         {total > 0 && (
           <div style={{ padding: '14px 20px', background: '#f9fafb', borderTop: '1px solid #f3f4f6', borderBottom: '1px solid #f3f4f6', marginBottom: 0 }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 13, marginBottom: 8, fontWeight: 600 }}>
-              <span style={{ color: '#16a34a', display: 'flex', alignItems: 'center', gap: 5 }}>✅ Etik — {incident.vote_ethical} oy ({ethPct}%)</span>
-              <span style={{ color: '#dc2626', display: 'flex', alignItems: 'center', gap: 5 }}>❌ Etik Değil — {incident.vote_unethical} oy ({100 - ethPct}%)</span>
+              <span style={{ color: '#16a34a', display: 'flex', alignItems: 'center', gap: 5 }}>✅ Güvenilir — {incident.vote_ethical} oy ({ethPct}%)</span>
+              <span style={{ color: '#dc2626', display: 'flex', alignItems: 'center', gap: 5 }}>❌ Güvenilmez — {incident.vote_unethical} oy ({100 - ethPct}%)</span>
             </div>
             <div style={{ height: 8, background: '#fecaca', borderRadius: 4, overflow: 'hidden' }}>
               <div style={{ width: ethPct + '%', height: '100%', background: '#22c55e', borderRadius: 4, transition: 'width 0.6s' }} />
@@ -186,7 +186,7 @@ export default function IncidentPage() {
             <VoteBar incidentId={id} initialEthical={incident.vote_ethical} initialUnethical={incident.vote_unethical} initialMyVote={incident.my_vote} />
           ) : votingEnds ? (
             <div style={{ padding: '12px 16px', background: '#f9fafb', borderRadius: 10, textAlign: 'center', fontSize: 13, color: '#6b7280' }}>
-              Oylama süresi doldu. {incident.verdict === 'ethical' ? '✅ Etik bulundu.' : incident.verdict === 'unethical' ? '❌ Etik dışı bulundu.' : ''}
+              Oylama süresi doldu. {incident.verdict === 'ethical' ? '✅ Güvenilir bulundu.' : incident.verdict === 'unethical' ? '❌ Güvenilmez bulundu.' : ''}
             </div>
           ) : null}
         </div>

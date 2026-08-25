@@ -90,7 +90,7 @@ export default function HomePage() {
                       <span style={{ fontSize: 14, fontWeight: 800, color: '#ddd', minWidth: 18 }}>{idx + 1}</span>
                       <div style={{ flex: 1, minWidth: 0 }}>
                         <div style={{ fontSize: 12, fontWeight: 600, color: '#333', lineHeight: 1.4, marginBottom: 4, display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>{inc.title}</div>
-                        {ethPct !== null && <div style={{ fontSize: 11, color: ethPct >= 50 ? '#16a34a' : '#dc2626', fontWeight: 600 }}>{ethPct >= 50 ? '✅ ' + ethPct + '% Etik' : '❌ ' + (100 - ethPct) + '% Etik Değil'} · {total} oy</div>}
+                        {ethPct !== null && <div style={{ fontSize: 11, color: ethPct >= 50 ? '#16a34a' : '#dc2626', fontWeight: 600 }}>{ethPct >= 50 ? '✅ ' + ethPct + '% Güvenilir' : '❌ ' + (100 - ethPct) + '% Güvenilir Değil'} · {total} oy</div>}
                       </div>
                     </div>
                   </Link>
@@ -193,7 +193,7 @@ function IncidentCard({ incident: inc, onVote }) {
           <Link to={'/olay/' + inc.id}>
             <span style={{ fontSize: 14, fontWeight: 600, color: '#1a7f37', lineHeight: 1.4, display: 'block' }}>{inc.title}</span>
           </Link>
-          <div style={{ fontSize: 11, color: '#86efac', marginTop: 2 }}>Etik bulundu · {ethPct}% · {total} oy</div>
+          <div style={{ fontSize: 11, color: '#86efac', marginTop: 2 }}>Güvenilir bulundu · {ethPct}% · {total} oy</div>
         </div>
         {inc.category_icon && <span style={{ fontSize: 16, opacity: 0.5, flexShrink: 0 }}>{inc.category_icon}</span>}
       </div>
@@ -252,8 +252,8 @@ function IncidentCard({ incident: inc, onVote }) {
           </div>
         ) : votingActive ? (
           <div style={{ display: 'flex', gap: 8, alignItems: 'center', flexWrap: 'wrap' }}>
-            <button onClick={() => vote('ethical')} disabled={voting} style={{ flex: 1, padding: '8px', borderRadius: 20, border: '1.5px solid #46d160', background: 'white', color: '#1a7f37', fontWeight: 700, fontSize: 13, cursor: 'pointer' }}>✅ Etik</button>
-            <button onClick={() => vote('unethical')} disabled={voting} style={{ flex: 1, padding: '8px', borderRadius: 20, border: '1.5px solid #f85149', background: 'white', color: '#cf222e', fontWeight: 700, fontSize: 13, cursor: 'pointer' }}>❌ Etik Değil</button>
+            <button onClick={() => vote('ethical')} disabled={voting} style={{ flex: 1, padding: '8px', borderRadius: 20, border: '1.5px solid #46d160', background: 'white', color: '#1a7f37', fontWeight: 700, fontSize: 13, cursor: 'pointer' }}>✅ Güvenilir</button>
+            <button onClick={() => vote('unethical')} disabled={voting} style={{ flex: 1, padding: '8px', borderRadius: 20, border: '1.5px solid #f85149', background: 'white', color: '#cf222e', fontWeight: 700, fontSize: 13, cursor: 'pointer' }}>❌ Güvenilmez</button>
             <Link to={'/olay/' + inc.id} style={{ fontSize: 12, color: '#aaa' }}>💬 {inc.comment_count}</Link>
           </div>
         ) : (
