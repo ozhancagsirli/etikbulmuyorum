@@ -112,7 +112,7 @@ export default function SubmitPage() {
   return (
     <div style={{ maxWidth: 640, margin: '0 auto' }}>
       <div style={{ background: 'white', borderRadius: 12, border: '1px solid #e0e0e0', padding: '20px 24px', marginBottom: 12 }}>
-        <h1 style={{ fontSize: 20, fontWeight: 700, margin: 0 }}>🚨 Şikayet Ekle</h1>
+        <h1 style={{ fontSize: 20, fontWeight: 700, margin: 0 }}>🚨 Olay Ekle</h1>
         <p style={{ color: '#888', fontSize: 13, margin: '4px 0 0' }}>Deneyimini paylaş, başkalarını koru.</p>
       </div>
 
