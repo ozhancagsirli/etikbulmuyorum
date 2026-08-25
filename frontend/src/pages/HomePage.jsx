@@ -98,7 +98,7 @@ export default function HomePage() {
             <div style={{ fontWeight: 700, fontSize: 13, marginBottom: 4, color: '#111827' }}>Başkası zarar görmesin</div>
             <div style={{ fontSize: 12, color: '#6b7280', marginBottom: 12 }}>Yaşadığın olumsuz deneyimi paylaş</div>
             <Link to="/bildir" style={{ background: '#FF4500', color: 'white', padding: '8px 20px', borderRadius: 20, fontWeight: 700, fontSize: 13, display: 'inline-block' }}>
-              + Olay Ekle
+              + Olay Bildir
             </Link>
           </div>
         </div>
