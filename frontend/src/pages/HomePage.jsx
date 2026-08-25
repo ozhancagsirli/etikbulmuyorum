@@ -90,7 +90,7 @@ export default function HomePage() {
                       <span style={{ fontSize: 14, fontWeight: 800, color: '#ddd', minWidth: 18 }}>{idx + 1}</span>
                       <div style={{ flex: 1, minWidth: 0 }}>
                         <div style={{ fontSize: 12, fontWeight: 600, color: '#333', lineHeight: 1.4, marginBottom: 4, display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>{inc.title}</div>
-                        {ethPct !== null && <div style={{ fontSize: 11, color: '#46d160', fontWeight: 600 }}>{ethPct}% Etik · {total} oy</div>}
+                        {ethPct !== null && <div style={{ fontSize: 11, color: ethPct >= 50 ? '#16a34a' : '#dc2626', fontWeight: 600 }}>{ethPct >= 50 ? '✅ ' + ethPct + '% Etik' : '❌ ' + (100 - ethPct) + '% Etik Değil'} · {total} oy</div>}
                       </div>
                     </div>
                   </Link>
