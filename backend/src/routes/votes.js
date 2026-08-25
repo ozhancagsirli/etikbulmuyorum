@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { body, param, validationResult } from 'express-validator';
+import { param, body, validationResult } from 'express-validator';
 import pool from '../db/pool.js';
 import { authenticate } from '../middleware/auth.js';
 
@@ -10,39 +10,73 @@ const validate = (req, res, next) => {
   next();
 };
 
+function calcTrustScore(correct, wrong, neutral, insufficient) {
+  const total = correct + wrong + neutral + insufficient;
+  if (total === 0) return 0;
+  const score = (correct * 2) + (neutral * 0) + (wrong * -2) + (insufficient * -1);
+  return Math.round((score / (total * 2)) * 100);
+}
+
+// POST /api/votes/:incidentId
 router.post('/:incidentId', authenticate, [
   param('incidentId').isUUID(),
-  body('verdict').isIn(['ethical', 'unethical']),
+  body('verdict').isIn(['correct', 'wrong', 'neutral', 'insufficient']),
 ], validate, async (req, res, next) => {
-  const client = await pool.connect();
   try {
-    await client.query('BEGIN');
-    const { rows: inc } = await client.query(
-      "SELECT id, author_id FROM incidents WHERE id = $1 AND status = 'approved'",
-      [req.params.incidentId]
-    );
-    if (!inc.length) { await client.query('ROLLBACK'); return res.status(404).json({ error: 'Olay bulunamadı.' }); }
+    const { incidentId } = req.params;
+    const { verdict } = req.body;
 
-    await client.query(
-      `INSERT INTO votes (incident_id, user_id, verdict) VALUES ($1, $2, $3)
-       ON CONFLICT (incident_id, user_id) DO UPDATE SET verdict = EXCLUDED.verdict`,
-      [req.params.incidentId, req.user.id, req.body.verdict]
+    const { rows: inc } = await pool.query(
+      "SELECT id FROM incidents WHERE id = $1 AND status = 'approved'",
+      [incidentId]
     );
-    const { rows } = await client.query(
-      'SELECT vote_ethical, vote_unethical FROM incidents WHERE id = $1',
-      [req.params.incidentId]
+    if (!inc.length) return res.status(404).json({ error: 'Olay bulunamadı.' });
+
+    const { rows: existing } = await pool.query(
+      'SELECT verdict FROM votes WHERE incident_id = $1 AND user_id = $2',
+      [incidentId, req.user.id]
     );
-    await client.query('COMMIT');
-    res.json({ verdict: req.body.verdict, voteEthical: rows[0].vote_ethical, voteUnethical: rows[0].vote_unethical });
-  } catch (err) { await client.query('ROLLBACK'); next(err); }
-  finally { client.release(); }
+
+    if (existing.length) {
+      const old = existing[0].verdict;
+      const oldCol = old === 'correct' ? 'vote_correct' : old === 'wrong' ? 'vote_wrong' : old === 'neutral' ? 'vote_neutral' : 'vote_insufficient';
+      const newCol = verdict === 'correct' ? 'vote_correct' : verdict === 'wrong' ? 'vote_wrong' : verdict === 'neutral' ? 'vote_neutral' : 'vote_insufficient';
+      await pool.query(`UPDATE incidents SET ${oldCol} = GREATEST(0, ${oldCol} - 1), ${newCol} = ${newCol} + 1 WHERE id = $1`, [incidentId]);
+      await pool.query('UPDATE votes SET verdict = $1 WHERE incident_id = $2 AND user_id = $3', [verdict, incidentId, req.user.id]);
+    } else {
+      const col = verdict === 'correct' ? 'vote_correct' : verdict === 'wrong' ? 'vote_wrong' : verdict === 'neutral' ? 'vote_neutral' : 'vote_insufficient';
+      await pool.query(`UPDATE incidents SET ${col} = ${col} + 1 WHERE id = $1`, [incidentId]);
+      await pool.query('INSERT INTO votes (incident_id, user_id, verdict) VALUES ($1, $2, $3)', [incidentId, req.user.id, verdict]);
+    }
+
+    const { rows } = await pool.query(
+      'SELECT vote_correct, vote_wrong, vote_neutral, vote_insufficient FROM incidents WHERE id = $1',
+      [incidentId]
+    );
+    const { vote_correct, vote_wrong, vote_neutral, vote_insufficient } = rows[0];
+    const trustScore = calcTrustScore(vote_correct, vote_wrong, vote_neutral, vote_insufficient);
+    await pool.query('UPDATE incidents SET trust_score = $1 WHERE id = $2', [trustScore, incidentId]);
+
+    res.json({ voteCorrect: vote_correct, voteWrong: vote_wrong, voteNeutral: vote_neutral, voteInsufficient: vote_insufficient, trustScore, myVote: verdict });
+  } catch (err) { next(err); }
 });
 
+// DELETE /api/votes/:incidentId
 router.delete('/:incidentId', authenticate, [param('incidentId').isUUID()], validate, async (req, res, next) => {
   try {
+    const { rows } = await pool.query('SELECT verdict FROM votes WHERE incident_id = $1 AND user_id = $2', [req.params.incidentId, req.user.id]);
+    if (!rows.length) return res.status(404).json({ error: 'Oy bulunamadı.' });
+
+    const col = rows[0].verdict === 'correct' ? 'vote_correct' : rows[0].verdict === 'wrong' ? 'vote_wrong' : rows[0].verdict === 'neutral' ? 'vote_neutral' : 'vote_insufficient';
+    await pool.query(`UPDATE incidents SET ${col} = GREATEST(0, ${col} - 1) WHERE id = $1`, [req.params.incidentId]);
     await pool.query('DELETE FROM votes WHERE incident_id = $1 AND user_id = $2', [req.params.incidentId, req.user.id]);
-    const { rows } = await pool.query('SELECT vote_ethical, vote_unethical FROM incidents WHERE id = $1', [req.params.incidentId]);
-    res.json({ verdict: null, voteEthical: rows[0]?.vote_ethical ?? 0, voteUnethical: rows[0]?.vote_unethical ?? 0 });
+
+    const { rows: inc } = await pool.query('SELECT vote_correct, vote_wrong, vote_neutral, vote_insufficient FROM incidents WHERE id = $1', [req.params.incidentId]);
+    const { vote_correct, vote_wrong, vote_neutral, vote_insufficient } = inc[0];
+    const trustScore = calcTrustScore(vote_correct, vote_wrong, vote_neutral, vote_insufficient);
+    await pool.query('UPDATE incidents SET trust_score = $1 WHERE id = $2', [trustScore, req.params.incidentId]);
+
+    res.json({ voteCorrect: vote_correct, voteWrong: vote_wrong, voteNeutral: vote_neutral, voteInsufficient: vote_insufficient, trustScore, myVote: null });
   } catch (err) { next(err); }
 });
 
