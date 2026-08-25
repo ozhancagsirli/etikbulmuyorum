@@ -48,7 +48,7 @@ export default function Navbar() {
             </div>
             <div style={{ lineHeight: 1.1 }}>
               <div style={{ fontWeight: 800, fontSize: 14, letterSpacing: -0.5, color: '#111827' }}>etikbulmuyorum</div>
-              <div style={{ fontSize: 9, color: '#9ca3af', fontWeight: 500 }}>Etik mi, değil mi?</div>
+              <div style={{ fontSize: 9, color: '#9ca3af', fontWeight: 500 }}>Güvenilir mi, değil mi?</div>
             </div>
           </Link>
 
@@ -93,7 +93,7 @@ export default function Navbar() {
                         <div><div style={{ fontWeight: 600, fontSize: 13 }}>{user.name?.split(' ')[0]}</div><div style={{ fontSize: 11, color: '#9ca3af' }}>Profil</div></div>
                       </Link>
                       <Link to="/bildir" style={{ display: 'flex', alignItems: 'center', gap: 8, padding: '10px 16px', color: '#374151', fontSize: 13, borderBottom: '1px solid #f3f4f6' }}>
-                        <Plus size={15} color="#6b7280" /> Olay Bildir
+                        <Plus size={15} color="#6b7280" /> Şikayet Ekle
                       </Link>
                       {(user.role === 'moderator' || user.role === 'admin') && (
                         <Link to="/moderasyon" style={{ display: 'flex', alignItems: 'center', gap: 8, padding: '10px 16px', color: '#374151', fontSize: 13, borderBottom: '1px solid #f3f4f6' }}>

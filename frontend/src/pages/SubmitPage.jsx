@@ -69,10 +69,10 @@ export default function SubmitPage() {
   function nextStep() {
     if (step === 1) {
       if (!form.categoryId) return toast.error('Lütfen bir kategori seçin.');
-      if (form.title.length < 3) return toast.error('Başlık en az 3 karakter olmalı.');
+      if (form.title.length < 3) return toast.error('Kişi/Firma Adı ve Yaşananlar en az 3 karakter olmalı.');
     }
     if (step === 2) {
-      if (form.description.length < 50) return toast.error('Açıklama en az 50 karakter olmalı.');
+      if (form.description.length < 50) return toast.error('Ne Yaşandı? en az 50 karakter olmalı.');
     }
     setStep(s => s + 1);
   }
@@ -112,8 +112,8 @@ export default function SubmitPage() {
   return (
     <div style={{ maxWidth: 640, margin: '0 auto' }}>
       <div style={{ background: 'white', borderRadius: 12, border: '1px solid #e0e0e0', padding: '20px 24px', marginBottom: 12 }}>
-        <h1 style={{ fontSize: 20, fontWeight: 700, margin: 0 }}>📢 Olay Bildir</h1>
-        <p style={{ color: '#888', fontSize: 13, margin: '4px 0 0' }}>Moderatörlerimiz inceleyip yayınlayacak.</p>
+        <h1 style={{ fontSize: 20, fontWeight: 700, margin: 0 }}>🚨 Şikayet Ekle</h1>
+        <p style={{ color: '#888', fontSize: 13, margin: '4px 0 0' }}>Deneyimini paylaş, başkalarını koru.</p>
       </div>
 
       {/* Adım göstergesi */}
@@ -135,7 +135,7 @@ export default function SubmitPage() {
 
       <div style={{ background: 'white', borderRadius: 12, border: '1px solid #e0e0e0', padding: '24px 28px' }}>
 
-        {/* ADIM 1 — Kategori + Başlık + Şirket/Kişi/Marka */}
+        {/* ADIM 1 — Kategori + Kişi/Firma Adı ve Yaşananlar + Şirket/Kişi/Marka */}
         {step === 1 && (
           <div style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
             <div>
@@ -161,13 +161,13 @@ export default function SubmitPage() {
 
             <div>
               <label style={{ display: 'block', fontWeight: 600, fontSize: 13, marginBottom: 8 }}>
-                Başlık <span style={{ color: '#FF4500' }}>*</span>
+                Kişi/Firma Adı ve Yaşananlar <span style={{ color: '#FF4500' }}>*</span>
               </label>
               <input
                 value={form.title}
                 onChange={set('title')}
                 maxLength={500}
-                placeholder="Olayı özetleyen başlık..."
+                placeholder="Kimin hakkında şikayet ediyorsunuz?"
                 style={inp}
               />
               <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: 4 }}>
@@ -223,7 +223,7 @@ export default function SubmitPage() {
           </div>
         )}
 
-        {/* ADIM 2 — Açıklama + Etiket + Fotoğraf */}
+        {/* ADIM 2 — Ne Yaşandı? + Etiket + Fotoğraf */}
         {step === 2 && (
           <div style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
             {selectedCategory && (
@@ -237,10 +237,10 @@ export default function SubmitPage() {
 
             <div>
               <label style={{ display: 'block', fontWeight: 600, fontSize: 13, marginBottom: 8 }}>
-                Açıklama <span style={{ color: '#FF4500' }}>*</span>
+                Ne Yaşandı? <span style={{ color: '#FF4500' }}>*</span>
               </label>
               <textarea value={form.description} onChange={set('description')} rows={7} maxLength={5000}
-                placeholder="Ne oldu? Kim ne yaptı? Nerede, ne zaman oldu? Ayrıntılı anlatın..."
+                placeholder="Ne söz verdi, ne yaptı? Kanıt var mı? Ayrıntılı anlatın..."
                 style={{ ...inp, resize: 'vertical', lineHeight: 1.7 }} />
               <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: 4 }}>
                 {form.description.length > 0 && form.description.length < 50 && (

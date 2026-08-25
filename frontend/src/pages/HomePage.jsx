@@ -101,10 +101,10 @@ export default function HomePage() {
 
           <div style={{ background: 'white', borderRadius: 12, border: '1px solid #e0e0e0', padding: '16px', textAlign: 'center' }}>
             <div style={{ fontSize: 24, marginBottom: 6 }}>⚖️</div>
-            <div style={{ fontWeight: 700, fontSize: 13, marginBottom: 4, color: '#111827' }}>Tanık olduğun bir olayı paylaş</div>
-            <div style={{ fontSize: 12, color: '#6b7280', marginBottom: 12 }}>Toplum karar versin</div>
+            <div style={{ fontWeight: 700, fontSize: 13, marginBottom: 4, color: '#111827' }}>Güvenilmez biriyle mi karşılaştın?</div>
+            <div style={{ fontSize: 12, color: '#6b7280', marginBottom: 12 }}>Toplumu uyar, başkalarını koru</div>
             <Link to="/bildir" style={{ background: '#FF4500', color: 'white', padding: '8px 20px', borderRadius: 20, fontWeight: 700, fontSize: 13, display: 'inline-block', boxShadow: '0 2px 8px rgba(255,69,0,0.25)' }}>
-              + Olay Bildir
+              + Şikayet Ekle
             </Link>
           </div>
         </div>
