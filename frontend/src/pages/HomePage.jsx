@@ -45,8 +45,8 @@ export default function HomePage() {
 
   return (
     <div>
-      {/* Mobil kategori filtresi */}
-      <div style={{ display: 'flex', gap: 8, overflowX: 'auto', paddingBottom: 8, marginBottom: 12, WebkitOverflowScrolling: 'touch', scrollbarWidth: 'none' }}>
+      {/* Mobil kategori filtresi - sadece mobilde */}
+      <div id="mobile-cats" style={{ display: 'flex', gap: 8, overflowX: 'auto', paddingBottom: 8, marginBottom: 12, WebkitOverflowScrolling: 'touch', scrollbarWidth: 'none' }}>
         <button onClick={() => { setCategory(''); setPage(1); }} style={{
           flexShrink: 0, padding: '6px 14px', borderRadius: 20, border: '1.5px solid',
           borderColor: !category ? '#FF4500' : '#e0e0e0',
