@@ -1,10 +1,8 @@
 import { useState, useEffect } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
-import { formatDistanceToNow, formatDistance } from 'date-fns';
+import { formatDistanceToNow } from 'date-fns';
 import { tr } from 'date-fns/locale';
 import { apiFetch } from '../lib/api';
-import { useAuthStore } from '../lib/authStore';
-import toast from 'react-hot-toast';
 
 export default function HomePage() {
   const [searchParams] = useSearchParams();
@@ -15,12 +13,11 @@ export default function HomePage() {
   const [pages,       setPages]       = useState(1);
   const [loading,     setLoading]     = useState(true);
   const [category,    setCategory]    = useState('');
-  const [showSidebar, setShowSidebar] = useState(false);
   const search = searchParams.get('search') || '';
 
   useEffect(() => {
     apiFetch('/categories').then(setCategories).catch(() => {});
-    apiFetch('/incidents?sort=most_voted&limit=5').then(d => setTopVoted(d.data || [])).catch(() => {});
+    apiFetch('/incidents?sort=most_voted&limit=10').then(d => setTopVoted(d.data || [])).catch(() => {});
   }, []);
 
   useEffect(() => {
@@ -35,37 +32,24 @@ export default function HomePage() {
     }).catch(() => setLoading(false));
   }, [page, category, search]);
 
-  function updateVote(id, voteEthical, voteUnethical, myVote) {
-    setIncidents(prev => prev.map(inc =>
-      inc.id === id ? { ...inc, vote_ethical: voteEthical, vote_unethical: voteUnethical, my_vote: myVote } : inc
-    ));
-  }
-
   const selectedCat = categories.find(c => c.slug === category);
 
   return (
     <div>
-      {/* Mobil kategori filtresi - sadece mobilde */}
+      {/* Mobil kategori filtresi */}
       <div id="mobile-cats" style={{ display: 'flex', gap: 8, overflowX: 'auto', paddingBottom: 8, marginBottom: 12, WebkitOverflowScrolling: 'touch', scrollbarWidth: 'none' }}>
-        <button onClick={() => { setCategory(''); setPage(1); }} style={{
-          flexShrink: 0, padding: '6px 14px', borderRadius: 20, border: '1.5px solid',
-          borderColor: !category ? '#FF4500' : '#e0e0e0',
-          background: !category ? '#FF4500' : 'white',
-          color: !category ? 'white' : '#555', fontSize: 13, fontWeight: !category ? 600 : 400, cursor: 'pointer',
-        }}>🌐 Tümü</button>
+        <button onClick={() => { setCategory(''); setPage(1); }} style={{ flexShrink: 0, padding: '6px 14px', borderRadius: 20, border: '1.5px solid', borderColor: !category ? '#FF4500' : '#e0e0e0', background: !category ? '#FF4500' : 'white', color: !category ? 'white' : '#555', fontSize: 13, fontWeight: !category ? 600 : 400, cursor: 'pointer' }}>🌐 Tümü</button>
         {categories.map(c => (
-          <button key={c.slug} onClick={() => { setCategory(c.slug); setPage(1); }} style={{
-            flexShrink: 0, padding: '6px 14px', borderRadius: 20, border: '1.5px solid',
-            borderColor: category === c.slug ? '#FF4500' : '#e0e0e0',
-            background: category === c.slug ? '#FF4500' : 'white',
-            color: category === c.slug ? 'white' : '#555', fontSize: 13, fontWeight: category === c.slug ? 600 : 400, cursor: 'pointer',
-          }}>{c.icon} {c.name_tr}</button>
+          <button key={c.slug} onClick={() => { setCategory(c.slug); setPage(1); }} style={{ flexShrink: 0, padding: '6px 14px', borderRadius: 20, border: '1.5px solid', borderColor: category === c.slug ? '#FF4500' : '#e0e0e0', background: category === c.slug ? '#FF4500' : 'white', color: category === c.slug ? 'white' : '#555', fontSize: 13, fontWeight: category === c.slug ? 600 : 400, cursor: 'pointer' }}>{c.icon} {c.name_tr}</button>
         ))}
       </div>
 
       <div style={{ display: 'flex', gap: 16, alignItems: 'flex-start' }}>
-        {/* Sol sidebar — sadece desktop */}
+
+        {/* Sol sidebar */}
         <div style={{ width: 220, flexShrink: 0, display: 'none', flexDirection: 'column', gap: 12, position: 'sticky', top: 68 }} className="sidebar">
+
+          {/* Kategoriler */}
           <div style={{ background: 'white', borderRadius: 12, border: '1px solid #e0e0e0', overflow: 'hidden' }}>
             <div style={{ padding: '12px 16px', borderBottom: '1px solid #f0f0f0', fontWeight: 700, fontSize: 14 }}>🗂 Kategoriler</div>
             <button onClick={() => { setCategory(''); setPage(1); }} style={{ display: 'flex', alignItems: 'center', gap: 10, width: '100%', padding: '10px 16px', border: 'none', background: !category ? '#fff5f0' : 'white', cursor: 'pointer', fontSize: 13, textAlign: 'left', borderLeft: !category ? '3px solid #FF4500' : '3px solid transparent', color: !category ? '#FF4500' : '#333', fontWeight: !category ? 600 : 400 }}>
@@ -78,19 +62,28 @@ export default function HomePage() {
             ))}
           </div>
 
+          {/* En çok değerlendirilen kişiler */}
           {topVoted.length > 0 && (
             <div style={{ background: 'white', borderRadius: 12, border: '1px solid #e0e0e0', overflow: 'hidden' }}>
-              <div style={{ padding: '12px 16px', borderBottom: '1px solid #f0f0f0', fontWeight: 700, fontSize: 14 }}>🔥 En Çok Oylanan</div>
+              <div style={{ padding: '12px 16px', borderBottom: '1px solid #f0f0f0', fontWeight: 700, fontSize: 14 }}>🔍 Çok Değerlendirilen</div>
               {topVoted.map((inc, idx) => {
-                const total = inc.vote_ethical + inc.vote_unethical;
-                const ethPct = total ? Math.round((inc.vote_ethical / total) * 100) : null;
+                const total = (inc.vote_correct || 0) + (inc.vote_wrong || 0) + (inc.vote_neutral || 0) + (inc.vote_insufficient || 0);
+                const ts = inc.trust_score || 0;
                 return (
-                  <Link key={inc.id} to={'/olay/' + inc.id} style={{ display: 'block', padding: '10px 14px', borderTop: idx > 0 ? '1px solid #f8f8f8' : 'none', color: 'inherit' }}>
+                  <Link key={inc.id} to={inc.subject ? '/konu/' + encodeURIComponent(inc.subject) : '/olay/' + inc.id} style={{ display: 'block', padding: '10px 14px', borderTop: idx > 0 ? '1px solid #f8f8f8' : 'none', color: 'inherit' }}>
                     <div style={{ display: 'flex', gap: 8, alignItems: 'flex-start' }}>
-                      <span style={{ fontSize: 14, fontWeight: 800, color: '#ddd', minWidth: 18 }}>{idx + 1}</span>
+                      <span style={{ fontSize: 14, fontWeight: 800, color: '#ddd', minWidth: 20 }}>{idx + 1}</span>
                       <div style={{ flex: 1, minWidth: 0 }}>
-                        <div style={{ fontSize: 12, fontWeight: 600, color: '#333', lineHeight: 1.4, marginBottom: 4, display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>{inc.title}</div>
-                        {ethPct !== null && <div style={{ fontSize: 11, color: ethPct >= 50 ? '#16a34a' : '#dc2626', fontWeight: 600 }}>{ethPct >= 50 ? '✅ ' + ethPct + '% Güvenilir' : '❌ ' + (100 - ethPct) + '% Güvenilir Değil'} · {total} oy</div>}
+                        <div style={{ fontSize: 12, fontWeight: 700, color: '#333', marginBottom: 2 }}>{inc.subject || inc.title}</div>
+                        {inc.subject && <div style={{ fontSize: 11, color: '#aaa', marginBottom: 2 }}>{inc.category_name}</div>}
+                        {total > 0 && (
+                          <div style={{ display: 'flex', alignItems: 'center', gap: 4, fontSize: 11 }}>
+                            <span style={{ fontWeight: 700, color: ts >= 50 ? '#16a34a' : ts >= -10 ? '#d97706' : '#dc2626' }}>
+                              {ts >= 50 ? '🟢' : ts >= -10 ? '🟡' : '🔴'} {ts > 0 ? '+' : ''}{ts}
+                            </span>
+                            <span style={{ color: '#bbb' }}>· {total} değerlendirme</span>
+                          </div>
+                        )}
                       </div>
                     </div>
                   </Link>
@@ -99,12 +92,13 @@ export default function HomePage() {
             </div>
           )}
 
+          {/* CTA */}
           <div style={{ background: 'white', borderRadius: 12, border: '1px solid #e0e0e0', padding: '16px', textAlign: 'center' }}>
-            <div style={{ fontSize: 24, marginBottom: 6 }}>⚖️</div>
-            <div style={{ fontWeight: 700, fontSize: 13, marginBottom: 4, color: '#111827' }}>Güvenilmez biriyle mi karşılaştın?</div>
-            <div style={{ fontSize: 12, color: '#6b7280', marginBottom: 12 }}>Toplumu uyar, başkalarını koru</div>
-            <Link to="/bildir" style={{ background: '#FF4500', color: 'white', padding: '8px 20px', borderRadius: 20, fontWeight: 700, fontSize: 13, display: 'inline-block', boxShadow: '0 2px 8px rgba(255,69,0,0.25)' }}>
-              + Şikayet Ekle
+            <div style={{ fontSize: 24, marginBottom: 8 }}>⚠️</div>
+            <div style={{ fontWeight: 700, fontSize: 13, marginBottom: 4, color: '#111827' }}>Başkası zarar görmesin</div>
+            <div style={{ fontSize: 12, color: '#6b7280', marginBottom: 12 }}>Yaşadığın olumsuz deneyimi paylaş</div>
+            <Link to="/bildir" style={{ background: '#FF4500', color: 'white', padding: '8px 20px', borderRadius: 20, fontWeight: 700, fontSize: 13, display: 'inline-block' }}>
+              + Olay Ekle
             </Link>
           </div>
         </div>
@@ -126,11 +120,11 @@ export default function HomePage() {
             <div style={{ background: 'white', borderRadius: 12, padding: 40, textAlign: 'center', border: '1px solid #e0e0e0' }}>
               <div style={{ fontSize: 40, marginBottom: 12 }}>🔍</div>
               <div style={{ fontSize: 15, fontWeight: 600, marginBottom: 8 }}>Sonuç bulunamadı</div>
-              <Link to="/bildir" style={{ color: '#FF4500', fontWeight: 600 }}>İlk olayı sen bildir →</Link>
+              <Link to="/bildir" style={{ color: '#FF4500', fontWeight: 600 }}>İlk olayı sen ekle →</Link>
             </div>
           ) : (
             <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
-              {incidents.map(inc => <IncidentCard key={inc.id} incident={inc} onVote={updateVote} />)}
+              {incidents.map(inc => <IncidentCard key={inc.id} incident={inc} />)}
             </div>
           )}
 
@@ -160,112 +154,90 @@ export default function HomePage() {
   );
 }
 
-function IncidentCard({ incident: inc, onVote }) {
-  const user = useAuthStore(s => s.user);
-  const [voting, setVoting] = useState(false);
-
+function IncidentCard({ incident: inc }) {
   const total = (inc.vote_correct || 0) + (inc.vote_wrong || 0) + (inc.vote_neutral || 0) + (inc.vote_insufficient || 0);
-  const trustScore = inc.trust_score || 0;
-  const hasVoted = inc.my_vote !== null && inc.my_vote !== undefined;
+  const ts = inc.trust_score || 0;
   const images = inc.images || [];
   const tags = inc.tags || [];
-  const isEthical = inc.verdict === 'ethical';
-  const isUnethical = inc.verdict === 'unethical';
-  const votingEnds = inc.voting_ends_at ? new Date(inc.voting_ends_at) : null;
-  const votingActive = votingEnds && votingEnds > new Date();
+  const isVerified = inc.verdict === 'ethical';
+  const isDangerous = inc.verdict === 'unethical';
 
-  async function vote(verdict) {
-    if (!user) return toast.error('Oy vermek için giriş yapın.');
-    if (voting) return;
-    setVoting(true);
-    try {
-      if (inc.my_vote === verdict) {
-        const data = await apiFetch('/votes/' + inc.id, { method: 'DELETE' });
-        onVote(inc.id, data, null);
-      } else {
-        const data = await apiFetch('/votes/' + inc.id, { method: 'POST', body: JSON.stringify({ verdict }) });
-        onVote(inc.id, data, verdict);
-      }
-    } catch (e) { toast.error(e.message); }
-    finally { setVoting(false); }
-  }
-
-  if (isEthical) {
+  if (isVerified) {
     return (
-      <div style={{ background: '#f0fdf4', borderRadius: 12, border: '1.5px solid #46d160', padding: '12px 16px', display: 'flex', alignItems: 'center', gap: 10 }}>
-        <span style={{ fontSize: 18, flexShrink: 0 }}>✅</span>
+      <div style={{ background: '#f0fdf4', borderRadius: 12, border: '1.5px solid #22c55e', padding: '12px 16px', display: 'flex', alignItems: 'center', gap: 12 }}>
+        <span style={{ fontSize: 18, flexShrink: 0 }}>🟢</span>
         <div style={{ flex: 1, minWidth: 0 }}>
           <Link to={'/olay/' + inc.id}>
-            <span style={{ fontSize: 14, fontWeight: 600, color: '#1a7f37', lineHeight: 1.4, display: 'block' }}>{inc.title}</span>
+            <span style={{ fontSize: 14, fontWeight: 600, color: '#15803d', lineHeight: 1.4, display: 'block' }}>{inc.title}</span>
           </Link>
-          <div style={{ fontSize: 11, color: '#86efac', marginTop: 2 }}>Güvenilir bulundu · {total} oy</div>
+          <div style={{ fontSize: 11, color: '#86efac', marginTop: 2 }}>Güvenilir bulundu · {total} değerlendirme</div>
         </div>
-        {inc.category_icon && <span style={{ fontSize: 16, opacity: 0.5, flexShrink: 0 }}>{inc.category_icon}</span>}
       </div>
     );
   }
 
   return (
-    <div style={{ background: 'white', borderRadius: 12, border: isUnethical ? '1.5px solid #f85149' : '1px solid #e0e0e0', overflow: 'hidden' }}>
+    <div style={{ background: 'white', borderRadius: 12, border: isDangerous ? '1.5px solid #ef4444' : '1px solid #e0e0e0', overflow: 'hidden' }}>
+
+      {images.length > 0 && (
+        <Link to={'/olay/' + inc.id}>
+          <img src={images[0]} alt="" style={{ width: '100%', height: 180, objectFit: 'cover', display: 'block' }} />
+        </Link>
+      )}
+
       <div style={{ padding: '12px 14px' }}>
+        {/* Üst meta */}
         <div style={{ display: 'flex', gap: 6, marginBottom: 8, flexWrap: 'wrap', alignItems: 'center' }}>
-          {isUnethical && <span style={{ fontSize: 11, background: '#ffeef0', color: '#cf222e', padding: '2px 8px', borderRadius: 20, fontWeight: 700 }}>❌ Etik Dışı</span>}
+          {isDangerous && <span style={{ fontSize: 11, background: '#fef2f2', color: '#dc2626', padding: '2px 8px', borderRadius: 20, fontWeight: 700 }}>🔴 Güvenilmez</span>}
           {inc.category_name && <span style={{ fontSize: 11, background: '#fff5f0', color: '#FF4500', padding: '2px 8px', borderRadius: 20, fontWeight: 600 }}>{inc.category_icon} {inc.category_name}</span>}
           {inc.location && <span style={{ fontSize: 11, color: '#aaa' }}>📍 {inc.location}</span>}
           <span style={{ fontSize: 11, color: '#aaa', marginLeft: 'auto' }}>{formatDistanceToNow(new Date(inc.created_at), { locale: tr, addSuffix: true })}</span>
         </div>
 
-        <Link to={'/olay/' + inc.id}>
-          <h2 style={{ fontSize: 15, fontWeight: 700, marginBottom: 6, color: '#1c1c1c', lineHeight: 1.4 }}>{inc.title}</h2>
-        </Link>
-
-        <p style={{ fontSize: 13, color: '#666', marginBottom: 8, lineHeight: 1.55, display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>
-          {inc.description}
-        </p>
-
-        {images.length > 0 && (
-          <Link to={'/olay/' + inc.id}>
-            <img src={images[0]} alt="" style={{ width: '100%', height: 180, objectFit: 'cover', display: 'block', borderRadius: 8, marginBottom: 10 }} />
+        {/* Kişi/Firma adı — tıklanabilir */}
+        {inc.subject && (
+          <Link to={'/konu/' + encodeURIComponent(inc.subject)}>
+            <div style={{ fontSize: 17, fontWeight: 800, color: '#111827', marginBottom: 4, lineHeight: 1.3 }}>{inc.subject}</div>
           </Link>
         )}
 
-        {(inc.subject || tags.length > 0) && (
-          <div style={{ display: 'flex', gap: 5, flexWrap: 'wrap', marginBottom: 10 }}>
-          {inc.subject && <Link to={'/konu/' + encodeURIComponent(inc.subject)} style={{ fontSize: 11, background: '#f0f0f0', color: '#555', padding: '2px 8px', borderRadius: 20, fontWeight: 500 }}>📌 {inc.subject}</Link>}  
+        {/* Başlık */}
+        <Link to={'/olay/' + inc.id}>
+          <h2 style={{ fontSize: 14, fontWeight: 600, marginBottom: 6, color: '#374151', lineHeight: 1.4 }}>{inc.title}</h2>
+        </Link>
 
-            {tags.map(tag => <Link key={tag} to={'/?search=' + encodeURIComponent('#' + tag)} style={{ fontSize: 11, color: '#378ADD', background: '#e8f4fd', padding: '2px 8px', borderRadius: 20, fontWeight: 500 }}>#{tag}</Link>)}
+        {/* Açıklama */}
+        <p style={{ fontSize: 13, color: '#6b7280', marginBottom: 8, lineHeight: 1.55, display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>
+          {inc.description}
+        </p>
+
+        {/* Resim açıklama altında */}
+        {images.length > 0 && (
+          <Link to={'/olay/' + inc.id}>
+            <img src={images[0]} alt="" style={{ width: '100%', height: 160, objectFit: 'cover', display: 'block', borderRadius: 8, marginBottom: 10 }} />
+          </Link>
+        )}
+
+        {/* Etiketler */}
+        {tags.length > 0 && (
+          <div style={{ display: 'flex', gap: 5, flexWrap: 'wrap', marginBottom: 8 }}>
+            {tags.map(tag => <Link key={tag} to={'/?search=' + encodeURIComponent('#' + tag)} style={{ fontSize: 11, color: '#3b82f6', background: '#eff6ff', padding: '2px 8px', borderRadius: 20 }}>#{tag}</Link>)}
           </div>
         )}
 
-        {votingEnds && (
-          <div style={{ fontSize: 11, color: votingActive ? '#888' : '#f85149', marginBottom: 8 }}>
-            {votingActive ? '⏱️ ' + formatDistance(votingEnds, new Date(), { locale: tr, addSuffix: true }) + ' bitiyor' : '⏱️ Oylama tamamlandı'}
-          </div>
-        )}
-
-        {hasVoted || isUnethical ? (
-          <div>
-            <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 12, marginBottom: 4 }}>
-              <span style={{ color: trustScore >= 50 ? '#16a34a' : trustScore >= -10 ? '#d97706' : '#dc2626', fontWeight: 700 }}>Güven Skoru: {trustScore > 0 ? '+' : ''}{trustScore}</span>
-            </div>
-            <div style={{ display: 'flex', gap: 8, alignItems: 'center', flexWrap: 'wrap' }}>
-              {hasVoted && <span style={{ fontSize: 12, color: '#888' }}>Oyunuz: <strong style={{ color: inc.my_vote === 'ethical' ? '#46d160' : '#f85149' }}>{inc.my_vote === 'ethical' ? 'Güvenilir' : 'Güvenilmez'}</strong> · {total} oy</span>}
-              {hasVoted && votingActive && <button onClick={() => vote(inc.my_vote)} style={{ fontSize: 11, color: '#bbb', background: 'none', border: 'none', cursor: 'pointer', textDecoration: 'underline' }}>geri al</button>}
-              <Link to={'/olay/' + inc.id} style={{ fontSize: 12, color: '#aaa', marginLeft: 'auto' }}>💬 {inc.comment_count}</Link>
-            </div>
-          </div>
-        ) : votingActive ? (
-          <div style={{ display: 'flex', gap: 8, alignItems: 'center', flexWrap: 'wrap' }}>
-            <button onClick={() => vote('ethical')} disabled={voting} style={{ flex: 1, padding: '8px', borderRadius: 20, border: '1.5px solid #46d160', background: 'white', color: '#1a7f37', fontWeight: 700, fontSize: 13, cursor: 'pointer' }}>✅ Güvenilir</button>
-            <button onClick={() => vote('unethical')} disabled={voting} style={{ flex: 1, padding: '8px', borderRadius: 20, border: '1.5px solid #f85149', background: 'white', color: '#cf222e', fontWeight: 700, fontSize: 13, cursor: 'pointer' }}>❌ Güvenilmez</button>
-            <Link to={'/olay/' + inc.id} style={{ fontSize: 12, color: '#aaa' }}>💬 {inc.comment_count}</Link>
-          </div>
-        ) : (
-          <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 12 }}>
-            <span style={{ color: '#aaa' }}>Oylama bitti · {total} oy</span>
-            <Link to={'/olay/' + inc.id} style={{ color: '#aaa' }}>💬 {inc.comment_count}</Link>
-          </div>
-        )}
+        {/* Alt satır: güven skoru + yorum sayısı */}
+        <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginTop: 4 }}>
+          {total > 0 ? (
+            <span style={{ fontSize: 12, fontWeight: 700, color: ts >= 50 ? '#16a34a' : ts >= -10 ? '#d97706' : '#dc2626' }}>
+              {ts >= 50 ? '🟢' : ts >= -10 ? '🟡' : '🔴'} Güven: {ts > 0 ? '+' : ''}{ts} · {total} değerlendirme
+            </span>
+          ) : (
+            <span style={{ fontSize: 12, color: '#aaa' }}>Henüz değerlendirme yok</span>
+          )}
+          <Link to={'/olay/' + inc.id} style={{ fontSize: 12, color: '#aaa', marginLeft: 'auto' }}>
+            💬 {inc.comment_count} · 👁 {inc.view_count}
+          </Link>
+        </div>
       </div>
     </div>
   );
