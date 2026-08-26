@@ -19,7 +19,7 @@ export default function SubmitPage() {
   const [showSuggestions, setShowSuggestions] = useState(false);
   const subjectRef = useRef(null);
   const [form, setForm] = useState({
-    title: '', description: '', categoryId: '',
+    title: '', headline: '', description: '', categoryId: '',
     location: '', incidentDate: '', isAnonymous: false,
     subject: '', votingDays: 3,
   });
@@ -176,6 +176,22 @@ export default function SubmitPage() {
                 )}
                 <span style={{ fontSize: 11, color: '#aaa', marginLeft: 'auto' }}>{form.title.length}/500</span>
               </div>
+            </div>
+
+            <div>
+              <label style={{ display: 'block', fontWeight: 600, fontSize: 13, marginBottom: 8 }}>
+                Başlık <span style={{ color: '#FF4500' }}>*</span>
+              </label>
+              <input
+                value={form.headline}
+                onChange={e => setForm(f => ({ ...f, headline: e.target.value }))}
+                maxLength={300}
+                placeholder="Kısaca ne yaşandı? ör: Parayı alıp kaçtı, işi yarım bıraktı..."
+                style={inp}
+              />
+              {form.headline.length > 0 && form.headline.length < 5 && (
+                <span style={{ fontSize: 11, color: '#f85149' }}>En az 5 karakter gerekli</span>
+              )}
             </div>
 
             {/* Şirket / Kişi / Marka — autocomplete */}
