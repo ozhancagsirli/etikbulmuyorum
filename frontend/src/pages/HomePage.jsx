@@ -70,11 +70,11 @@ export default function HomePage() {
                 const total = (inc.vote_correct || 0) + (inc.vote_wrong || 0) + (inc.vote_neutral || 0) + (inc.vote_insufficient || 0);
                 const ts = inc.trust_score || 0;
                 return (
-                  <Link key={inc.id} to={inc.person_name ? '/konu/' + encodeURIComponent(inc.person_name) : inc.subject ? '/konu/' + encodeURIComponent(inc.subject) : '/olay/' + inc.id} style={{ display: 'block', padding: '10px 14px', borderTop: idx > 0 ? '1px solid #f8f8f8' : 'none', color: 'inherit' }}>
+                  <Link key={inc.id} to={inc.subject ? '/konu/' + encodeURIComponent(inc.subject) : '/olay/' + inc.id} style={{ display: 'block', padding: '10px 14px', borderTop: idx > 0 ? '1px solid #f8f8f8' : 'none', color: 'inherit' }}>
                     <div style={{ display: 'flex', gap: 8, alignItems: 'flex-start' }}>
                       <span style={{ fontSize: 14, fontWeight: 800, color: '#ddd', minWidth: 20 }}>{idx + 1}</span>
                       <div style={{ flex: 1, minWidth: 0 }}>
-                        <div style={{ fontSize: 12, fontWeight: 700, color: '#333', marginBottom: 2 }}>{inc.person_name || inc.subject || inc.title}</div>
+                        <div style={{ fontSize: 12, fontWeight: 700, color: '#333', marginBottom: 2 }}>{inc.subject || inc.title}</div>
                         {inc.subject && <div style={{ fontSize: 11, color: '#aaa', marginBottom: 2 }}>{inc.category_name}</div>}
                         {total > 0 && (
                           <div style={{ display: 'flex', alignItems: 'center', gap: 4, fontSize: 11 }}>
@@ -196,7 +196,7 @@ function IncidentCard({ incident: inc }) {
         {/* Kişi/Firma adı — tıklanabilir */}
         {inc.subject && (
           <Link to={'/konu/' + encodeURIComponent(inc.subject)}>
-            <div style={{ fontSize: 17, fontWeight: 800, color: '#111827', marginBottom: 4, lineHeight: 1.3 }}>{inc.person_name || inc.subject}</div>
+            <div style={{ fontSize: 17, fontWeight: 800, color: '#111827', marginBottom: 4, lineHeight: 1.3 }}>{inc.subject}</div>
           </Link>
         )}
 
