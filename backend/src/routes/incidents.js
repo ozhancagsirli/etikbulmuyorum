@@ -38,6 +38,7 @@ router.get('/', optionalAuth, async (req, res, next) => {
 
     if (category) { params.push(category); filters.push('c.slug = $' + params.length); }
     if (subject)  { params.push(subject);  filters.push('i.subject ILIKE $' + params.length); }
+    if (req.query.person) { params.push(req.query.person); filters.push('i.person_name ILIKE $' + params.length); }
     if (search)   { params.push(search);   filters.push("to_tsvector('turkish', i.title || ' ' || i.description) @@ plainto_tsquery('turkish', $" + params.length + ')'); }
 
     const orderMap = {
@@ -50,7 +51,7 @@ router.get('/', optionalAuth, async (req, res, next) => {
     const sql = `
       SELECT i.id, i.title, i.description, i.location, i.is_anonymous,
         i.vote_ethical, i.vote_unethical, i.view_count, i.created_at,
-        i.images, i.tags, i.subject, i.voting_ends_at, i.verdict,
+        i.images, i.tags, i.subject, i.person_name, i.profession, i.voting_ends_at, i.verdict, i.trust_score,
         c.slug AS category_slug, c.name_tr AS category_name, c.icon AS category_icon,
         CASE WHEN i.is_anonymous THEN NULL ELSE u.name END AS author_name,
         CASE WHEN i.is_anonymous THEN NULL ELSE u.avatar_url END AS author_avatar,
@@ -82,7 +83,7 @@ router.get('/:id', optionalAuth, async (req, res, next) => {
     const { rows } = await pool.query(`
       SELECT i.id, i.title, i.description, i.location, i.incident_date, i.is_anonymous,
         i.vote_ethical, i.vote_unethical, i.view_count, i.status, i.created_at,
-        i.images, i.tags, i.subject, i.voting_ends_at, i.verdict,
+        i.images, i.tags, i.subject, i.person_name, i.profession, i.voting_ends_at, i.verdict, i.trust_score,
         c.slug AS category_slug, c.name_tr AS category_name, c.icon AS category_icon,
         CASE WHEN i.is_anonymous THEN NULL ELSE u.name END AS author_name,
         CASE WHEN i.is_anonymous THEN NULL ELSE u.avatar_url END AS author_avatar,
@@ -100,20 +101,26 @@ router.get('/:id', optionalAuth, async (req, res, next) => {
 
 router.post('/', authenticate, spamFilter, async (req, res, next) => {
   try {
-    const { title, description, categoryId, location, incidentDate, isAnonymous, images, tags, subject, votingDays } = req.body;
+    const { title, description, categoryId, location, incidentDate, isAnonymous, images, tags, subject, personName, profession, votingDays } = req.body;
     if (!title || title.length < 3) return res.status(422).json({ error: 'Başlık en az 3 karakter olmalı.' });
     if (!description || description.length < 50) return res.status(422).json({ error: 'Açıklama en az 50 karakter olmalı.' });
     if (!categoryId) return res.status(422).json({ error: 'Kategori gerekli.' });
     const days = Math.min(Math.max(parseInt(votingDays) || 3, 1), 3);
     const { rows } = await pool.query(`
-      INSERT INTO incidents (author_id, category_id, title, description, location, incident_date, is_anonymous, status, images, tags, subject, voting_ends_at, verdict)
-      VALUES ($1,$2,$3,$4,$5,$6,$7,'pending',$8,$9,$10,NOW() + ($11 || ' days')::INTERVAL,'pending')
+      INSERT INTO incidents (author_id, category_id, title, description, location, incident_date, is_anonymous, status, images, tags, subject, person_name, profession, voting_ends_at, verdict)
+      VALUES ($1,$2,$3,$4,$5,$6,$7,'pending',$8,$9,$10,$11,$12,NOW() + ($13 || ' days')::INTERVAL,'pending')
       RETURNING id, title, status, created_at
-    `, [req.user.id, categoryId, title, description, location||null, incidentDate||null, isAnonymous||false, images||[], tags||[], subject||null, days]);
+    `, [req.user.id, categoryId, title, description, location||null, incidentDate||null, isAnonymous||false, images||[], tags||[], subject||null, personName||null, profession||null, days]);
     if (subject) {
       await pool.query(
         'INSERT INTO subjects (name, count) VALUES ($1, 1) ON CONFLICT (name) DO UPDATE SET count = subjects.count + 1',
         [subject.trim()]
+      );
+    }
+    if (personName) {
+      await pool.query(
+        'INSERT INTO persons (name, profession, count) VALUES ($1, $2, 1) ON CONFLICT (name) DO UPDATE SET count = persons.count + 1, profession = COALESCE($2, persons.profession)',
+        [personName.trim(), profession?.trim() || null]
       );
     }
     res.status(201).json({ ...rows[0], message: 'Olayınız inceleme sonrası yayınlanacak!' });
@@ -130,4 +137,18 @@ router.delete('/:id', authenticate, async (req, res, next) => {
   } catch (err) { next(err); }
 });
 
+// GET /api/incidents/persons/search
+router.get('/persons/search', async (req, res, next) => {
+  try {
+    const q = req.query.q || '';
+    if (q.length < 2) return res.json([]);
+    const { rows } = await pool.query(
+      'SELECT name, profession, count FROM persons WHERE name ILIKE $1 ORDER BY count DESC LIMIT 8',
+      ['%' + q + '%']
+    );
+    res.json(rows);
+  } catch (err) { next(err); }
+});
+
 export default router;
+// Bu satırı export default router'dan önce ekle - aslında zaten var, sadece person search ekle
