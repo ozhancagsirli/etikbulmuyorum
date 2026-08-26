@@ -186,11 +186,10 @@ function IncidentCard({ incident: inc }) {
       )}
 
       <div style={{ padding: '12px 14px' }}>
-        {/* Üst meta */}
-        <div style={{ display: 'flex', gap: 6, marginBottom: 8, flexWrap: 'wrap', alignItems: 'center' }}>
+        {/* Üst meta: lokasyon + tarih */}
+        <div style={{ display: 'flex', gap: 6, marginBottom: 6, flexWrap: 'wrap', alignItems: 'center' }}>
           {isDangerous && <span style={{ fontSize: 11, background: '#fef2f2', color: '#dc2626', padding: '2px 8px', borderRadius: 20, fontWeight: 700 }}>🔴 Güvenilmez</span>}
-          {inc.category_name && <span style={{ fontSize: 11, background: '#fff5f0', color: '#FF4500', padding: '2px 8px', borderRadius: 20, fontWeight: 600 }}>{inc.category_icon} {inc.category_name}</span>}
-          {inc.location && <span style={{ fontSize: 11, color: '#aaa' }}>📍 {inc.location}</span>}
+          {inc.location && <span style={{ fontSize: 11, color: '#6b7280' }}>📍 {inc.location}</span>}
           <span style={{ fontSize: 11, color: '#aaa', marginLeft: 'auto' }}>{formatDistanceToNow(new Date(inc.created_at), { locale: tr, addSuffix: true })}</span>
         </div>
 
@@ -218,10 +217,10 @@ function IncidentCard({ incident: inc }) {
           </Link>
         )}
 
-        {/* Etiketler */}
-        {tags.length > 0 && (
-          <div style={{ display: 'flex', gap: 5, flexWrap: 'wrap', marginBottom: 8 }}>
-            {tags.map(tag => <Link key={tag} to={'/?search=' + encodeURIComponent('#' + tag)} style={{ fontSize: 11, color: '#3b82f6', background: '#eff6ff', padding: '2px 8px', borderRadius: 20 }}>#{tag}</Link>)}
+        {/* Kategori - altta */}
+        {inc.category_name && (
+          <div style={{ marginBottom: 6 }}>
+            <span style={{ fontSize: 11, background: '#fff5f0', color: '#FF4500', padding: '2px 8px', borderRadius: 20, fontWeight: 600 }}>{inc.category_icon} {inc.category_name}</span>
           </div>
         )}
 
