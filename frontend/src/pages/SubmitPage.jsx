@@ -161,36 +161,17 @@ export default function SubmitPage() {
 
             <div>
               <label style={{ display: 'block', fontWeight: 600, fontSize: 13, marginBottom: 8 }}>
-                Şahıs/Firma Adı <span style={{ color: '#FF4500' }}>*</span>
+                Başlık <span style={{ color: '#FF4500' }}>*</span>
               </label>
               <input
                 value={form.title}
                 onChange={set('title')}
-                maxLength={500}
-                placeholder="Şahıs veya firma adını girin..."
-                style={inp}
-              />
-              <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: 4 }}>
-                {form.title.length > 0 && form.title.length < 3 && (
-                  <span style={{ fontSize: 11, color: '#f85149' }}>En az 3 karakter gerekli</span>
-                )}
-                <span style={{ fontSize: 11, color: '#aaa', marginLeft: 'auto' }}>{form.title.length}/500</span>
-              </div>
-            </div>
-
-            <div>
-              <label style={{ display: 'block', fontWeight: 600, fontSize: 13, marginBottom: 8 }}>
-                Başlık <span style={{ color: '#FF4500' }}>*</span>
-              </label>
-              <input
-                value={form.headline}
-                onChange={e => setForm(f => ({ ...f, headline: e.target.value }))}
                 maxLength={300}
                 placeholder="Kısaca ne yaşandı? ör: Parayı alıp kaçtı, işi yarım bıraktı..."
                 style={inp}
               />
-              {form.headline.length > 0 && form.headline.length < 5 && (
-                <span style={{ fontSize: 11, color: '#f85149' }}>En az 5 karakter gerekli</span>
+              {form.title.length > 0 && form.title.length < 3 && (
+                <span style={{ fontSize: 11, color: '#f85149' }}>En az 3 karakter gerekli</span>
               )}
             </div>
 
