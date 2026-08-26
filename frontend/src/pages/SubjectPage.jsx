@@ -11,7 +11,7 @@ export default function SubjectPage() {
   const decodedName = decodeURIComponent(name);
 
   useEffect(() => {
-    apiFetch('/incidents?subject=' + encodeURIComponent(decodedName) + '&limit=15')
+    apiFetch('/incidents?person=' + encodeURIComponent(decodedName) + '&limit=15')
       .then(data => { setIncidents(data.data || []); setLoading(false); })
       .catch(() => setLoading(false));
   }, [name]);
