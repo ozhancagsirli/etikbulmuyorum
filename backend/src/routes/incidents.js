@@ -110,7 +110,7 @@ router.post('/', authenticate, spamFilter, async (req, res, next) => {
       INSERT INTO incidents (author_id, category_id, title, description, location, incident_date, is_anonymous, status, images, tags, subject, person_name, profession, voting_ends_at, verdict)
       VALUES ($1,$2,$3,$4,$5,$6,$7,'pending',$8,$9,$10,$11,$12,NOW()
       RETURNING id, title, status, created_at
-    `, [req.user.id, categoryId, title, description, location||null, incidentDate||null, isAnonymous||false, images||[], tags||[], subject||null, personName||null, profession||null, days]);
+    `, [req.user.id, categoryId, title, description, location||null, incidentDate||null, isAnonymous||false, images||[], tags||[], subject||null, personName||null, profession||null]);
     if (subject) {
       await pool.query(
         'INSERT INTO subjects (name, count) VALUES ($1, 1) ON CONFLICT (name) DO UPDATE SET count = subjects.count + 1',
