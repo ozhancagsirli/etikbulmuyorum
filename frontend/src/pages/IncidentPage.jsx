@@ -62,8 +62,6 @@ export default function IncidentPage() {
   const ethPct = total ? Math.round((incident.vote_ethical / total) * 100) : null;
   const images = incident.images || [];
   const tags = incident.tags || [];
-  const votingEnds = incident.voting_ends_at ? new Date(incident.voting_ends_at) : null;
-  const votingActive = votingEnds && votingEnds > new Date();
 
   return (
     <div style={{ maxWidth: 740, margin: '0 auto', display: 'flex', flexDirection: 'column', gap: 12 }}>

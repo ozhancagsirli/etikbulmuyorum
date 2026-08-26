@@ -51,7 +51,7 @@ router.get('/', optionalAuth, async (req, res, next) => {
     const sql = `
       SELECT i.id, i.title, i.description, i.location, i.is_anonymous,
         i.vote_ethical, i.vote_unethical, i.view_count, i.created_at,
-        i.images, i.tags, i.subject, i.person_name, i.profession, i.voting_ends_at, i.verdict, i.trust_score,
+        i.images, i.tags, i.subject, i.person_name, i.profession, i.trust_score,
         c.slug AS category_slug, c.name_tr AS category_name, c.icon AS category_icon,
         CASE WHEN i.is_anonymous THEN NULL ELSE u.name END AS author_name,
         CASE WHEN i.is_anonymous THEN NULL ELSE u.avatar_url END AS author_avatar,
@@ -83,7 +83,7 @@ router.get('/:id', optionalAuth, async (req, res, next) => {
     const { rows } = await pool.query(`
       SELECT i.id, i.title, i.description, i.location, i.incident_date, i.is_anonymous,
         i.vote_ethical, i.vote_unethical, i.view_count, i.status, i.created_at,
-        i.images, i.tags, i.subject, i.person_name, i.profession, i.voting_ends_at, i.verdict, i.trust_score,
+        i.images, i.tags, i.subject, i.person_name, i.profession, i.trust_score,
         c.slug AS category_slug, c.name_tr AS category_name, c.icon AS category_icon,
         CASE WHEN i.is_anonymous THEN NULL ELSE u.name END AS author_name,
         CASE WHEN i.is_anonymous THEN NULL ELSE u.avatar_url END AS author_avatar,
@@ -101,14 +101,14 @@ router.get('/:id', optionalAuth, async (req, res, next) => {
 
 router.post('/', authenticate, spamFilter, async (req, res, next) => {
   try {
-    const { title, description, categoryId, location, incidentDate, isAnonymous, images, tags, subject, personName, profession, votingDays } = req.body;
+    const { title, description, categoryId, location, incidentDate, isAnonymous, images, tags, subject, personName, profession } = req.body;
     if (!title || title.length < 3) return res.status(422).json({ error: 'Başlık en az 3 karakter olmalı.' });
     if (!description || description.length < 50) return res.status(422).json({ error: 'Açıklama en az 50 karakter olmalı.' });
     if (!categoryId) return res.status(422).json({ error: 'Kategori gerekli.' });
     const days = Math.min(Math.max(parseInt(votingDays) || 3, 1), 3);
     const { rows } = await pool.query(`
       INSERT INTO incidents (author_id, category_id, title, description, location, incident_date, is_anonymous, status, images, tags, subject, person_name, profession, voting_ends_at, verdict)
-      VALUES ($1,$2,$3,$4,$5,$6,$7,'pending',$8,$9,$10,$11,$12,NOW() + ($13 || ' days')::INTERVAL,'pending')
+      VALUES ($1,$2,$3,$4,$5,$6,$7,'pending',$8,$9,$10,$11,$12,NOW()
       RETURNING id, title, status, created_at
     `, [req.user.id, categoryId, title, description, location||null, incidentDate||null, isAnonymous||false, images||[], tags||[], subject||null, personName||null, profession||null, days]);
     if (subject) {

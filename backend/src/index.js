@@ -6,7 +6,6 @@ import morgan from 'morgan';
 import rateLimit from 'express-rate-limit';
 import { testConnection } from './db/pool.js';
 import { startAutoApprove } from './autoApprove.js';
-import { startVerdictChecker } from './verdictChecker.js';
 import authRoutes from './routes/auth.js';
 import incidentRoutes from './routes/incidents.js';
 import voteRoutes from './routes/votes.js';
@@ -52,6 +51,5 @@ app.use((err, _req, res, _next) => {
 (async () => {
   await testConnection();
   startAutoApprove();
-  startVerdictChecker();
   app.listen(PORT, () => console.log('API running on port ' + PORT));
 })();

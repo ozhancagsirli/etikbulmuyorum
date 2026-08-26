@@ -21,8 +21,7 @@ export default function SubmitPage() {
   const [form, setForm] = useState({
     title: '', headline: '', description: '', categoryId: '',
     location: '', incidentDate: '', isAnonymous: false,
-    subject: '', votingDays: 3,
-  });
+    subject: '',   });
 
   useEffect(() => { apiFetch('/categories').then(setCategories).catch(() => {}); }, []);
 
@@ -86,8 +85,7 @@ export default function SubmitPage() {
         body: JSON.stringify({
           ...form,
           categoryId: Number(form.categoryId),
-          votingDays: Number(form.votingDays),
-          incidentDate: form.incidentDate || undefined,
+              incidentDate: form.incidentDate || undefined,
           images: images.map(i => i.url),
           tags,
         }),
@@ -295,29 +293,7 @@ export default function SubmitPage() {
               </div>
             </div>
 
-            {/* Oylama süresi */}
-            <div>
-              <label style={{ display: 'block', fontWeight: 600, fontSize: 13, marginBottom: 8 }}>
-                ⏱️ Oylama Süresi
-              </label>
-              <div style={{ display: 'flex', gap: 8 }}>
-                {[1, 2, 3].map(d => (
-                  <button key={d} type="button" onClick={() => setForm(f => ({ ...f, votingDays: d }))} style={{
-                    flex: 1, padding: '10px', borderRadius: 8, border: '1.5px solid',
-                    borderColor: form.votingDays === d ? '#FF4500' : '#e0e0e0',
-                    background: form.votingDays === d ? '#fff5f0' : 'white',
-                    color: form.votingDays === d ? '#FF4500' : '#555',
-                    fontWeight: form.votingDays === d ? 700 : 400,
-                    fontSize: 14, cursor: 'pointer', textAlign: 'center',
-                  }}>
-                    {d} Gün
-                  </button>
-                ))}
-              </div>
-              <div style={{ fontSize: 12, color: '#888', marginTop: 6 }}>
-                Süre bitince oylar sayılır. Etik dışı sonuçlanırsa olay tam görünür kalır. Etik sonuçlanırsa başlık yeşile döner ve detaylar gizlenir.
-              </div>
-            </div>
+            
 
             <label style={{ display: 'flex', gap: 12, alignItems: 'center', cursor: 'pointer', padding: '14px 16px', background: '#f8f9fa', borderRadius: 8, border: '1.5px solid', borderColor: form.isAnonymous ? '#FF4500' : '#eee' }}>
               <input type="checkbox" checked={form.isAnonymous} onChange={set('isAnonymous')} style={{ width: 18, height: 18, accentColor: '#FF4500' }} />
