@@ -105,7 +105,6 @@ router.post('/', authenticate, spamFilter, async (req, res, next) => {
     if (!title || title.length < 3) return res.status(422).json({ error: 'Başlık en az 3 karakter olmalı.' });
     if (!description || description.length < 50) return res.status(422).json({ error: 'Açıklama en az 50 karakter olmalı.' });
     if (!categoryId) return res.status(422).json({ error: 'Kategori gerekli.' });
-    const days = Math.min(Math.max(parseInt(votingDays) || 3, 1), 3);
     const { rows } = await pool.query(`
       INSERT INTO incidents (author_id, category_id, title, description, location, incident_date, is_anonymous, status, images, tags, subject, person_name, profession, voting_ends_at, verdict)
       VALUES ($1,$2,$3,$4,$5,$6,$7,'pending',$8,$9,$10,$11,$12,NOW()
