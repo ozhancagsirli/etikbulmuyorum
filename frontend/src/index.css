@@ -1,36 +1,47 @@
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
 :root {
-  --orange:      #FF4500;
-  --orange-dark: #e03d00;
-  --orange-light:#fff5f0;
-  --orange-border:#ffd5c2;
-  --green:       #22c55e;
-  --green-light: #f0fdf4;
-  --green-border:#bbf7d0;
-  --red:         #ef4444;
-  --red-light:   #fef2f2;
-  --red-border:  #fecaca;
-  --blue:        #3b82f6;
-  --blue-light:  #eff6ff;
-  --gray-50:     #f9fafb;
-  --gray-100:    #f3f4f6;
-  --gray-200:    #e5e7eb;
-  --gray-400:    #9ca3af;
-  --gray-500:    #6b7280;
-  --gray-700:    #374151;
-  --gray-900:    #111827;
-  --radius-sm:   6px;
-  --radius-md:   10px;
-  --radius-lg:   16px;
-  --shadow-sm:   0 1px 3px rgba(0,0,0,0.08), 0 1px 2px rgba(0,0,0,0.04);
-  --shadow-md:   0 4px 12px rgba(0,0,0,0.08), 0 2px 4px rgba(0,0,0,0.04);
-  --shadow-lg:   0 10px 30px rgba(0,0,0,0.10), 0 4px 8px rgba(0,0,0,0.06);
+  /* Ana renkler */
+  --navy:        #0f172a;
+  --navy-800:    #1e293b;
+  --navy-700:    #334155;
+  --navy-600:    #475569;
+  --primary:     #dc2626;
+  --primary-dark:#b91c1c;
+  --primary-light:#fef2f2;
+
+  /* Güven renkleri */
+  --trust-green: #16a34a;
+  --trust-green-bg: #f0fdf4;
+  --trust-green-border: #22c55e;
+  --trust-yellow: #d97706;
+  --trust-yellow-bg: #fffbeb;
+  --trust-yellow-border: #fbbf24;
+  --trust-red:   #dc2626;
+  --trust-red-bg:#fef2f2;
+  --trust-red-border: #ef4444;
+
+  /* Nötr renkler */
+  --gray-50:  #f8fafc;
+  --gray-100: #f1f5f9;
+  --gray-200: #e2e8f0;
+  --gray-400: #94a3b8;
+  --gray-500: #64748b;
+  --gray-700: #334155;
+  --gray-900: #0f172a;
+
+  /* Radius & Shadow */
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 16px;
+  --shadow-sm: 0 1px 3px rgba(0,0,0,0.08);
+  --shadow-md: 0 4px 12px rgba(0,0,0,0.10);
+  --shadow-lg: 0 10px 30px rgba(0,0,0,0.12);
 }
 
 body {
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Inter', Roboto, sans-serif;
-  background: #f0f2f5;
+  background: #f1f5f9;
   color: var(--gray-900);
   font-size: 14px;
   line-height: 1.5;
@@ -41,31 +52,15 @@ a { color: inherit; text-decoration: none; }
 button { cursor: pointer; font-family: inherit; }
 input, textarea, select { font-family: inherit; }
 
-/* Scrollbar */
 ::-webkit-scrollbar { width: 6px; }
-::-webkit-scrollbar-track { background: #f0f2f5; }
-::-webkit-scrollbar-thumb { background: #d1d5db; border-radius: 3px; }
-::-webkit-scrollbar-thumb:hover { background: #9ca3af; }
+::-webkit-scrollbar-track { background: #f1f5f9; }
+::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
 
-/* Selection */
-::selection { background: var(--orange); color: white; }
+::selection { background: var(--primary); color: white; }
 
-/* Smooth focus */
 *:focus-visible {
-  outline: 2px solid var(--orange);
+  outline: 2px solid var(--primary);
   outline-offset: 2px;
   border-radius: var(--radius-sm);
-}
-
-/* Card base */
-.card {
-  background: white;
-  border-radius: var(--radius-lg);
-  border: 1px solid var(--gray-200);
-  box-shadow: var(--shadow-sm);
-  transition: box-shadow 0.2s, border-color 0.2s;
-}
-.card:hover {
-  box-shadow: var(--shadow-md);
-  border-color: #d1d5db;
 }

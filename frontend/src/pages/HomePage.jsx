@@ -38,9 +38,9 @@ export default function HomePage() {
     <div>
       {/* Mobil kategori filtresi */}
       <div id="mobile-cats" style={{ display: 'flex', gap: 8, overflowX: 'auto', paddingBottom: 8, marginBottom: 12, WebkitOverflowScrolling: 'touch', scrollbarWidth: 'none' }}>
-        <button onClick={() => { setCategory(''); setPage(1); }} style={{ flexShrink: 0, padding: '6px 14px', borderRadius: 20, border: '1.5px solid', borderColor: !category ? '#FF4500' : '#e0e0e0', background: !category ? '#FF4500' : 'white', color: !category ? 'white' : '#555', fontSize: 13, fontWeight: !category ? 600 : 400, cursor: 'pointer' }}>🌐 Tümü</button>
+        <button onClick={() => { setCategory(''); setPage(1); }} style={{ flexShrink: 0, padding: '6px 14px', borderRadius: 20, border: '1.5px solid', borderColor: !category ? '#dc2626' : '#e0e0e0', background: !category ? '#dc2626' : 'white', color: !category ? 'white' : '#555', fontSize: 13, fontWeight: !category ? 600 : 400, cursor: 'pointer' }}>🌐 Tümü</button>
         {categories.map(c => (
-          <button key={c.slug} onClick={() => { setCategory(c.slug); setPage(1); }} style={{ flexShrink: 0, padding: '6px 14px', borderRadius: 20, border: '1.5px solid', borderColor: category === c.slug ? '#FF4500' : '#e0e0e0', background: category === c.slug ? '#FF4500' : 'white', color: category === c.slug ? 'white' : '#555', fontSize: 13, fontWeight: category === c.slug ? 600 : 400, cursor: 'pointer' }}>{c.icon} {c.name_tr}</button>
+          <button key={c.slug} onClick={() => { setCategory(c.slug); setPage(1); }} style={{ flexShrink: 0, padding: '6px 14px', borderRadius: 20, border: '1.5px solid', borderColor: category === c.slug ? '#dc2626' : '#e0e0e0', background: category === c.slug ? '#dc2626' : 'white', color: category === c.slug ? 'white' : '#555', fontSize: 13, fontWeight: category === c.slug ? 600 : 400, cursor: 'pointer' }}>{c.icon} {c.name_tr}</button>
         ))}
       </div>
 
@@ -52,11 +52,11 @@ export default function HomePage() {
           {/* Kategoriler */}
           <div style={{ background: 'white', borderRadius: 12, border: '1px solid #e0e0e0', overflow: 'hidden' }}>
             <div style={{ padding: '12px 16px', borderBottom: '1px solid #f0f0f0', fontWeight: 700, fontSize: 14 }}>🗂 Kategoriler</div>
-            <button onClick={() => { setCategory(''); setPage(1); }} style={{ display: 'flex', alignItems: 'center', gap: 10, width: '100%', padding: '10px 16px', border: 'none', background: !category ? '#fff5f0' : 'white', cursor: 'pointer', fontSize: 13, textAlign: 'left', borderLeft: !category ? '3px solid #FF4500' : '3px solid transparent', color: !category ? '#FF4500' : '#333', fontWeight: !category ? 600 : 400 }}>
+            <button onClick={() => { setCategory(''); setPage(1); }} style={{ display: 'flex', alignItems: 'center', gap: 10, width: '100%', padding: '10px 16px', border: 'none', background: !category ? '#fef2f2' : 'white', cursor: 'pointer', fontSize: 13, textAlign: 'left', borderLeft: !category ? '3px solid #dc2626' : '3px solid transparent', color: !category ? '#dc2626' : '#333', fontWeight: !category ? 600 : 400 }}>
               <span style={{ fontSize: 16 }}>🌐</span> Tümü
             </button>
             {categories.map(c => (
-              <button key={c.slug} onClick={() => { setCategory(c.slug); setPage(1); }} style={{ display: 'flex', alignItems: 'center', gap: 10, width: '100%', padding: '10px 16px', border: 'none', background: category === c.slug ? '#fff5f0' : 'white', cursor: 'pointer', fontSize: 13, textAlign: 'left', borderLeft: category === c.slug ? '3px solid #FF4500' : '3px solid transparent', color: category === c.slug ? '#FF4500' : '#333', fontWeight: category === c.slug ? 600 : 400, borderTop: '1px solid #f8f8f8' }}>
+              <button key={c.slug} onClick={() => { setCategory(c.slug); setPage(1); }} style={{ display: 'flex', alignItems: 'center', gap: 10, width: '100%', padding: '10px 16px', border: 'none', background: category === c.slug ? '#fef2f2' : 'white', cursor: 'pointer', fontSize: 13, textAlign: 'left', borderLeft: category === c.slug ? '3px solid #dc2626' : '3px solid transparent', color: category === c.slug ? '#dc2626' : '#333', fontWeight: category === c.slug ? 600 : 400, borderTop: '1px solid #f8f8f8' }}>
                 <span style={{ fontSize: 18 }}>{c.icon}</span> <span>{c.name_tr}</span>
               </button>
             ))}
@@ -97,7 +97,7 @@ export default function HomePage() {
             <div style={{ fontSize: 24, marginBottom: 8 }}>⚠️</div>
             <div style={{ fontWeight: 700, fontSize: 13, marginBottom: 4, color: '#111827' }}>Başkası zarar görmesin</div>
             <div style={{ fontSize: 12, color: '#6b7280', marginBottom: 12 }}>Yaşadığın olumsuz deneyimi paylaş</div>
-            <Link to="/bildir" style={{ background: '#FF4500', color: 'white', padding: '8px 20px', borderRadius: 20, fontWeight: 700, fontSize: 13, display: 'inline-block' }}>
+            <Link to="/bildir" style={{ background: '#dc2626', color: 'white', padding: '8px 20px', borderRadius: 20, fontWeight: 700, fontSize: 13, display: 'inline-block' }}>
               + Olay Bildir
             </Link>
           </div>
@@ -108,7 +108,7 @@ export default function HomePage() {
           {search && (
             <div style={{ marginBottom: 10, color: '#555', fontSize: 13, display: 'flex', alignItems: 'center', gap: 8 }}>
               🔍 "<strong>{search}</strong>" için sonuçlar
-              <a href="/" style={{ color: '#FF4500', fontSize: 12 }}>× temizle</a>
+              <a href="/" style={{ color: '#dc2626', fontSize: 12 }}>× temizle</a>
             </div>
           )}
 
@@ -120,7 +120,7 @@ export default function HomePage() {
             <div style={{ background: 'white', borderRadius: 12, padding: 40, textAlign: 'center', border: '1px solid #e0e0e0' }}>
               <div style={{ fontSize: 40, marginBottom: 12 }}>🔍</div>
               <div style={{ fontSize: 15, fontWeight: 600, marginBottom: 8 }}>Sonuç bulunamadı</div>
-              <Link to="/bildir" style={{ color: '#FF4500', fontWeight: 600 }}>İlk olayı sen ekle →</Link>
+              <Link to="/bildir" style={{ color: '#dc2626', fontWeight: 600 }}>İlk olayı sen ekle →</Link>
             </div>
           ) : (
             <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
@@ -132,7 +132,7 @@ export default function HomePage() {
             <div style={{ display: 'flex', gap: 6, justifyContent: 'center', marginTop: 16, flexWrap: 'wrap' }}>
               <button onClick={() => setPage(p => Math.max(1,p-1))} disabled={page===1} style={{ padding: '8px 14px', borderRadius: 8, border: '1px solid #e0e0e0', background: 'white', cursor: page===1?'not-allowed':'pointer', color: page===1?'#ccc':'#555', fontSize: 13 }}>← Önceki</button>
               {Array.from({length:Math.min(pages,5)},(_,i)=>i+1).map(p=>(
-                <button key={p} onClick={()=>setPage(p)} style={{ width:36,height:36,borderRadius:8,border:'1.5px solid',borderColor:p===page?'#FF4500':'#e0e0e0',background:p===page?'#FF4500':'white',color:p===page?'white':'#333',fontWeight:p===page?700:400,cursor:'pointer',fontSize:13 }}>{p}</button>
+                <button key={p} onClick={()=>setPage(p)} style={{ width:36,height:36,borderRadius:8,border:'1.5px solid',borderColor:p===page?'#dc2626':'#e0e0e0',background:p===page?'#dc2626':'white',color:p===page?'white':'#333',fontWeight:p===page?700:400,cursor:'pointer',fontSize:13 }}>{p}</button>
               ))}
               <button onClick={() => setPage(p => Math.min(pages,p+1))} disabled={page===pages} style={{ padding: '8px 14px', borderRadius: 8, border: '1px solid #e0e0e0', background: 'white', cursor: page===pages?'not-allowed':'pointer', color: page===pages?'#ccc':'#555', fontSize: 13 }}>Sonraki →</button>
             </div>
@@ -220,7 +220,7 @@ function IncidentCard({ incident: inc }) {
         {/* Kategori - altta */}
         {inc.category_name && (
           <div style={{ marginBottom: 6 }}>
-            <span style={{ fontSize: 11, background: '#fff5f0', color: '#FF4500', padding: '2px 8px', borderRadius: 20, fontWeight: 600 }}>{inc.category_icon} {inc.category_name}</span>
+            <span style={{ fontSize: 11, background: '#fef2f2', color: '#dc2626', padding: '2px 8px', borderRadius: 20, fontWeight: 600 }}>{inc.category_icon} {inc.category_name}</span>
           </div>
         )}
 

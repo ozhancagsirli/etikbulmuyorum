@@ -68,12 +68,12 @@ export default function ImageUploader({ images, onChange }) {
           onDrop={handleDrop}
           onClick={() => inputRef.current?.click()}
           style={{
-            border: `2px dashed ${dragging ? '#FF4500' : '#ddd'}`,
+            border: `2px dashed ${dragging ? '#dc2626' : '#ddd'}`,
             borderRadius: 12,
             padding: '28px 20px',
             textAlign: 'center',
             cursor: uploading ? 'not-allowed' : 'pointer',
-            background: dragging ? '#fff5f0' : uploading ? '#fafafa' : 'white',
+            background: dragging ? '#fef2f2' : uploading ? '#fafafa' : 'white',
             transition: 'all 0.2s',
             marginBottom: images.length > 0 ? 12 : 0,
           }}

@@ -78,7 +78,7 @@ export default function AuthPage() {
       <div style={{ textAlign: 'center', marginBottom: 28 }}>
         <Link to="/" style={{ display: 'inline-flex', alignItems: 'center', gap: 8, fontWeight: 800, fontSize: 20, letterSpacing: -0.4 }}>
           <span style={{ fontSize: 28 }}>⚖️</span>
-          <span style={{ color: '#FF4500' }}>etik</span><span style={{ color: '#111827' }}>bulmuyorum</span>
+          <span style={{ color: '#dc2626' }}>etik</span><span style={{ color: '#111827' }}>bulmuyorum</span>
         </Link>
         <p style={{ fontSize: 13, color: '#6b7280', marginTop: 6 }}>
           {tab === 'login' ? 'Hesabınıza giriş yapın' : 'Yeni hesap oluşturun'}
@@ -105,7 +105,7 @@ export default function AuthPage() {
             <button key={key} onClick={() => setTab(key)} style={{
               flex: 1, padding: '8px', border: 'none', borderRadius: 8, cursor: 'pointer',
               fontSize: 13, fontWeight: tab === key ? 700 : 500,
-              color: tab === key ? '#FF4500' : '#6b7280',
+              color: tab === key ? '#dc2626' : '#6b7280',
               background: tab === key ? 'white' : 'transparent',
               boxShadow: tab === key ? '0 1px 4px rgba(0,0,0,0.08)' : 'none',
               transition: 'all 0.15s',
@@ -121,7 +121,7 @@ export default function AuthPage() {
               <label style={{ display: 'block', fontSize: 12, fontWeight: 600, marginBottom: 6, color: '#374151', textTransform: 'uppercase', letterSpacing: 0.5 }}>Ad Soyad</label>
               <input value={form.name} onChange={set('name')} placeholder="Adınızı girin" required
                 style={inp()}
-                onFocus={e => { e.target.style.borderColor='#FF4500'; e.target.style.background='white'; }}
+                onFocus={e => { e.target.style.borderColor='#dc2626'; e.target.style.background='white'; }}
                 onBlur={e => { e.target.style.borderColor='#e5e7eb'; e.target.style.background='#f9fafb'; }}
               />
             </div>
@@ -131,7 +131,7 @@ export default function AuthPage() {
             <label style={{ display: 'block', fontSize: 12, fontWeight: 600, marginBottom: 6, color: '#374151', textTransform: 'uppercase', letterSpacing: 0.5 }}>Email</label>
             <input type="email" value={form.email} onChange={set('email')} placeholder="ornek@email.com" required
               style={inp()}
-              onFocus={e => { e.target.style.borderColor='#FF4500'; e.target.style.background='white'; }}
+              onFocus={e => { e.target.style.borderColor='#dc2626'; e.target.style.background='white'; }}
               onBlur={e => { e.target.style.borderColor='#e5e7eb'; e.target.style.background='#f9fafb'; }}
             />
           </div>
@@ -142,7 +142,7 @@ export default function AuthPage() {
               <input type={showPass ? 'text' : 'password'} value={form.password} onChange={set('password')}
                 placeholder={tab === 'register' ? 'En az 6 karakter' : 'Şifrenizi girin'} required
                 style={inp({ paddingRight: 42 })}
-                onFocus={e => { e.target.style.borderColor='#FF4500'; e.target.style.background='white'; }}
+                onFocus={e => { e.target.style.borderColor='#dc2626'; e.target.style.background='white'; }}
                 onBlur={e => { e.target.style.borderColor='#e5e7eb'; e.target.style.background='#f9fafb'; }}
               />
               <button type="button" onClick={() => setShowPass(s => !s)} style={{ position: 'absolute', right: 12, top: '50%', transform: 'translateY(-50%)', background: 'none', border: 'none', cursor: 'pointer', fontSize: 16, color: '#9ca3af' }}>
@@ -156,7 +156,7 @@ export default function AuthPage() {
               <label style={{ display: 'block', fontSize: 12, fontWeight: 600, marginBottom: 6, color: '#374151', textTransform: 'uppercase', letterSpacing: 0.5 }}>Şifre Tekrar</label>
               <input type="password" value={form.password2} onChange={set('password2')} placeholder="Şifrenizi tekrar girin" required
                 style={inp()}
-                onFocus={e => { e.target.style.borderColor='#FF4500'; e.target.style.background='white'; }}
+                onFocus={e => { e.target.style.borderColor='#dc2626'; e.target.style.background='white'; }}
                 onBlur={e => { e.target.style.borderColor='#e5e7eb'; e.target.style.background='#f9fafb'; }}
               />
             </div>
@@ -164,7 +164,7 @@ export default function AuthPage() {
 
           <button type="submit" disabled={loading} style={{
             padding: '12px', borderRadius: 10, border: 'none',
-            background: loading ? '#e5e7eb' : '#FF4500',
+            background: loading ? '#e5e7eb' : '#dc2626',
             color: loading ? '#9ca3af' : 'white',
             fontWeight: 700, fontSize: 15,
             cursor: loading ? 'not-allowed' : 'pointer',
@@ -172,7 +172,7 @@ export default function AuthPage() {
             transition: 'all 0.15s', marginTop: 4,
           }}
             onMouseEnter={e => { if (!loading) e.currentTarget.style.background='#e03d00'; }}
-            onMouseLeave={e => { if (!loading) e.currentTarget.style.background='#FF4500'; }}
+            onMouseLeave={e => { if (!loading) e.currentTarget.style.background='#dc2626'; }}
           >
             {loading ? 'Bekleyin...' : tab === 'login' ? '→ Giriş Yap' : '→ Hesap Oluştur'}
           </button>
@@ -180,7 +180,7 @@ export default function AuthPage() {
           {tab === 'login' && (
             <p style={{ textAlign: 'center', fontSize: 13, color: '#6b7280' }}>
               Hesabınız yok mu?{' '}
-              <button type="button" onClick={() => setTab('register')} style={{ background: 'none', border: 'none', color: '#FF4500', fontWeight: 600, cursor: 'pointer', fontSize: 13 }}>
+              <button type="button" onClick={() => setTab('register')} style={{ background: 'none', border: 'none', color: '#dc2626', fontWeight: 600, cursor: 'pointer', fontSize: 13 }}>
                 Kayıt Ol
               </button>
             </p>

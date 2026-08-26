@@ -136,7 +136,7 @@ export default function LocationPicker({ value, onChange }) {
         onClick={() => setOpen(o => !o)}
         style={{
           width: '100%', padding: '11px 14px', borderRadius: 8,
-          border: '1.5px solid', borderColor: open ? '#FF4500' : '#e0e0e0',
+          border: '1.5px solid', borderColor: open ? '#dc2626' : '#e0e0e0',
           background: 'white', fontSize: 14, textAlign: 'left',
           cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'space-between',
           color: value ? '#1c1c1c' : '#aaa',
@@ -179,10 +179,10 @@ export default function LocationPicker({ value, onChange }) {
                   style={{
                     display: 'block', width: '100%', padding: '9px 14px',
                     textAlign: 'left', border: 'none', fontSize: 13, cursor: 'pointer',
-                    background: selectedIl === il ? '#fff5f0' : 'white',
-                    color: selectedIl === il ? '#FF4500' : '#333',
+                    background: selectedIl === il ? '#fef2f2' : 'white',
+                    color: selectedIl === il ? '#dc2626' : '#333',
                     fontWeight: selectedIl === il ? 600 : 400,
-                    borderLeft: selectedIl === il ? '3px solid #FF4500' : '3px solid transparent',
+                    borderLeft: selectedIl === il ? '3px solid #dc2626' : '3px solid transparent',
                   }}
                 >
                   {il}
@@ -200,7 +200,7 @@ export default function LocationPicker({ value, onChange }) {
                     style={{
                       display: 'block', width: '100%', padding: '9px 14px',
                       textAlign: 'left', border: 'none', fontSize: 13, cursor: 'pointer',
-                      background: '#f8f9fa', color: '#FF4500', fontWeight: 600,
+                      background: '#f8f9fa', color: '#dc2626', fontWeight: 600,
                       borderBottom: '1px solid #f0f0f0',
                     }}
                   >
@@ -214,8 +214,8 @@ export default function LocationPicker({ value, onChange }) {
                       style={{
                         display: 'block', width: '100%', padding: '9px 14px',
                         textAlign: 'left', border: 'none', fontSize: 13, cursor: 'pointer',
-                        background: selectedIlce === ilce ? '#fff5f0' : 'white',
-                        color: selectedIlce === ilce ? '#FF4500' : '#444',
+                        background: selectedIlce === ilce ? '#fef2f2' : 'white',
+                        color: selectedIlce === ilce ? '#dc2626' : '#444',
                         fontWeight: selectedIlce === ilce ? 600 : 400,
                       }}
                     >
