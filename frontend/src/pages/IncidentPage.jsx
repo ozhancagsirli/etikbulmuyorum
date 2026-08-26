@@ -215,7 +215,7 @@ export default function IncidentPage() {
               </div>
               <div style={{ display: 'flex', gap: 10, alignItems: 'center', paddingLeft: 46 }}>
                 <label style={{ fontSize: 13, cursor: 'pointer', display: 'flex', gap: 6, alignItems: 'center', color: '#6b7280' }}>
-                  <input type="checkbox" checked={anon} onChange={e => setAnon(e.target.checked)} style={{ accentColor: '#dc2626' }} /> Anonim
+                  <input type="checkbox" checked={anon} onChange={e => setAnon(e.target.checked)} style={{ accentColor: '#e8ff00' }} /> Anonim
                 </label>
                 <button type="submit" disabled={submitting || !comment.trim()} style={{
                   marginLeft: 'auto', padding: '7px 20px', borderRadius: 20, border: 'none',
