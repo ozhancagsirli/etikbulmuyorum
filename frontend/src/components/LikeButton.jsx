@@ -26,7 +26,7 @@ export default function LikeButton({ commentId, initialCount, initialLiked }) {
     <button onClick={toggle} disabled={loading} style={{
       display: 'inline-flex', alignItems: 'center', gap: 4,
       padding: '4px 10px', borderRadius: 20, border: 'none',
-      background: liked ? '#fef2f2' : 'transparent',
+      background: liked ? '#f0fdf4' : 'transparent',
       color: liked ? '#ef4444' : '#9ca3af',
       fontSize: 12, cursor: 'pointer', marginTop: 6,
       transition: 'all 0.15s',

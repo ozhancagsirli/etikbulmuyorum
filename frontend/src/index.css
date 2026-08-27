@@ -1,15 +1,15 @@
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
 :root {
-  --orange:      #FF4500;
+  --orange:      #46A53E;
   --orange-dark: #e03d00;
-  --orange-light:#fff5f0;
+  --orange-light:#f0fdf4;
   --orange-border:#ffd5c2;
   --green:       #22c55e;
   --green-light: #f0fdf4;
   --green-border:#bbf7d0;
   --red:         #ef4444;
-  --red-light:   #fef2f2;
+  --red-light:   #f0fdf4;
   --red-border:  #fecaca;
   --blue:        #3b82f6;
   --blue-light:  #eff6ff;

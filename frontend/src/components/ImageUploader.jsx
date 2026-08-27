@@ -73,7 +73,7 @@ export default function ImageUploader({ images, onChange }) {
             padding: '28px 20px',
             textAlign: 'center',
             cursor: uploading ? 'not-allowed' : 'pointer',
-            background: dragging ? '#fef2f2' : uploading ? '#fafafa' : 'white',
+            background: dragging ? '#f0fdf4' : uploading ? '#fafafa' : 'white',
             transition: 'all 0.2s',
             marginBottom: images.length > 0 ? 12 : 0,
           }}

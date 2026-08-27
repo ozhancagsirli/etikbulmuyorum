@@ -22,7 +22,7 @@ export default function SubjectPage() {
 
   return (
     <div style={{ maxWidth: 740, margin: '0 auto' }}>
-      <Link to="/" style={{ color: '#FF4500', fontSize: 13 }}>← Ana sayfaya dön</Link>
+      <Link to="/" style={{ color: '#46A53E', fontSize: 13 }}>← Ana sayfaya dön</Link>
 
       <div style={{ background: 'white', borderRadius: 16, border: '1px solid #e0e0e0', padding: '24px 28px', margin: '12px 0', display: 'flex', gap: 20, alignItems: 'center' }}>
         <div style={{ width: 64, height: 64, borderRadius: '50%', background: '#f0f4ff', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 28, flexShrink: 0 }}>
@@ -48,7 +48,7 @@ export default function SubjectPage() {
         <div style={{ background: 'white', borderRadius: 12, padding: 40, textAlign: 'center', border: '1px solid #e0e0e0' }}>
           <div style={{ fontSize: 40, marginBottom: 12 }}>🔍</div>
           <p style={{ color: '#888' }}>Bu konu hakkında henüz olay yok.</p>
-          <Link to="/bildir" style={{ color: '#FF4500', fontWeight: 600 }}>Şikayet Ekle →</Link>
+          <Link to="/bildir" style={{ color: '#46A53E', fontWeight: 600 }}>Şikayet Ekle →</Link>
         </div>
       ) : (
         <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
@@ -74,7 +74,7 @@ export default function SubjectPage() {
               <div key={inc.id} style={{ background: 'white', borderRadius: 12, border: isUnethical ? '1.5px solid #f85149' : '1px solid #e0e0e0', padding: '14px 18px' }}>
                 <div style={{ display: 'flex', gap: 6, marginBottom: 6, flexWrap: 'wrap', alignItems: 'center' }}>
                   {isUnethical && <span style={{ fontSize: 11, background: '#ffeef0', color: '#cf222e', padding: '2px 8px', borderRadius: 20, fontWeight: 700 }}>❌ Etik Dışı Sonuçlandı</span>}
-                  {inc.category_name && <span style={{ fontSize: 11, background: '#fff5f0', color: '#FF4500', padding: '2px 8px', borderRadius: 20, fontWeight: 600 }}>{inc.category_icon} {inc.category_name}</span>}
+                  {inc.category_name && <span style={{ fontSize: 11, background: '#f0fdf4', color: '#46A53E', padding: '2px 8px', borderRadius: 20, fontWeight: 600 }}>{inc.category_icon} {inc.category_name}</span>}
                   <span style={{ fontSize: 11, color: '#aaa', marginLeft: 'auto' }}>{formatDistanceToNow(new Date(inc.created_at), { locale: tr, addSuffix: true })}</span>
                 </div>
                 <Link to={'/olay/' + inc.id}>

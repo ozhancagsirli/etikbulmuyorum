@@ -39,7 +39,7 @@ export default function HomePage() {
         <div style={{ background: 'white', borderRadius: 12, border: '1px solid #e5e7eb', padding: '14px 18px', marginBottom: 14, display: 'flex', alignItems: 'center', gap: 10 }}>
           <Search size={15} color="#9ca3af" />
           <span style={{ fontSize: 14, color: '#374151' }}>"<strong>{search}</strong>" için sonuçlar</span>
-          <a href="/" style={{ marginLeft: 'auto', fontSize: 12, color: '#dc2626' }}>× temizle</a>
+          <a href="/" style={{ marginLeft: 'auto', fontSize: 12, color: '#013C26' }}>× temizle</a>
         </div>
         {loading ? (
           <div style={{ textAlign: 'center', padding: 48, color: '#9ca3af' }}>Aranıyor...</div>
@@ -47,7 +47,7 @@ export default function HomePage() {
           <div style={{ background: 'white', borderRadius: 12, padding: 48, textAlign: 'center', border: '1px solid #e5e7eb' }}>
             <div style={{ fontSize: 40, marginBottom: 12 }}>🔍</div>
             <div style={{ fontWeight: 600, marginBottom: 8 }}>"{search}" için sonuç bulunamadı</div>
-            <Link to="/bildir" style={{ color: '#FF4500', fontWeight: 600 }}>İlk bildirimi sen ekle →</Link>
+            <Link to="/bildir" style={{ color: '#46A53E', fontWeight: 600 }}>İlk bildirimi sen ekle →</Link>
           </div>
         ) : (
           <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
@@ -126,7 +126,7 @@ export default function HomePage() {
                   <div style={{ fontSize: 13, color: '#6b7280', lineHeight: 1.6, marginBottom: 14, display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>{inc.title}</div>
                   <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
                     {total > 0 ? (
-                      <span style={{ fontSize: 12, fontWeight: 700, padding: '3px 10px', borderRadius: 20, background: ts >= 50 ? '#f0fdf4' : ts >= -10 ? '#fffbeb' : '#fef2f2', color: ts >= 50 ? '#16a34a' : ts >= -10 ? '#d97706' : '#dc2626' }}>
+                      <span style={{ fontSize: 12, fontWeight: 700, padding: '3px 10px', borderRadius: 20, background: ts >= 50 ? '#f0fdf4' : ts >= -10 ? '#fffbeb' : '#f0fdf4', color: ts >= 50 ? '#16a34a' : ts >= -10 ? '#d97706' : '#dc2626' }}>
                         {ts > 0 ? '+' : ''}{ts} {ts >= 50 ? 'Güvenilir' : ts >= -10 ? 'Dikkatli' : 'Güvenilmez'}
                       </span>
                     ) : (
@@ -225,7 +225,7 @@ function IncidentCard({ incident: inc }) {
           <h2 style={{ fontSize: 14, fontWeight: 600, marginBottom: 6, color: '#374151', lineHeight: 1.4 }}>{inc.title}</h2>
         </Link>
         <p style={{ fontSize: 13, color: '#6b7280', marginBottom: 10, lineHeight: 1.6, display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>{inc.description}</p>
-        {inc.category_name && <div style={{ marginBottom: 10 }}><span style={{ fontSize: 11, background: '#fff5f0', color: '#FF4500', padding: '2px 8px', borderRadius: 20, fontWeight: 600 }}>{inc.category_icon} {inc.category_name}</span></div>}
+        {inc.category_name && <div style={{ marginBottom: 10 }}><span style={{ fontSize: 11, background: '#f0fdf4', color: '#46A53E', padding: '2px 8px', borderRadius: 20, fontWeight: 600 }}>{inc.category_icon} {inc.category_name}</span></div>}
         <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
           {total > 0 ? (
             <span style={{ fontSize: 12, fontWeight: 700, color: ts >= 50 ? '#16a34a' : ts >= -10 ? '#d97706' : '#dc2626' }}>

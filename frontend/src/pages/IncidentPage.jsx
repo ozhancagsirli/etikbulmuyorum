@@ -54,7 +54,7 @@ export default function IncidentPage() {
   if (!incident) return (
     <div style={{ background: 'white', borderRadius: 12, padding: 48, textAlign: 'center', border: '1px solid #e5e7eb' }}>
       <p style={{ marginBottom: 16, color: '#6b7280' }}>Olay bulunamadı.</p>
-      <Link to="/" style={{ color: '#FF4500', fontWeight: 600 }}>Ana sayfaya dön</Link>
+      <Link to="/" style={{ color: '#46A53E', fontWeight: 600 }}>Ana sayfaya dön</Link>
     </div>
   );
 
@@ -66,7 +66,7 @@ export default function IncidentPage() {
   return (
     <div style={{ maxWidth: 740, margin: '0 auto', display: 'flex', flexDirection: 'column', gap: 12 }}>
 
-      <button onClick={() => navigate(-1)} style={{ display: 'inline-flex', alignItems: 'center', gap: 6, color: '#FF4500', fontSize: 13, background: 'none', border: 'none', cursor: 'pointer', padding: 0, fontWeight: 500 }}>
+      <button onClick={() => navigate(-1)} style={{ display: 'inline-flex', alignItems: 'center', gap: 6, color: '#46A53E', fontSize: 13, background: 'none', border: 'none', cursor: 'pointer', padding: 0, fontWeight: 500 }}>
         <ArrowLeft size={16} /> Geri
       </button>
 
@@ -76,7 +76,7 @@ export default function IncidentPage() {
           {/* Meta üst */}
           <div style={{ display: 'flex', gap: 8, marginBottom: 12, flexWrap: 'wrap', alignItems: 'center' }}>
             {incident.category_name && (
-              <span style={{ display: 'inline-flex', alignItems: 'center', gap: 4, fontSize: 12, background: '#fff5f0', color: '#FF4500', padding: '3px 10px', borderRadius: 20, fontWeight: 600, border: '1px solid #ffd5c2' }}>
+              <span style={{ display: 'inline-flex', alignItems: 'center', gap: 4, fontSize: 12, background: '#f0fdf4', color: '#46A53E', padding: '3px 10px', borderRadius: 20, fontWeight: 600, border: '1px solid #ffd5c2' }}>
                 {incident.category_icon} {incident.category_name}
               </span>
             )}
@@ -169,7 +169,7 @@ export default function IncidentPage() {
           <div style={{ padding: '14px 20px', background: '#f9fafb', borderTop: '1px solid #f3f4f6', borderBottom: '1px solid #f3f4f6', marginBottom: 0 }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 13, marginBottom: 8, fontWeight: 600 }}>
               <span style={{ color: '#16a34a', display: 'flex', alignItems: 'center', gap: 5 }}>✅ Güvenilir — {incident.vote_ethical} oy ({ethPct}%)</span>
-              <span style={{ color: '#dc2626', display: 'flex', alignItems: 'center', gap: 5 }}>❌ Güvenilmez — {incident.vote_unethical} oy ({100 - ethPct}%)</span>
+              <span style={{ color: '#013C26', display: 'flex', alignItems: 'center', gap: 5 }}>❌ Güvenilmez — {incident.vote_unethical} oy ({100 - ethPct}%)</span>
             </div>
             <div style={{ height: 8, background: '#fecaca', borderRadius: 4, overflow: 'hidden' }}>
               <div style={{ width: ethPct + '%', height: '100%', background: '#22c55e', borderRadius: 4, transition: 'width 0.6s' }} />
@@ -209,17 +209,17 @@ export default function IncidentPage() {
                 </div>
                 <textarea value={comment} onChange={e => setComment(e.target.value)} placeholder="Görüşünüzü paylaşın..." rows={3}
                   style={{ flex: 1, padding: '10px 14px', borderRadius: 12, border: '1.5px solid #e5e7eb', fontSize: 14, resize: 'vertical', fontFamily: 'inherit', background: 'white', outline: 'none', lineHeight: 1.6 }}
-                  onFocus={e => e.target.style.borderColor='#FF4500'}
+                  onFocus={e => e.target.style.borderColor='#46A53E'}
                   onBlur={e => e.target.style.borderColor='#e5e7eb'}
                 />
               </div>
               <div style={{ display: 'flex', gap: 10, alignItems: 'center', paddingLeft: 46 }}>
                 <label style={{ fontSize: 13, cursor: 'pointer', display: 'flex', gap: 6, alignItems: 'center', color: '#6b7280' }}>
-                  <input type="checkbox" checked={anon} onChange={e => setAnon(e.target.checked)} style={{ accentColor: '#FF4500' }} /> Anonim
+                  <input type="checkbox" checked={anon} onChange={e => setAnon(e.target.checked)} style={{ accentColor: '#46A53E' }} /> Anonim
                 </label>
                 <button type="submit" disabled={submitting || !comment.trim()} style={{
                   marginLeft: 'auto', padding: '7px 20px', borderRadius: 20, border: 'none',
-                  background: !comment.trim() ? '#e5e7eb' : '#FF4500',
+                  background: !comment.trim() ? '#e5e7eb' : '#46A53E',
                   color: !comment.trim() ? '#9ca3af' : 'white',
                   fontWeight: 700, fontSize: 13, cursor: comment.trim() ? 'pointer' : 'not-allowed',
                 }}>{submitting ? '...' : 'Yorum Yap'}</button>
@@ -227,7 +227,7 @@ export default function IncidentPage() {
             </form>
           ) : (
             <div style={{ marginBottom: 20, padding: '14px 16px', background: '#f9fafb', borderRadius: 12, textAlign: 'center', fontSize: 14, color: '#6b7280' }}>
-              Yorum yapmak için <Link to="/giris" style={{ color: '#FF4500', fontWeight: 600 }}>giriş yapın</Link>
+              Yorum yapmak için <Link to="/giris" style={{ color: '#46A53E', fontWeight: 600 }}>giriş yapın</Link>
             </div>
           )}
 

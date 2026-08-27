@@ -17,7 +17,7 @@ export default function LeaderboardPage() {
     <div style={{ maxWidth: 700, margin: '0 auto' }}>
       <div style={{ background: 'white', borderRadius: 16, border: '1px solid #e5e7eb', padding: '20px 24px', marginBottom: 16 }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-          <Trophy size={22} color="#FF4500" />
+          <Trophy size={22} color="#46A53E" />
           <div>
             <h1 style={{ fontSize: 20, fontWeight: 800, margin: 0 }}>Liderboard</h1>
             <p style={{ color: '#9ca3af', fontSize: 13, margin: 0 }}>En aktif kullanıcılar</p>
@@ -43,7 +43,7 @@ export default function LeaderboardPage() {
               <div style={{ width: 40, height: 40, borderRadius: '50%', flexShrink: 0, overflow: 'hidden', background: '#f3f4f6', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                 {u.avatar_url
                   ? <img src={u.avatar_url} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
-                  : <span style={{ fontWeight: 700, color: '#FF4500', fontSize: 16 }}>{u.name?.[0]?.toUpperCase()}</span>
+                  : <span style={{ fontWeight: 700, color: '#46A53E', fontSize: 16 }}>{u.name?.[0]?.toUpperCase()}</span>
                 }
               </div>
               <div style={{ flex: 1, minWidth: 0 }}>
@@ -55,7 +55,7 @@ export default function LeaderboardPage() {
                 </div>
               </div>
               <div style={{ textAlign: 'right', flexShrink: 0 }}>
-                <div style={{ fontSize: 20, fontWeight: 800, color: '#FF4500' }}>{u.total_votes}</div>
+                <div style={{ fontSize: 20, fontWeight: 800, color: '#46A53E' }}>{u.total_votes}</div>
                 <div style={{ fontSize: 11, color: '#9ca3af' }}>toplam oy</div>
               </div>
             </div>

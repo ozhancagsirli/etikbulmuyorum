@@ -6,7 +6,7 @@ import { useAuthStore } from '../lib/authStore';
 
 const VOTES = [
   { key: 'correct',      label: 'Doğru',           icon: <ThumbsUp size={16} />,    color: '#16a34a', bg: '#f0fdf4', border: '#22c55e' },
-  { key: 'wrong',        label: 'Yanlış',           icon: <ThumbsDown size={16} />,  color: '#dc2626', bg: '#fef2f2', border: '#ef4444' },
+  { key: 'wrong',        label: 'Yanlış',           icon: <ThumbsDown size={16} />,  color: '#013C26', bg: '#f0fdf4', border: '#ef4444' },
   { key: 'neutral',      label: 'Nötr',             icon: <Minus size={16} />,       color: '#6b7280', bg: '#f9fafb', border: '#d1d5db' },
   { key: 'insufficient', label: 'Yetersiz Bilgi',   icon: <HelpCircle size={16} />,  color: '#d97706', bg: '#fffbeb', border: '#fbbf24' },
 ];

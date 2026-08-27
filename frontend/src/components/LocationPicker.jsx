@@ -179,7 +179,7 @@ export default function LocationPicker({ value, onChange }) {
                   style={{
                     display: 'block', width: '100%', padding: '9px 14px',
                     textAlign: 'left', border: 'none', fontSize: 13, cursor: 'pointer',
-                    background: selectedIl === il ? '#fef2f2' : 'white',
+                    background: selectedIl === il ? '#f0fdf4' : 'white',
                     color: selectedIl === il ? '#dc2626' : '#333',
                     fontWeight: selectedIl === il ? 600 : 400,
                     borderLeft: selectedIl === il ? '3px solid #dc2626' : '3px solid transparent',
@@ -200,7 +200,7 @@ export default function LocationPicker({ value, onChange }) {
                     style={{
                       display: 'block', width: '100%', padding: '9px 14px',
                       textAlign: 'left', border: 'none', fontSize: 13, cursor: 'pointer',
-                      background: '#f8f9fa', color: '#dc2626', fontWeight: 600,
+                      background: '#f8f9fa', color: '#013C26', fontWeight: 600,
                       borderBottom: '1px solid #f0f0f0',
                     }}
                   >
@@ -214,7 +214,7 @@ export default function LocationPicker({ value, onChange }) {
                       style={{
                         display: 'block', width: '100%', padding: '9px 14px',
                         textAlign: 'left', border: 'none', fontSize: 13, cursor: 'pointer',
-                        background: selectedIlce === ilce ? '#fef2f2' : 'white',
+                        background: selectedIlce === ilce ? '#f0fdf4' : 'white',
                         color: selectedIlce === ilce ? '#dc2626' : '#444',
                         fontWeight: selectedIlce === ilce ? 600 : 400,
                       }}

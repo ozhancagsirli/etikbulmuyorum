@@ -41,7 +41,7 @@ export default function ShareButton({ title, url }) {
         background: 'white', color: '#6b7280', fontSize: 13, fontWeight: 500, cursor: 'pointer',
         transition: 'all 0.15s',
       }}
-        onMouseEnter={e => { e.currentTarget.style.borderColor='#FF4500'; e.currentTarget.style.color='#FF4500'; }}
+        onMouseEnter={e => { e.currentTarget.style.borderColor='#46A53E'; e.currentTarget.style.color='#46A53E'; }}
         onMouseLeave={e => { e.currentTarget.style.borderColor='#e5e7eb'; e.currentTarget.style.color='#6b7280'; }}
       >
         <Share2 size={15} /> Paylaş

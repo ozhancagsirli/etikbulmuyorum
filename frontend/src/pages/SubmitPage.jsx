@@ -37,7 +37,7 @@ export default function SubmitPage() {
     <div style={{ background: 'white', borderRadius: 12, padding: 48, textAlign: 'center', border: '1px solid #e0e0e0', maxWidth: 480, margin: '0 auto' }}>
       <div style={{ fontSize: 48, marginBottom: 16 }}>🔐</div>
       <p style={{ fontSize: 16, color: '#444', marginBottom: 20 }}>Olay bildirmek için giriş yapmanız gerekiyor.</p>
-      <Link to="/" style={{ color: '#FF4500', fontWeight: 600, fontSize: 15 }}>Ana sayfaya dön</Link>
+      <Link to="/" style={{ color: '#46A53E', fontWeight: 600, fontSize: 15 }}>Ana sayfaya dön</Link>
     </div>
   );
 
@@ -120,13 +120,13 @@ export default function SubmitPage() {
           <div key={n} style={{ display: 'flex', alignItems: 'center', gap: 8, flex: n < 3 ? 1 : 'none' }}>
             <div style={{
               width: 28, height: 28, borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center',
-              background: step >= n ? '#FF4500' : '#f0f0f0',
+              background: step >= n ? '#46A53E' : '#f0f0f0',
               color: step >= n ? 'white' : '#888', fontWeight: 700, fontSize: 13, flexShrink: 0,
             }}>{step > n ? '✓' : n}</div>
             <span style={{ fontSize: 13, color: step >= n ? '#1c1c1c' : '#aaa', fontWeight: step === n ? 600 : 400 }}>
               {n === 1 ? 'Temel Bilgiler' : n === 2 ? 'Olay Detayı' : 'Son Ayarlar'}
             </span>
-            {n < 3 && <div style={{ flex: 1, height: 2, background: step > n ? '#FF4500' : '#f0f0f0', borderRadius: 1 }} />}
+            {n < 3 && <div style={{ flex: 1, height: 2, background: step > n ? '#46A53E' : '#f0f0f0', borderRadius: 1 }} />}
           </div>
         ))}
       </div>
@@ -138,15 +138,15 @@ export default function SubmitPage() {
           <div style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
             <div>
               <label style={{ display: 'block', fontWeight: 600, fontSize: 13, marginBottom: 8 }}>
-                Kategori <span style={{ color: '#FF4500' }}>*</span>
+                Kategori <span style={{ color: '#46A53E' }}>*</span>
               </label>
               <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 8 }}>
                 {categories.map(c => (
                   <button key={c.id} type="button" onClick={() => setForm(f => ({ ...f, categoryId: c.id }))} style={{
                     padding: '10px 8px', borderRadius: 8, border: '1.5px solid',
-                    borderColor: String(form.categoryId) === String(c.id) ? '#FF4500' : '#e0e0e0',
-                    background: String(form.categoryId) === String(c.id) ? '#fff5f0' : 'white',
-                    color: String(form.categoryId) === String(c.id) ? '#FF4500' : '#444',
+                    borderColor: String(form.categoryId) === String(c.id) ? '#46A53E' : '#e0e0e0',
+                    background: String(form.categoryId) === String(c.id) ? '#f0fdf4' : 'white',
+                    color: String(form.categoryId) === String(c.id) ? '#46A53E' : '#444',
                     fontWeight: String(form.categoryId) === String(c.id) ? 600 : 400,
                     fontSize: 13, cursor: 'pointer', textAlign: 'center',
                   }}>
@@ -159,7 +159,7 @@ export default function SubmitPage() {
 
             <div>
               <label style={{ display: 'block', fontWeight: 600, fontSize: 13, marginBottom: 8 }}>
-                Başlık <span style={{ color: '#FF4500' }}>*</span>
+                Başlık <span style={{ color: '#46A53E' }}>*</span>
               </label>
               <input
                 value={form.title}
@@ -176,7 +176,7 @@ export default function SubmitPage() {
             {/* Şirket / Kişi / Marka — autocomplete */}
             <div ref={subjectRef} style={{ position: 'relative' }}>
               <label style={{ display: 'block', fontWeight: 600, fontSize: 13, marginBottom: 8 }}>
-                👤 Şahıs Adı Soyadı <span style={{ color: '#FF4500' }}>*</span>
+                👤 Şahıs Adı Soyadı <span style={{ color: '#46A53E' }}>*</span>
               </label>
               <input
                 value={form.subject}
@@ -213,7 +213,7 @@ export default function SubmitPage() {
 
             <button type="button" onClick={nextStep} style={{
               padding: '12px', borderRadius: 8, border: 'none',
-              background: '#FF4500', color: 'white', fontWeight: 700, fontSize: 15, cursor: 'pointer',
+              background: '#46A53E', color: 'white', fontWeight: 700, fontSize: 15, cursor: 'pointer',
             }}>Devam Et →</button>
           </div>
         )}
@@ -222,9 +222,9 @@ export default function SubmitPage() {
         {step === 2 && (
           <div style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
             {selectedCategory && (
-              <div style={{ display: 'flex', alignItems: 'center', gap: 8, padding: '10px 14px', background: '#fff5f0', borderRadius: 8, border: '1px solid #ffd5c2' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 8, padding: '10px 14px', background: '#f0fdf4', borderRadius: 8, border: '1px solid #ffd5c2' }}>
                 <span style={{ fontSize: 20 }}>{selectedCategory.icon}</span>
-                <span style={{ fontSize: 14, color: '#FF4500', fontWeight: 600 }}>{selectedCategory.name_tr}</span>
+                <span style={{ fontSize: 14, color: '#46A53E', fontWeight: 600 }}>{selectedCategory.name_tr}</span>
                 <span style={{ fontSize: 13, color: '#888' }}>— {form.title}</span>
                 {form.subject && <span style={{ fontSize: 12, background: '#f0f0f0', padding: '2px 8px', borderRadius: 20, color: '#555' }}>📌 {form.subject}</span>}
               </div>
@@ -232,7 +232,7 @@ export default function SubmitPage() {
 
             <div>
               <label style={{ display: 'block', fontWeight: 600, fontSize: 13, marginBottom: 8 }}>
-                Ne Yaşandı? <span style={{ color: '#FF4500' }}>*</span>
+                Ne Yaşandı? <span style={{ color: '#46A53E' }}>*</span>
               </label>
               <textarea value={form.description} onChange={set('description')} rows={7} maxLength={5000}
                 placeholder="Ne söz verdi, ne yaptı? Kanıt var mı? Ayrıntılı anlatın..."
@@ -261,7 +261,7 @@ export default function SubmitPage() {
               }}>← Geri</button>
               <button type="button" onClick={nextStep} style={{
                 flex: 2, padding: '12px', borderRadius: 8, border: 'none',
-                background: '#FF4500', color: 'white', fontWeight: 700, fontSize: 15, cursor: 'pointer',
+                background: '#46A53E', color: 'white', fontWeight: 700, fontSize: 15, cursor: 'pointer',
               }}>Devam Et →</button>
             </div>
           </div>
@@ -295,8 +295,8 @@ export default function SubmitPage() {
 
             
 
-            <label style={{ display: 'flex', gap: 12, alignItems: 'center', cursor: 'pointer', padding: '14px 16px', background: '#f8f9fa', borderRadius: 8, border: '1.5px solid', borderColor: form.isAnonymous ? '#FF4500' : '#eee' }}>
-              <input type="checkbox" checked={form.isAnonymous} onChange={set('isAnonymous')} style={{ width: 18, height: 18, accentColor: '#FF4500' }} />
+            <label style={{ display: 'flex', gap: 12, alignItems: 'center', cursor: 'pointer', padding: '14px 16px', background: '#f8f9fa', borderRadius: 8, border: '1.5px solid', borderColor: form.isAnonymous ? '#46A53E' : '#eee' }}>
+              <input type="checkbox" checked={form.isAnonymous} onChange={set('isAnonymous')} style={{ width: 18, height: 18, accentColor: '#46A53E' }} />
               <div>
                 <div style={{ fontWeight: 600, fontSize: 14 }}>🎭 Anonim olarak paylaş</div>
                 <div style={{ fontSize: 12, color: '#888', marginTop: 2 }}>Adınız gösterilmez, kimliğiniz gizlenir</div>
@@ -314,7 +314,7 @@ export default function SubmitPage() {
               }}>← Geri</button>
               <button type="submit" disabled={submitting} style={{
                 flex: 2, padding: '13px', borderRadius: 8, border: 'none',
-                background: submitting ? '#ccc' : '#FF4500',
+                background: submitting ? '#ccc' : '#46A53E',
                 color: 'white', fontWeight: 700, fontSize: 16,
                 cursor: submitting ? 'not-allowed' : 'pointer',
               }}>
