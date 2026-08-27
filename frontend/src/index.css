@@ -1,8 +1,8 @@
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
 :root {
-  --black:       #0a0a0a;
-  --yellow:      #e8ff00;
+  --black:       #111827;
+  --yellow:      #16a34a;
   --red:         #dc2626;
   --red-light:   #fef2f2;
   --red-border:  #fecaca;
@@ -38,4 +38,4 @@ input, textarea, select { font-family: inherit; }
 ::-webkit-scrollbar-track { background: #f1f5f9; }
 ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 3px; }
 
-::selection { background: #e8ff00; color: #0a0a0a; }
+::selection { background: #16a34a; color: #111827; }

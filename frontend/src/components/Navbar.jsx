@@ -40,19 +40,19 @@ export default function Navbar() {
   return (
     <>
       <nav style={{
-        background: '#0a0a0a',
+        background: '#111827',
         position: 'sticky', top: 0, zIndex: 100,
-        borderBottom: '1px solid #1a1a1a',
+        borderBottom: '1px solid #e5e7eb',
         boxShadow: '0 1px 0 0 transparent',
       }}>
         {/* Gradient çizgi */}
-        <div style={{ height: 1, background: 'linear-gradient(90deg, transparent, #e8ff00 30%, #ff3333 70%, transparent)' }} />
+        <div style={{ height: 1, background: 'linear-gradient(90deg, transparent, #16a34a 30%, #ff3333 70%, transparent)' }} />
 
         <div style={{ maxWidth: 1100, margin: '0 auto', padding: '0 20px', height: 60, display: 'flex', alignItems: 'center', gap: 16 }}>
 
           {/* Logo */}
           <Link to="/" style={{ display: 'flex', alignItems: 'center', gap: 12, flexShrink: 0 }}>
-            <div style={{ width: 34, height: 34, borderRadius: 8, background: '#e8ff00', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 18 }}>⚖️</div>
+            <div style={{ width: 34, height: 34, borderRadius: 8, background: '#16a34a', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 18 }}>⚖️</div>
             <div>
               <div style={{ color: 'white', fontWeight: 900, fontSize: 15, letterSpacing: -0.8, lineHeight: 1.1 }}>etikbulmuyorum</div>
               <div style={{ color: '#3d3d3d', fontSize: 9, fontWeight: 700, letterSpacing: 2, textTransform: 'uppercase' }}>Hesap Vakti</div>
@@ -63,9 +63,9 @@ export default function Navbar() {
           <form onSubmit={handleSearch} id="desktop-search" style={{ flex: 1, maxWidth: 400, display: 'none', position: 'relative' }}>
             <Search size={14} color="#444" style={{ position: 'absolute', left: 13, top: '50%', transform: 'translateY(-50%)' }} />
             <input value={search} onChange={e => setSearch(e.target.value)} placeholder="Kişi veya firma ara..."
-              style={{ width: '100%', padding: '9px 16px 9px 36px', borderRadius: 6, border: '1px solid #1e1e1e', background: '#141414', color: '#ccc', fontSize: 13, outline: 'none', boxSizing: 'border-box', fontFamily: 'inherit' }}
-              onFocus={e => e.target.style.borderColor = '#e8ff00'}
-              onBlur={e => e.target.style.borderColor = '#1e1e1e'}
+              style={{ width: '100%', padding: '9px 16px 9px 36px', borderRadius: 6, border: '1px solid #e5e7eb', background: '#f9fafb', color: '#ccc', fontSize: 13, outline: 'none', boxSizing: 'border-box', fontFamily: 'inherit' }}
+              onFocus={e => e.target.style.borderColor = '#16a34a'}
+              onBlur={e => e.target.style.borderColor = '#e5e7eb'}
             />
           </form>
 
@@ -79,18 +79,18 @@ export default function Navbar() {
 
             {user ? (
               <>
-                <Link to="/bildir" style={{ background: '#e8ff00', color: '#0a0a0a', padding: '9px 18px', borderRadius: 6, fontWeight: 800, fontSize: 13, flexShrink: 0 }}>
+                <Link to="/bildir" style={{ background: '#16a34a', color: '#111827', padding: '9px 18px', borderRadius: 6, fontWeight: 800, fontSize: 13, flexShrink: 0 }}>
                   Olay Bildir
                 </Link>
                 <NotificationBell />
                 <div style={{ position: 'relative' }}>
-                  <button onClick={() => setMenuOpen(m => !m)} style={{ display: 'flex', alignItems: 'center', gap: 7, background: '#141414', border: '1px solid #222', borderRadius: 6, padding: '7px 12px 7px 7px', cursor: 'pointer' }}
-                    onMouseEnter={e => e.currentTarget.style.borderColor = '#e8ff00'}
+                  <button onClick={() => setMenuOpen(m => !m)} style={{ display: 'flex', alignItems: 'center', gap: 7, background: '#f9fafb', border: '1px solid #222', borderRadius: 6, padding: '7px 12px 7px 7px', cursor: 'pointer' }}
+                    onMouseEnter={e => e.currentTarget.style.borderColor = '#16a34a'}
                     onMouseLeave={e => e.currentTarget.style.borderColor = '#222'}
                   >
                     {user.avatarUrl
                       ? <img src={user.avatarUrl} alt="" style={{ width: 24, height: 24, borderRadius: '50%' }} />
-                      : <div style={{ width: 24, height: 24, borderRadius: '50%', background: '#e8ff00', color: '#0a0a0a', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 900, fontSize: 11 }}>{user.name?.[0]?.toUpperCase()}</div>
+                      : <div style={{ width: 24, height: 24, borderRadius: '50%', background: '#16a34a', color: '#111827', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 900, fontSize: 11 }}>{user.name?.[0]?.toUpperCase()}</div>
                     }
                     <span style={{ fontSize: 13, fontWeight: 700, color: '#ccc', maxWidth: 60, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{user.name?.split(' ')[0]}</span>
                     <ChevronDown size={12} color="#444" />
@@ -99,8 +99,8 @@ export default function Navbar() {
                   {menuOpen && (
                     <div style={{ position: 'absolute', right: 0, top: 46, background: 'white', borderRadius: 8, border: '1px solid #e5e7eb', boxShadow: '0 8px 24px rgba(0,0,0,0.12)', minWidth: 200, overflow: 'hidden', zIndex: 200 }}
                       onClick={() => setMenuOpen(false)}>
-                      <Link to="/profil" style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '14px 16px', color: '#0a0a0a', fontSize: 14, borderBottom: '1px solid #f3f4f6' }}>
-                        {user.avatarUrl ? <img src={user.avatarUrl} alt="" style={{ width: 30, height: 30, borderRadius: '50%' }} /> : <div style={{ width: 30, height: 30, borderRadius: '50%', background: '#e8ff00', color: '#0a0a0a', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 900 }}>{user.name?.[0]?.toUpperCase()}</div>}
+                      <Link to="/profil" style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '14px 16px', color: '#111827', fontSize: 14, borderBottom: '1px solid #f3f4f6' }}>
+                        {user.avatarUrl ? <img src={user.avatarUrl} alt="" style={{ width: 30, height: 30, borderRadius: '50%' }} /> : <div style={{ width: 30, height: 30, borderRadius: '50%', background: '#16a34a', color: '#111827', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 900 }}>{user.name?.[0]?.toUpperCase()}</div>}
                         <div><div style={{ fontWeight: 700, fontSize: 13 }}>{user.name?.split(' ')[0]}</div><div style={{ fontSize: 11, color: '#9ca3af' }}>Profil</div></div>
                       </Link>
                       <Link to="/bildir" style={{ display: 'flex', alignItems: 'center', gap: 8, padding: '11px 16px', color: '#374151', fontSize: 13, borderBottom: '1px solid #f3f4f6' }}>
@@ -123,7 +123,7 @@ export default function Navbar() {
                 <div id="google-btn" style={{ transform: 'scale(0.85)', transformOrigin: 'right center' }} />
                 <div style={{ width: 1, height: 20, background: '#222' }} />
                 <Link to="/giris" style={{ color: '#555', fontSize: 13, fontWeight: 600, whiteSpace: 'nowrap' }}>Giriş Yap</Link>
-                <Link to="/giris?tab=register" style={{ background: '#e8ff00', color: '#0a0a0a', fontSize: 13, fontWeight: 800, padding: '9px 18px', borderRadius: 6, whiteSpace: 'nowrap' }}>
+                <Link to="/giris?tab=register" style={{ background: '#16a34a', color: '#111827', fontSize: 13, fontWeight: 800, padding: '9px 18px', borderRadius: 6, whiteSpace: 'nowrap' }}>
                   Kayıt Ol
                 </Link>
               </div>
@@ -133,11 +133,11 @@ export default function Navbar() {
 
         {/* Mobil arama */}
         {mobileSearch && (
-          <div style={{ padding: '10px 20px', borderTop: '1px solid #1a1a1a', background: '#0a0a0a' }}>
+          <div style={{ padding: '10px 20px', borderTop: '1px solid #e5e7eb', background: '#111827' }}>
             <form onSubmit={handleSearch} style={{ position: 'relative' }}>
               <Search size={14} color="#444" style={{ position: 'absolute', left: 13, top: '50%', transform: 'translateY(-50%)' }} />
               <input autoFocus value={search} onChange={e => setSearch(e.target.value)} placeholder="Kişi veya firma ara..."
-                style={{ width: '100%', padding: '10px 16px 10px 36px', borderRadius: 6, border: '1px solid #e8ff00', background: '#141414', color: '#ccc', fontSize: 14, outline: 'none', boxSizing: 'border-box', fontFamily: 'inherit' }} />
+                style={{ width: '100%', padding: '10px 16px 10px 36px', borderRadius: 6, border: '1px solid #16a34a', background: '#f9fafb', color: '#ccc', fontSize: 14, outline: 'none', boxSizing: 'border-box', fontFamily: 'inherit' }} />
             </form>
           </div>
         )}

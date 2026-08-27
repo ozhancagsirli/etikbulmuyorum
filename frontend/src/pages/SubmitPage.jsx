@@ -296,7 +296,7 @@ export default function SubmitPage() {
             
 
             <label style={{ display: 'flex', gap: 12, alignItems: 'center', cursor: 'pointer', padding: '14px 16px', background: '#f8f9fa', borderRadius: 8, border: '1.5px solid', borderColor: form.isAnonymous ? '#dc2626' : '#eee' }}>
-              <input type="checkbox" checked={form.isAnonymous} onChange={set('isAnonymous')} style={{ width: 18, height: 18, accentColor: '#e8ff00' }} />
+              <input type="checkbox" checked={form.isAnonymous} onChange={set('isAnonymous')} style={{ width: 18, height: 18, accentColor: '#16a34a' }} />
               <div>
                 <div style={{ fontWeight: 600, fontSize: 14 }}>🎭 Anonim olarak paylaş</div>
                 <div style={{ fontSize: 12, color: '#888', marginTop: 2 }}>Adınız gösterilmez, kimliğiniz gizlenir</div>
