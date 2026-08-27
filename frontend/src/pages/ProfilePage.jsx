@@ -38,7 +38,7 @@ export default function ProfilePage() {
   if (!user) return (
     <div style={{ background: 'white', borderRadius: 12, padding: 48, textAlign: 'center', border: '1px solid #e5e7eb' }}>
       <p style={{ marginBottom: 16, color: '#6b7280' }}>Giriş yapmanız gerekiyor.</p>
-      <Link to="/giris" style={{ color: '#dc2626', fontWeight: 600 }}>Giriş Yap</Link>
+      <Link to="/giris" style={{ color: '#FF4500', fontWeight: 600 }}>Giriş Yap</Link>
     </div>
   );
 
@@ -62,11 +62,11 @@ export default function ProfilePage() {
 
       {/* Profil kartı */}
       <div style={{ background: 'white', borderRadius: 16, border: '1px solid #e5e7eb', overflow: 'hidden' }}>
-        <div style={{ height: 72, background: '#dc2626' }} />
+        <div style={{ height: 72, background: '#FF4500' }} />
         <div style={{ padding: '0 20px 20px', position: 'relative' }}>
           {user.avatarUrl
             ? <img src={user.avatarUrl} alt="" style={{ width: 68, height: 68, borderRadius: '50%', border: '4px solid white', marginTop: -34, display: 'block' }} />
-            : <div style={{ width: 68, height: 68, borderRadius: '50%', border: '4px solid white', marginTop: -34, background: '#dc2626', color: 'white', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 800, fontSize: 28 }}>{user.name?.[0]?.toUpperCase()}</div>
+            : <div style={{ width: 68, height: 68, borderRadius: '50%', border: '4px solid white', marginTop: -34, background: '#FF4500', color: 'white', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 800, fontSize: 28 }}>{user.name?.[0]?.toUpperCase()}</div>
           }
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginTop: 10 }}>
             <div>
@@ -86,7 +86,7 @@ export default function ProfilePage() {
       {/* İstatistikler */}
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 10 }}>
         {[
-          { label: 'Toplam Olay', value: stats.total,      color: '#dc2626', icon: <BarChart2 size={18} /> },
+          { label: 'Toplam Olay', value: stats.total,      color: '#FF4500', icon: <BarChart2 size={18} /> },
           { label: 'Yayında',     value: stats.approved,   color: '#22c55e', icon: <CheckCircle size={18} /> },
           { label: 'İncelemede',  value: stats.pending,    color: '#f59e0b', icon: <Clock size={18} /> },
           { label: 'Toplam Oy',   value: stats.totalVotes, color: '#3b82f6', icon: <BarChart2 size={18} /> },
@@ -103,7 +103,7 @@ export default function ProfilePage() {
       <div style={{ background: 'white', borderRadius: 16, border: '1px solid #e5e7eb', overflow: 'hidden' }}>
         <div style={{ padding: '16px 20px', borderBottom: '1px solid #f3f4f6', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
           <div style={{ fontWeight: 700, fontSize: 16 }}>Paylaştığım Olaylar</div>
-          <Link to="/bildir" style={{ display: 'flex', alignItems: 'center', gap: 5, background: '#dc2626', color: 'white', padding: '7px 14px', borderRadius: 20, fontSize: 13, fontWeight: 600 }}>
+          <Link to="/bildir" style={{ display: 'flex', alignItems: 'center', gap: 5, background: '#FF4500', color: 'white', padding: '7px 14px', borderRadius: 20, fontSize: 13, fontWeight: 600 }}>
             <Plus size={14} /> Yeni
           </Link>
         </div>
@@ -114,10 +114,10 @@ export default function ProfilePage() {
             return (
               <button key={t.key} onClick={() => setActiveTab(t.key)} style={{
                 padding: '10px 14px', border: 'none', background: 'none', cursor: 'pointer', fontSize: 13,
-                fontWeight: activeTab === t.key ? 600 : 400, color: activeTab === t.key ? '#dc2626' : '#6b7280',
-                borderBottom: activeTab === t.key ? '2px solid #dc2626' : '2px solid transparent', marginBottom: -1, whiteSpace: 'nowrap',
+                fontWeight: activeTab === t.key ? 600 : 400, color: activeTab === t.key ? '#FF4500' : '#6b7280',
+                borderBottom: activeTab === t.key ? '2px solid #FF4500' : '2px solid transparent', marginBottom: -1, whiteSpace: 'nowrap',
               }}>
-                {t.label} <span style={{ fontSize: 11, background: activeTab === t.key ? '#dc2626' : '#f3f4f6', color: activeTab === t.key ? 'white' : '#9ca3af', padding: '1px 6px', borderRadius: 10, marginLeft: 4 }}>{count}</span>
+                {t.label} <span style={{ fontSize: 11, background: activeTab === t.key ? '#FF4500' : '#f3f4f6', color: activeTab === t.key ? 'white' : '#9ca3af', padding: '1px 6px', borderRadius: 10, marginLeft: 4 }}>{count}</span>
               </button>
             );
           })}
@@ -130,7 +130,7 @@ export default function ProfilePage() {
             <div style={{ textAlign: 'center', padding: 40 }}>
               <div style={{ fontSize: 32, marginBottom: 10 }}>📭</div>
               <div style={{ color: '#9ca3af', marginBottom: 12 }}>Bu kategoride olay yok.</div>
-              <Link to="/bildir" style={{ color: '#dc2626', fontWeight: 600 }}>İlk olayı bildir</Link>
+              <Link to="/bildir" style={{ color: '#FF4500', fontWeight: 600 }}>İlk olayı bildir</Link>
             </div>
           ) : (
             <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>

@@ -26,7 +26,7 @@ export default function StatsPage() {
       {/* Genel sayılar */}
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 10 }}>
         {[
-          { label: 'Toplam Olay', value: totals.total_incidents, icon: <FileText size={20} />, color: '#dc2626' },
+          { label: 'Toplam Olay', value: totals.total_incidents, icon: <FileText size={20} />, color: '#FF4500' },
           { label: 'Bu Hafta', value: totals.incidents_this_week, icon: <TrendingUp size={20} />, color: '#3b82f6' },
           { label: 'Toplam Oy', value: totals.total_votes, icon: <Vote size={20} />, color: '#22c55e' },
           { label: 'Kullanıcı', value: totals.total_users, icon: <Users size={20} />, color: '#f59e0b' },
@@ -47,7 +47,7 @@ export default function StatsPage() {
       {topSubjects.length > 0 && (
         <div style={{ background: 'white', borderRadius: 16, border: '1px solid #e5e7eb', overflow: 'hidden' }}>
           <div style={{ padding: '16px 20px', borderBottom: '1px solid #f3f4f6', display: 'flex', alignItems: 'center', gap: 8 }}>
-            <Building2 size={18} color="#dc2626" />
+            <Building2 size={18} color="#FF4500" />
             <span style={{ fontWeight: 700, fontSize: 16 }}>En Çok Şikayet Edilen</span>
           </div>
           <div>
@@ -80,7 +80,7 @@ export default function StatsPage() {
       {/* Kategorilere göre dağılım */}
       <div style={{ background: 'white', borderRadius: 16, border: '1px solid #e5e7eb', overflow: 'hidden' }}>
         <div style={{ padding: '16px 20px', borderBottom: '1px solid #f3f4f6', display: 'flex', alignItems: 'center', gap: 8 }}>
-          <Tag size={18} color="#dc2626" />
+          <Tag size={18} color="#FF4500" />
           <span style={{ fontWeight: 700, fontSize: 16 }}>Kategorilere Göre</span>
         </div>
         <div style={{ padding: '16px 20px', display: 'flex', flexDirection: 'column', gap: 10 }}>
@@ -96,7 +96,7 @@ export default function StatsPage() {
                     <span style={{ fontSize: 12, color: '#9ca3af' }}>{c.count} olay</span>
                   </div>
                   <div style={{ height: 6, background: '#f3f4f6', borderRadius: 3, overflow: 'hidden' }}>
-                    <div style={{ width: pct + '%', height: '100%', background: '#dc2626', borderRadius: 3, transition: 'width 0.6s' }} />
+                    <div style={{ width: pct + '%', height: '100%', background: '#FF4500', borderRadius: 3, transition: 'width 0.6s' }} />
                   </div>
                 </div>
               </div>

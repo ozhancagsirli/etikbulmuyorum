@@ -80,7 +80,7 @@ export default function ModerationPage() {
   return (
     <div style={{ maxWidth: 900, margin: '0 auto' }}>
       <div style={{ background: 'white', borderRadius: 16, border: '1px solid #e5e7eb', padding: '20px 24px', marginBottom: 16, display: 'flex', alignItems: 'center', gap: 10 }}>
-        <Shield size={22} color="#dc2626" />
+        <Shield size={22} color="#FF4500" />
         <div>
           <h1 style={{ fontSize: 20, fontWeight: 800, margin: 0 }}>Moderasyon Paneli</h1>
           <p style={{ color: '#9ca3af', fontSize: 13, margin: 0 }}>Admin görünümü</p>
@@ -93,8 +93,8 @@ export default function ModerationPage() {
           <button key={t.key} onClick={() => setTab(t.key)} style={{
             padding: '12px 14px', border: 'none', background: 'none', cursor: 'pointer',
             fontSize: 13, fontWeight: tab === t.key ? 700 : 400,
-            color: tab === t.key ? '#dc2626' : '#6b7280',
-            borderBottom: tab === t.key ? '2px solid #dc2626' : '2px solid transparent',
+            color: tab === t.key ? '#FF4500' : '#6b7280',
+            borderBottom: tab === t.key ? '2px solid #FF4500' : '2px solid transparent',
             whiteSpace: 'nowrap',
           }}>
             {t.label}
@@ -116,7 +116,7 @@ export default function ModerationPage() {
             ) : incidents.map(inc => (
               <div key={inc.id} style={{ background: 'white', borderRadius: 12, border: '1px solid #e5e7eb', padding: '16px 20px' }}>
                 <div style={{ display: 'flex', gap: 8, marginBottom: 8, flexWrap: 'wrap', alignItems: 'center' }}>
-                  {inc.category_name && <span style={{ fontSize: 11, background: '#fef2f2', color: '#dc2626', padding: '2px 8px', borderRadius: 20, fontWeight: 600 }}>{inc.category_icon} {inc.category_name}</span>}
+                  {inc.category_name && <span style={{ fontSize: 11, background: '#fff5f0', color: '#FF4500', padding: '2px 8px', borderRadius: 20, fontWeight: 600 }}>{inc.category_icon} {inc.category_name}</span>}
                   {inc.subject && <span style={{ fontSize: 11, background: '#eff6ff', color: '#3b82f6', padding: '2px 8px', borderRadius: 20 }}>📌 {inc.subject}</span>}
                   <span style={{ fontSize: 11, color: '#9ca3af', marginLeft: 'auto' }}>{formatDistanceToNow(new Date(inc.created_at), { locale: tr, addSuffix: true })}</span>
                 </div>
@@ -172,7 +172,7 @@ export default function ModerationPage() {
           <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 10 }}>
               {[
-                { label: 'Toplam Olay', value: stats.totals.total_incidents, color: '#dc2626', icon: <FileText size={20} /> },
+                { label: 'Toplam Olay', value: stats.totals.total_incidents, color: '#FF4500', icon: <FileText size={20} /> },
                 { label: 'Bu Hafta', value: stats.totals.incidents_this_week, color: '#3b82f6', icon: <BarChart2 size={20} /> },
                 { label: 'Toplam Oy', value: stats.totals.total_votes, color: '#22c55e', icon: <ThumbsUp size={20} /> },
                 { label: 'Kullanıcı', value: stats.totals.total_users, color: '#f59e0b', icon: <Users size={20} /> },
@@ -190,7 +190,7 @@ export default function ModerationPage() {
             {stats.topSubjects.length > 0 && (
               <div style={{ background: 'white', borderRadius: 12, border: '1px solid #e5e7eb', overflow: 'hidden' }}>
                 <div style={{ padding: '14px 20px', borderBottom: '1px solid #f3f4f6', fontWeight: 700, fontSize: 15, display: 'flex', alignItems: 'center', gap: 8 }}>
-                  <Building2 size={16} color="#dc2626" /> En Çok Şikayet Edilen
+                  <Building2 size={16} color="#FF4500" /> En Çok Şikayet Edilen
                 </div>
                 {stats.topSubjects.map((s, idx) => {
                   const total = Number(s.ethical) + Number(s.unethical);
@@ -224,7 +224,7 @@ export default function ModerationPage() {
                           <span style={{ fontSize: 12, color: '#9ca3af' }}>{c.count} olay</span>
                         </div>
                         <div style={{ height: 6, background: '#f3f4f6', borderRadius: 3, overflow: 'hidden' }}>
-                          <div style={{ width: pct + '%', height: '100%', background: '#dc2626', borderRadius: 3 }} />
+                          <div style={{ width: pct + '%', height: '100%', background: '#FF4500', borderRadius: 3 }} />
                         </div>
                       </div>
                     </div>
@@ -246,7 +246,7 @@ export default function ModerationPage() {
                   {idx === 0 ? '🥇' : idx === 1 ? '🥈' : idx === 2 ? '🥉' : idx + 1}
                 </span>
                 <div style={{ width: 38, height: 38, borderRadius: '50%', background: '#f3f4f6', overflow: 'hidden', flexShrink: 0, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                  {u.avatar_url ? <img src={u.avatar_url} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover' }} /> : <span style={{ fontWeight: 700, color: '#dc2626' }}>{u.name?.[0]?.toUpperCase()}</span>}
+                  {u.avatar_url ? <img src={u.avatar_url} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover' }} /> : <span style={{ fontWeight: 700, color: '#FF4500' }}>{u.name?.[0]?.toUpperCase()}</span>}
                 </div>
                 <div style={{ flex: 1 }}>
                   <div style={{ fontWeight: 600, fontSize: 14 }}>{u.name}</div>
@@ -256,7 +256,7 @@ export default function ModerationPage() {
                     <span><Eye size={11} style={{ display: 'inline' }} /> {u.total_views} görüntülenme</span>
                   </div>
                 </div>
-                <div style={{ fontWeight: 800, fontSize: 18, color: '#dc2626' }}>{u.total_votes}</div>
+                <div style={{ fontWeight: 800, fontSize: 18, color: '#FF4500' }}>{u.total_votes}</div>
               </div>
             ))}
           </div>
@@ -269,7 +269,7 @@ export default function ModerationPage() {
               <div style={{ padding: 40, textAlign: 'center', color: '#9ca3af' }}>Kullanıcı bulunamadı.</div>
             ) : users.map((u, idx) => (
               <div key={u.id} style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '12px 20px', borderBottom: idx < users.length - 1 ? '1px solid #f9fafb' : 'none', background: u.is_banned ? '#fef2f2' : 'white' }}>
-                <div style={{ width: 36, height: 36, borderRadius: '50%', background: '#f3f4f6', flexShrink: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 700, color: '#dc2626' }}>
+                <div style={{ width: 36, height: 36, borderRadius: '50%', background: '#f3f4f6', flexShrink: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 700, color: '#FF4500' }}>
                   {u.name?.[0]?.toUpperCase()}
                 </div>
                 <div style={{ flex: 1, minWidth: 0 }}>
