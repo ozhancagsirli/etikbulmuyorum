@@ -20,20 +20,26 @@ export default function App() {
   return (
     <BrowserRouter>
       <Toaster position="top-center" toastOptions={{ style: { fontSize: 14 } }} />
-      <Navbar />
-      <div style={{ maxWidth: 1100, margin: '0 auto', padding: '16px 12px' }}>
-        <Routes>
+      <Routes>
           <Route path="/"             element={<HomePage />} />
-          <Route path="/olay/:id"     element={<IncidentPage />} />
-          <Route path="/bildir"       element={<SubmitPage />} />
-          <Route path="/profil"       element={<ProfilePage />} />
-          <Route path="/moderasyon"   element={<ModerationPage />} />
-          <Route path="/konu/:name"   element={<SubjectPage />} />
-          <Route path="/giris"        element={<AuthPage />} />
-          <Route path="/istatistik"   element={<StatsPage />} />
-          <Route path="/liderboard"   element={<LeaderboardPage />} />
-        </Routes>
-      </div>
+          <Route path="/*" element={
+            <>
+              <Navbar />
+              <div style={{ maxWidth: 1100, margin: '0 auto', padding: '16px 12px' }}>
+                <Routes>
+                  <Route path="olay/:id"     element={<IncidentPage />} />
+                  <Route path="bildir"       element={<SubmitPage />} />
+                  <Route path="profil"       element={<ProfilePage />} />
+                  <Route path="moderasyon"   element={<ModerationPage />} />
+                  <Route path="konu/:name"   element={<SubjectPage />} />
+                  <Route path="giris"        element={<AuthPage />} />
+                  <Route path="istatistik"   element={<StatsPage />} />
+                  <Route path="liderboard"   element={<LeaderboardPage />} />
+                </Routes>
+              </div>
+            </>
+          } />
+      </Routes>
     </BrowserRouter>
   );
 }
