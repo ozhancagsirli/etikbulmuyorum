@@ -176,13 +176,13 @@ export default function SubmitPage() {
             {/* Şirket / Kişi / Marka — autocomplete */}
             <div ref={subjectRef} style={{ position: 'relative' }}>
               <label style={{ display: 'block', fontWeight: 600, fontSize: 13, marginBottom: 8 }}>
-                👤 Kişi / Firma Adı <span style={{ color: '#FF4500' }}>*</span>
+                👤 Şahıs Adı Soyadı <span style={{ color: '#FF4500' }}>*</span>
               </label>
               <input
                 value={form.subject}
                 onChange={handleSubjectChange}
                 onFocus={() => form.subject.length >= 2 && setShowSuggestions(subjectSuggestions.length > 0)}
-                placeholder="ör. Ahmet Yılmaz, ABC İnşaat, Mehmet Usta..."
+                placeholder="ör. Ahmet Yılmaz, Mehmet Demir..."
                 style={inp}
               />
               <div style={{ fontSize: 11, color: '#aaa', marginTop: 4 }}>
