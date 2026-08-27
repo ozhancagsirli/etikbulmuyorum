@@ -21,7 +21,7 @@ export default function App() {
     <BrowserRouter>
       <Toaster position="top-center" toastOptions={{ style: { fontSize: 14 } }} />
       <Navbar />
-      <div style={{ maxWidth: 1100, margin: '0 auto', padding: '16px 12px' }}>
+      <div>
         <Routes>
           <Route path="/"             element={<HomePage />} />
           <Route path="/olay/:id"     element={<IncidentPage />} />
