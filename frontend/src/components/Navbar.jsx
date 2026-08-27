@@ -37,10 +37,10 @@ export default function Navbar() {
   return (
     <>
       <nav style={{ background: 'white', borderBottom: '1px solid #e5e7eb', position: 'relative', zIndex: 10, boxShadow: '0 1px 3px rgba(0,0,0,0.06)' }}>
-        <div style={{ maxWidth: 1100, margin: '0 auto', padding: '0 12px', height: 52, display: 'flex', alignItems: 'center', gap: 10 }}>
+        <div style={{ maxWidth: 1100, margin: '0 auto', padding: '0 12px', height: 120, display: 'flex', alignItems: 'center', gap: 10 }}>
 
           <Link to="/" style={{ display: 'flex', alignItems: 'center', gap: 8, flexShrink: 0 }}>
-            <img src="/logo.png" alt="etikbulmuyorum" style={{ height: 34, width: 'auto' }} />
+            <img src="/logo.png" alt="etikbulmuyorum" style={{ height: 80, width: 'auto' }} />
             <div style={{ lineHeight: 1.1, display: 'none' }}>
               <div style={{ fontWeight: 800, fontSize: 14, letterSpacing: -0.5, color: '#111827' }}>etikbulmuyorum</div>
               <div style={{ fontSize: 9, color: '#9ca3af', fontWeight: 500 }}>Güvenilir mi, değil mi?</div>
