@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { Search, Menu, X, Scale, Plus, Shield, LogOut, User, ChevronDown } from 'lucide-react';
+import { Plus, Shield, LogOut, User, ChevronDown } from 'lucide-react';
 import toast from 'react-hot-toast';
 import { useAuthStore } from '../lib/authStore';
 import NotificationBell from './NotificationBell';
@@ -10,9 +10,9 @@ const GOOGLE_CLIENT_ID = import.meta.env.VITE_GOOGLE_CLIENT_ID;
 export default function Navbar() {
   const { user, loginWithGoogle, logout } = useAuthStore();
   const navigate = useNavigate();
-  const [search, setSearch] = useState('');
+
   const [menuOpen, setMenuOpen] = useState(false);
-  const [mobileSearch, setMobileSearch] = useState(false);
+
 
   useEffect(() => {
     if (user) return;
@@ -32,10 +32,7 @@ export default function Navbar() {
     else { const t = setInterval(() => { if (window.google) { initGoogle(); clearInterval(t); } }, 200); return () => clearInterval(t); }
   }, [user]);
 
-  function handleSearch(e) {
-    e.preventDefault();
-    if (search.trim()) { navigate('/?search=' + encodeURIComponent(search.trim())); setSearch(''); setMobileSearch(false); }
-  }
+
 
   return (
     <>
@@ -43,32 +40,17 @@ export default function Navbar() {
         <div style={{ maxWidth: 1100, margin: '0 auto', padding: '0 12px', height: 52, display: 'flex', alignItems: 'center', gap: 10 }}>
 
           <Link to="/" style={{ display: 'flex', alignItems: 'center', gap: 8, flexShrink: 0 }}>
-            <div style={{ background: '#FF4500', borderRadius: 8, width: 32, height: 32, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-              <Scale size={18} color="white" strokeWidth={2.5} />
-            </div>
-            <div style={{ lineHeight: 1.1 }}>
+            <img src="/logo.png" alt="etikbulmuyorum" style={{ height: 34, width: 'auto' }} />
+            <div style={{ lineHeight: 1.1, display: 'none' }}>
               <div style={{ fontWeight: 800, fontSize: 14, letterSpacing: -0.5, color: '#111827' }}>etikbulmuyorum</div>
               <div style={{ fontSize: 9, color: '#9ca3af', fontWeight: 500 }}>Güvenilir mi, değil mi?</div>
             </div>
           </Link>
 
-          <form onSubmit={handleSearch} id="desktop-search" style={{ flex: 1, maxWidth: 400, display: 'none' }}>
-            <div style={{ position: 'relative' }}>
-              <input value={search} onChange={e => setSearch(e.target.value)} placeholder="Olay, marka veya konu ara..."
-                style={{ width: '100%', padding: '7px 36px 7px 12px', borderRadius: 20, border: '1.5px solid #e5e7eb', background: '#f9fafb', fontSize: 13, outline: 'none', boxSizing: 'border-box' }}
-                onFocus={e => { e.target.style.borderColor='#FF4500'; e.target.style.background='white'; }}
-                onBlur={e => { e.target.style.borderColor='#e5e7eb'; e.target.style.background='#f9fafb'; }}
-              />
-              <button type="submit" style={{ position: 'absolute', right: 10, top: '50%', transform: 'translateY(-50%)', background: 'none', border: 'none', cursor: 'pointer', padding: 0, display: 'flex' }}>
-                <Search size={14} color="#9ca3af" />
-              </button>
-            </div>
-          </form>
+          
 
           <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginLeft: 'auto', flexShrink: 0 }}>
-            <button onClick={() => setMobileSearch(s => !s)} id="mobile-search-btn" style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#6b7280', padding: '4px', display: 'none', alignItems: 'center' }}>
-              {mobileSearch ? <X size={20} /> : <Search size={20} />}
-            </button>
+
 
             {user ? (
               <>
@@ -116,19 +98,7 @@ export default function Navbar() {
           </div>
         </div>
 
-        {mobileSearch && (
-          <div style={{ padding: '8px 12px', borderTop: '1px solid #f3f4f6' }}>
-            <form onSubmit={handleSearch}>
-              <div style={{ position: 'relative' }}>
-                <input autoFocus value={search} onChange={e => setSearch(e.target.value)} placeholder="Ara..."
-                  style={{ width: '100%', padding: '9px 36px 9px 14px', borderRadius: 20, border: '1.5px solid #FF4500', background: 'white', fontSize: 14, outline: 'none', boxSizing: 'border-box' }} />
-                <button type="submit" style={{ position: 'absolute', right: 12, top: '50%', transform: 'translateY(-50%)', background: 'none', border: 'none', cursor: 'pointer', display: 'flex' }}>
-                  <Search size={16} color="#FF4500" />
-                </button>
-              </div>
-            </form>
-          </div>
-        )}
+
       </nav>
       <style>{`
         @media (min-width: 640px) { #desktop-search { display: block !important; } #mobile-search-btn { display: none !important; } }
