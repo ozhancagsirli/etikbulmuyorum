@@ -59,7 +59,7 @@ export default function HomePage() {
   }
 
   return (
-    <div style={{ width: '100%' }}>
+    <div style={{ margin: '-16px -12px' }}>
 
       {/* BÖLÜM 1 — Hero arama */}
       <div style={{
