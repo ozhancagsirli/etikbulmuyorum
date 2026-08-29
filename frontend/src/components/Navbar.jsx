@@ -128,13 +128,6 @@ export default function Navbar() {
           #user-name { display: none; }
         }
       `}</style>
-    <>
-      <style>{`
-        @media (max-width: 480px) {
-          #bildir-text { display: none; }
-          #user-name { display: none; }
-        }
-      `}</style>
     </>
   );
 }
