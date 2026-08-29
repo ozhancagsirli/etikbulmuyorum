@@ -85,8 +85,17 @@ export default function IncidentPage() {
               </span>
             )}
             {incident.subject && (
-              <Link to={'/konu/' + encodeURIComponent(incident.subject)} style={{ display: 'inline-flex', alignItems: 'center', gap: 4, fontSize: 12, background: '#eff6ff', color: '#3b82f6', padding: '3px 10px', borderRadius: 20, fontWeight: 600, border: '1px solid #bfdbfe' }}>
-                <Building2 size={11} /> {incident.subject}
+              <Link to={'/konu/' + encodeURIComponent(incident.subject)} style={{ display: 'flex', alignItems: 'center', gap: 12, background: '#f9fafb', borderRadius: 10, padding: '10px 14px', border: '1px solid #e5e7eb', marginBottom: 8 }}>
+                <div style={{ width: 44, height: 44, borderRadius: '50%', background: '#e5e7eb', flexShrink: 0, overflow: 'hidden', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                  {incident.subject_avatar
+                    ? <img src={incident.subject_avatar} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                    : <span style={{ fontSize: 20 }}>{incident.category_icon || '👤'}</span>
+                  }
+                </div>
+                <div>
+                  <div style={{ fontWeight: 800, fontSize: 16, color: '#111827' }}>{incident.subject}</div>
+                  <div style={{ fontSize: 12, color: '#9ca3af' }}>{incident.category_name}</div>
+                </div>
               </Link>
             )}
             <span style={{ fontSize: 12, color: '#9ca3af' }}>
