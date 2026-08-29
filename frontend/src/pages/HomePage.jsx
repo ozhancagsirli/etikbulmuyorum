@@ -14,10 +14,12 @@ export default function HomePage() {
   const [stats, setStats] = useState(null);
   const [loading, setLoading] = useState(true);
   const [heroSearch, setHeroSearch] = useState('');
+  const [topVoted, setTopVoted] = useState([]);
   const search = searchParams.get('search') || '';
 
   useEffect(() => {
     apiFetch('/stats').then(setStats).catch(() => {});
+    apiFetch('/incidents?sort=most_voted&limit=3').then(d => setTopVoted(d.data || [])).catch(() => {});
     apiFetch('/incidents?sort=newest&limit=3').then(d => setRecentIncidents(d.data || [])).catch(() => {});
   }, []);
 
