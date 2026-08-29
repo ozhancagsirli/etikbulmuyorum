@@ -61,9 +61,9 @@ export default function HomePage() {
   return (
     <div>
 
-      {/* BÖLÜM 1 — Hero arama - navbar ile birleşik */}
+      {/* BÖLÜM 1 — Hero arama - navbar ile birleşik tam ekran */}
       <div style={{
-        minHeight: 'calc(100vh - 270px)', display: 'flex', flexDirection: 'column', justifyContent: 'center',
+        minHeight: 'calc(100vh - 128px)', display: 'flex', flexDirection: 'column', justifyContent: 'center',
         alignItems: 'center', padding: '40px 24px 60px', textAlign: 'center',
         background: 'white', position: 'relative', overflow: 'hidden',
       }}>
