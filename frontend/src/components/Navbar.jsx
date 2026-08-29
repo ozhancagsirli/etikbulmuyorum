@@ -70,10 +70,10 @@ export default function Navbar() {
                 <Link to="/bildir" style={{
                   display: 'flex', alignItems: 'center', gap: 5,
                   background: '#46A53E', color: 'white',
-                  padding: '8px 14px', borderRadius: 8,
-                  fontWeight: 700, fontSize: 13, whiteSpace: 'nowrap', flexShrink: 0,
+                  padding: '8px 12px', borderRadius: 8,
+                  fontWeight: 700, fontSize: 12, whiteSpace: 'nowrap', flexShrink: 0,
                 }}>
-                  <Plus size={14} /> Bildir
+                  <Plus size={14} /> <span id="bildir-text">Bildir</span>
                 </Link>
                 <NotificationBell />
                 <div style={{ position: 'relative' }}>
@@ -86,7 +86,7 @@ export default function Navbar() {
                       ? <img src={user.avatarUrl} alt="" style={{ width: 24, height: 24, borderRadius: '50%' }} />
                       : <div style={{ width: 24, height: 24, borderRadius: '50%', background: '#46A53E', color: 'white', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 700, fontSize: 11 }}>{user.name?.[0]?.toUpperCase()}</div>
                     }
-                    <span style={{ fontSize: 12, fontWeight: 600, color: '#374151', maxWidth: 60, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{user.name?.split(' ')[0]}</span>
+                    <span id="user-name" style={{ fontSize: 12, fontWeight: 600, color: '#374151', maxWidth: 60, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{user.name?.split(' ')[0]}</span>
                     <ChevronDown size={12} color="#9ca3af" />
                   </button>
 
@@ -121,6 +121,13 @@ export default function Navbar() {
           </div>
         </div>
       </nav>
+    <>
+      <style>{`
+        @media (max-width: 480px) {
+          #bildir-text { display: none; }
+          #user-name { display: none; }
+        }
+      `}</style>
     </>
   );
 }
