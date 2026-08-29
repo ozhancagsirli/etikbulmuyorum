@@ -149,35 +149,5 @@ router.get('/persons/search', async (req, res, next) => {
   } catch (err) { next(err); }
 });
 
-// GET /api/persons - kişi bazlı özet
-router.get('/persons', async (req, res, next) => {
-  try {
-    const { rows } = await pool.query(`
-      SELECT 
-        subject,
-        COUNT(*)::INT AS incident_count,
-        SUM(vote_correct)::INT AS vote_correct,
-        SUM(vote_wrong)::INT AS vote_wrong,
-        SUM(vote_neutral)::INT AS vote_neutral,
-        SUM(vote_insufficient)::INT AS vote_insufficient,
-        AVG(trust_score)::INT AS trust_score,
-        MAX(category_name) AS category_name,
-        MAX(category_icon) AS category_icon,
-        array_agg(images ORDER BY created_at DESC) AS all_images,
-        MAX(created_at) AS last_incident
-      FROM (
-        SELECT i.*, c.name_tr AS category_name, c.icon AS category_icon
-        FROM incidents i
-        LEFT JOIN categories c ON c.id = i.category_id
-        WHERE i.status = 'approved' AND i.subject IS NOT NULL
-      ) sub
-      GROUP BY subject
-      ORDER BY last_incident DESC
-      LIMIT 20
-    `);
-    res.json({ data: rows });
-  } catch (err) { next(err); }
-});
-
 export default router;
 // Bu satırı export default router'dan önce ekle - aslında zaten var, sadece person search ekle
