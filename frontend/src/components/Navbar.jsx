@@ -123,6 +123,13 @@ export default function Navbar() {
           </div>
         </div>
       </nav>
+    <>
+      <style>{`
+        @media (min-width: 640px) {
+          .navbar-inner { flex-direction: row !important; padding: 0 16px !important; height: 64px; }
+          .navbar-inner > a { margin-right: auto; }
+        }
+      `}</style>
     </>
   );
 }
