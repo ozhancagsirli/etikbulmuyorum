@@ -27,23 +27,33 @@ export default function SubjectPage() {
     <div style={{ maxWidth: 740, margin: '0 auto' }}>
       <Link to="/" style={{ color: '#46A53E', fontSize: 13 }}>← Ana sayfaya dön</Link>
 
-      <div style={{ background: 'white', borderRadius: 16, border: '1px solid #e0e0e0', padding: '24px 28px', margin: '12px 0', display: 'flex', gap: 20, alignItems: 'center' }}>
-        <div style={{ width: 64, height: 64, borderRadius: '50%', background: '#f0f4ff', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 28, flexShrink: 0 }}>
-          🏢
-        </div>
-        <div style={{ flex: 1 }}>
-          <h1 style={{ fontSize: 22, fontWeight: 800, margin: '0 0 4px' }}>{decodedName}</h1>
-          <div style={{ fontSize: 13, color: '#888', display: 'flex', gap: 12, flexWrap: 'wrap' }}>
-            <span>{incidents.length} olay</span>
-            <span>{totalVotes} toplam oy</span>
-            {overallPct !== null && (
-              <span style={{ color: overallPct >= 50 ? '#46d160' : '#f85149', fontWeight: 600 }}>
-                {overallPct >= 50 ? `✅ Genel olarak ${overallPct}% Etik bulundu` : `❌ Genel olarak ${100-overallPct}% Etik Dışı bulundu`}
-              </span>
+      {(() => {
+        const avatar = incidents[0]?.subject_avatar;
+        const ts = incidents.length > 0 ? Math.round(incidents.reduce((a, i) => a + (i.trust_score || 0), 0) / incidents.length) : 0;
+        const tsColor = ts >= 50 ? '#16a34a' : ts >= -10 ? '#d97706' : '#dc2626';
+        const tsLabel = ts >= 50 ? '🟢 Güvenilir' : ts >= -10 ? '🟡 Dikkatli Ol' : '🔴 Güvenilmez';
+        return (
+          <div style={{ background: 'white', borderRadius: 16, border: '1px solid #e5e7eb', padding: '24px 28px', margin: '12px 0', display: 'flex', gap: 20, alignItems: 'center' }}>
+            <div style={{ width: 72, height: 72, borderRadius: '50%', background: '#f3f4f6', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 28, flexShrink: 0, overflow: 'hidden', border: '2px solid #e5e7eb' }}>
+              {avatar ? <img src={avatar} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover' }} /> : <span>👤</span>}
+            </div>
+            <div style={{ flex: 1 }}>
+              <h1 style={{ fontSize: 22, fontWeight: 800, margin: '0 0 6px' }}>{decodedName}</h1>
+              <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap', alignItems: 'center', fontSize: 13, color: '#9ca3af' }}>
+                <span>{incidents.length} olay</span>
+                <span>{totalVotes} değerlendirme</span>
+              </div>
+            </div>
+            {incidents.length > 0 && (
+              <div style={{ textAlign: 'center', flexShrink: 0 }}>
+                <div style={{ fontSize: 32, fontWeight: 900, color: tsColor, lineHeight: 1 }}>{ts > 0 ? '+' : ''}{ts}</div>
+                <div style={{ fontSize: 12, color: tsColor, fontWeight: 700, marginTop: 4 }}>{tsLabel}</div>
+                <div style={{ fontSize: 11, color: '#9ca3af' }}>Güven Skoru</div>
+              </div>
             )}
           </div>
-        </div>
-      </div>
+        );
+      })()}
 
       {loading ? (
         <div style={{ textAlign: 'center', padding: 40, color: '#888' }}>Yükleniyor...</div>
