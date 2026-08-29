@@ -75,7 +75,7 @@ export default function ModerationPage() {
     { key: 'stats',       label: 'İstatistik' },
     { key: 'leaderboard', label: 'Lider' },
     { key: 'users',       label: 'Kullanıcı' },
-    { key: 'avatar',      label: 'Kişi Avatarı' },
+    { key: 'avatar', label: 'Avatar' },
   ];
 
   return (
