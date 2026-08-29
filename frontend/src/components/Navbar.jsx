@@ -30,7 +30,6 @@ export default function Navbar() {
           catch (e) { toast.error(e.message); }
         },
       });
-      window.google.accounts.id.renderButton(el, { theme: 'outline', size: 'medium', text: 'signin_with', locale: 'tr' });
     }
     if (window.google) initGoogle();
     else { const t = setInterval(() => { if (window.google) { initGoogle(); clearInterval(t); } }, 200); return () => clearInterval(t); }
@@ -38,60 +37,48 @@ export default function Navbar() {
 
   return (
     <>
-      {/* İstatistik bandı */}
+      <div id="google-btn" style={{ display: 'none' }} />
+
       <div style={{ background: '#013C26', padding: '7px 16px' }}>
         <div style={{ maxWidth: 1100, margin: '0 auto', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 8, flexWrap: 'wrap' }}>
             <span style={{ fontSize: 13, fontWeight: 900, color: '#4BAB42' }}>{stats ? Number(stats.totals.total_incidents).toLocaleString('tr') : '—'}</span>
             <span style={{ fontSize: 11, color: 'rgba(255,255,255,0.5)' }}>bildirim</span>
-            <span style={{ color: 'rgba(255,255,255,0.2)', margin: '0 4px' }}>|</span>
+            <span style={{ color: 'rgba(255,255,255,0.2)' }}>|</span>
             <span style={{ fontSize: 13, fontWeight: 900, color: '#4BAB42' }}>{stats ? Number(stats.totals.total_votes).toLocaleString('tr') : '—'}</span>
             <span style={{ fontSize: 11, color: 'rgba(255,255,255,0.5)' }}>değerlendirme</span>
-            <span style={{ color: 'rgba(255,255,255,0.2)', margin: '0 4px' }}>|</span>
+            <span style={{ color: 'rgba(255,255,255,0.2)' }}>|</span>
             <span style={{ fontSize: 13, fontWeight: 900, color: '#4BAB42' }}>{stats ? Number(stats.totals.total_users).toLocaleString('tr') : '—'}</span>
             <span style={{ fontSize: 11, color: 'rgba(255,255,255,0.5)' }}>kullanıcı</span>
           </div>
         </div>
       </div>
 
-      {/* Ana Navbar */}
-      <nav style={{ background: 'white', position: 'relative', zIndex: 10, borderBottom: '1px solid #f3f4f6' }}>
+      <nav style={{ background: 'white', borderBottom: '1px solid #f3f4f6', position: 'relative', zIndex: 10 }}>
         <div style={{ maxWidth: 1100, margin: '0 auto', padding: '0 16px', height: 60, display: 'flex', alignItems: 'center', gap: 10 }}>
-
-          {/* Logo */}
           <Link to="/" style={{ display: 'flex', alignItems: 'center', flexShrink: 0 }}>
             <img src="/logo.png" alt="etikbulmuyorum" style={{ height: 36, width: 'auto' }} />
           </Link>
 
-          {/* Sağ */}
           <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginLeft: 'auto', flexShrink: 0 }}>
             {user ? (
               <>
-                <Link to="/bildir" style={{
-                  display: 'flex', alignItems: 'center', gap: 5,
-                  background: '#46A53E', color: 'white',
-                  padding: '8px 12px', borderRadius: 8,
-                  fontWeight: 700, fontSize: 12, whiteSpace: 'nowrap', flexShrink: 0,
-                }}>
-                  <Plus size={14} /> <span id="bildir-text">Bildir</span>
+                <Link to="/bildir" style={{ display: 'flex', alignItems: 'center', gap: 5, background: '#46A53E', color: 'white', padding: '8px 12px', borderRadius: 8, fontWeight: 700, fontSize: 12, whiteSpace: 'nowrap', flexShrink: 0 }}>
+                  <Plus size={14} /> <span className="hide-mobile">Olay </span>Bildir
                 </Link>
                 <NotificationBell />
                 <div style={{ position: 'relative' }}>
-                  <button onClick={() => setMenuOpen(m => !m)} style={{
-                    display: 'flex', alignItems: 'center', gap: 6,
-                    background: 'white', border: '1.5px solid #e5e7eb',
-                    borderRadius: 8, padding: '6px 10px 6px 6px', cursor: 'pointer',
-                  }}>
+                  <button onClick={() => setMenuOpen(m => !m)} style={{ display: 'flex', alignItems: 'center', gap: 6, background: 'white', border: '1.5px solid #e5e7eb', borderRadius: 8, padding: '6px 10px 6px 6px', cursor: 'pointer' }}>
                     {user.avatarUrl
                       ? <img src={user.avatarUrl} alt="" style={{ width: 24, height: 24, borderRadius: '50%' }} />
                       : <div style={{ width: 24, height: 24, borderRadius: '50%', background: '#46A53E', color: 'white', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 700, fontSize: 11 }}>{user.name?.[0]?.toUpperCase()}</div>
                     }
-                    <span id="user-name" style={{ fontSize: 12, fontWeight: 600, color: '#374151', maxWidth: 60, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{user.name?.split(' ')[0]}</span>
+                    <span className="hide-mobile" style={{ fontSize: 12, fontWeight: 600, color: '#374151', maxWidth: 60, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{user.name?.split(' ')[0]}</span>
                     <ChevronDown size={12} color="#9ca3af" />
                   </button>
 
                   {menuOpen && (
-                    <div style={{ position: 'fixed', right: 8, top: 'auto', background: 'white', borderRadius: 12, border: '1px solid #e5e7eb', boxShadow: '0 8px 24px rgba(0,0,0,0.12)', minWidth: 190, width: 'calc(100vw - 16px)', maxWidth: 280, overflow: 'hidden', zIndex: 1000 }}
+                    <div style={{ position: 'fixed', right: 8, top: 104, background: 'white', borderRadius: 12, border: '1px solid #e5e7eb', boxShadow: '0 8px 24px rgba(0,0,0,0.12)', width: 220, overflow: 'hidden', zIndex: 1000 }}
                       onClick={() => setMenuOpen(false)}>
                       <Link to="/profil" style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '12px 16px', color: '#374151', fontSize: 14, borderBottom: '1px solid #f3f4f6' }}>
                         {user.avatarUrl ? <img src={user.avatarUrl} alt="" style={{ width: 28, height: 28, borderRadius: '50%' }} /> : <User size={18} color="#9ca3af" />}
@@ -121,12 +108,9 @@ export default function Navbar() {
           </div>
         </div>
       </nav>
-    <>
+
       <style>{`
-        @media (max-width: 480px) {
-          #bildir-text { display: none; }
-          #user-name { display: none; }
-        }
+        @media (max-width: 480px) { .hide-mobile { display: none !important; } }
       `}</style>
     </>
   );
