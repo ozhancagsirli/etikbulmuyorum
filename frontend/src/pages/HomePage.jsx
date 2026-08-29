@@ -69,6 +69,33 @@ export default function HomePage() {
         {/* Arka plan doku */}
 
         <div style={{ position: 'relative', zIndex: 1, maxWidth: 600, width: '100%' }}>
+
+          {/* En çok oylanan 3 kişi */}
+          {topVoted.length > 0 && (
+            <div style={{ display: 'flex', gap: 8, justifyContent: 'center', marginBottom: 24, flexWrap: 'wrap' }}>
+              {topVoted.slice(0, 3).map(inc => {
+                const ts = inc.trust_score || 0;
+                return (
+                  <Link key={inc.id} to={'/konu/' + encodeURIComponent(inc.subject || inc.title)} style={{
+                    display: 'flex', alignItems: 'center', gap: 8,
+                    background: 'white', border: '1px solid #e5e7eb',
+                    borderRadius: 10, padding: '8px 14px',
+                    boxShadow: '0 1px 4px rgba(0,0,0,0.06)',
+                    color: 'inherit', minWidth: 140, maxWidth: 180,
+                  }}>
+                    <div style={{ flex: 1, minWidth: 0 }}>
+                      <div style={{ fontSize: 13, fontWeight: 700, color: '#111827', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{inc.subject || inc.title}</div>
+                      <div style={{ fontSize: 11, color: '#9ca3af' }}>{inc.category_name}</div>
+                    </div>
+                    <div style={{ fontSize: 13, fontWeight: 900, color: ts >= 50 ? '#16a34a' : ts >= -10 ? '#d97706' : '#dc2626', flexShrink: 0 }}>
+                      {ts > 0 ? '+' : ''}{ts}
+                    </div>
+                  </Link>
+                );
+              })}
+            </div>
+          )}
+
           <div style={{ fontSize: 11, fontWeight: 700, letterSpacing: 2, textTransform: 'uppercase', color: '#9ca3af', marginBottom: 16 }}>Güven platformu</div>
           <h1 style={{ fontSize: 'clamp(22px, 5vw, 38px)', fontWeight: 900, color: '#111827', lineHeight: 1.2, marginBottom: 14, letterSpacing: -1 }}>
             Birisiyle çalışmadan önce<br />araştır
