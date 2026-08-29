@@ -39,7 +39,7 @@ router.get('/', optionalAuth, async (req, res, next) => {
     if (category) { params.push(category); filters.push('c.slug = $' + params.length); }
     if (subject)  { params.push(subject);  filters.push('i.subject ILIKE $' + params.length); }
     if (req.query.person) { params.push(req.query.person); filters.push('i.person_name ILIKE $' + params.length); }
-    if (search)   { params.push(search);   filters.push("to_tsvector('turkish', i.title || ' ' || i.description) @@ plainto_tsquery('turkish', $" + params.length + ')'); }
+    if (search)   { params.push('%' + search + '%'); filters.push('(i.title ILIKE $' + params.length + ' OR i.description ILIKE $' + params.length + ' OR i.subject ILIKE $' + params.length + ')'); }
 
     const orderMap = {
       newest: 'i.created_at DESC',
