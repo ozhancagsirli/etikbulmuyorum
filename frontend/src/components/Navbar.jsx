@@ -75,7 +75,7 @@ export default function Navbar() {
 
           {/* Logo */}
           <Link to="/" style={{ display: 'flex', alignItems: 'center', flexShrink: 0 }}>
-            <img src="/logo.png" alt="etikbulmuyorum" style={{ height: 60, width: 'auto' }} />
+            <img src="/logo.png" alt="etikbulmuyorum" style={{ height: 40, width: 'auto' }} />
           </Link>
 
           {/* Sağ taraf */}
