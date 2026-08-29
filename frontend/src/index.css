@@ -69,3 +69,7 @@ input, textarea, select { font-family: inherit; }
   box-shadow: var(--shadow-md);
   border-color: #d1d5db;
 }
+
+@media (max-width: 480px) {
+  .hide-mobile { display: none; }
+}
