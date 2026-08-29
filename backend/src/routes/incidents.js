@@ -23,6 +23,31 @@ router.get('/subjects/search', async (req, res, next) => {
   } catch (err) { next(err); }
 });
 
+router.get('/persons', async (req, res, next) => {
+  try {
+    const { rows } = await pool.query(`
+      SELECT 
+        subject,
+        COUNT(*)::INT AS incident_count,
+        SUM(vote_correct)::INT AS vote_correct,
+        SUM(vote_wrong)::INT AS vote_wrong,
+        SUM(vote_neutral)::INT AS vote_neutral,
+        SUM(vote_insufficient)::INT AS vote_insufficient,
+        ROUND(AVG(trust_score))::INT AS trust_score,
+        MAX(c.name_tr) AS category_name,
+        MAX(c.icon) AS category_icon,
+        MAX(i.created_at) AS last_incident
+      FROM incidents i
+      LEFT JOIN categories c ON c.id = i.category_id
+      WHERE i.status = 'approved' AND i.subject IS NOT NULL
+      GROUP BY subject
+      ORDER BY last_incident DESC
+      LIMIT 20
+    \`);
+    res.json({ data: rows });
+  } catch (err) { next(err); }
+});
+
 router.get('/', optionalAuth, async (req, res, next) => {
   try {
     const page    = parseInt(req.query.page) || 1;
