@@ -62,7 +62,7 @@ router.get('/', optionalAuth, async (req, res, next) => {
       LEFT JOIN users u ON u.id = i.author_id
       LEFT JOIN comments cm ON cm.incident_id = i.id AND NOT cm.is_removed
       WHERE ${where}
-      GROUP BY i.id, c.slug, c.name_tr, c.icon, u.name, u.avatar_url, s.avatar_url
+      GROUP BY i.id, c.slug, c.name_tr, c.icon, u.name, u.avatar_url
       ORDER BY ${orderMap[sort] || orderMap.newest}
       LIMIT $${params.length + 1} OFFSET $${params.length + 2}
     `;
