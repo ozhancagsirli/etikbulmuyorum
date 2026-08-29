@@ -26,8 +26,20 @@ export default function HomePage() {
   useEffect(() => {
     if (!search) {
       setLoading(true);
-      apiFetch('/incidents/persons')
-        .then(d => { setIncidents(d.data || []); setLoading(false); })
+      apiFetch('/incidents?sort=newest&limit=50')
+        .then(d => {
+          const all = d.data || [];
+          // Subject'e göre grupla - her subject için sadece bir kart
+          const seen = new Set();
+          const grouped = all.filter(inc => {
+            const key = inc.subject || inc.id;
+            if (seen.has(key)) return false;
+            seen.add(key);
+            return true;
+          });
+          setIncidents(grouped);
+          setLoading(false);
+        })
         .catch(() => setLoading(false));
       return;
     }
