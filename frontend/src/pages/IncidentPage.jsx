@@ -58,8 +58,12 @@ export default function IncidentPage() {
     </div>
   );
 
-  const total = incident.vote_ethical + incident.vote_unethical;
-  const ethPct = total ? Math.round((incident.vote_ethical / total) * 100) : null;
+  const votingEnds = null;
+  const votingActive = false;
+  const total = (incident.vote_correct || 0) + (incident.vote_wrong || 0) + (incident.vote_neutral || 0) + (incident.vote_insufficient || 0);
+  const trustScore = incident.trust_score || 0;
+  const trustLabel = trustScore >= 50 ? '🟢 Güvenilir' : trustScore >= -10 ? '🟡 Dikkatli Ol' : '🔴 Güvenilmez';
+  const trustColor = trustScore >= 50 ? '#16a34a' : trustScore >= -10 ? '#d97706' : '#dc2626';
   const images = incident.images || [];
   const tags = incident.tags || [];
 
