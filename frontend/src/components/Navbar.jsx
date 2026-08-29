@@ -38,19 +38,48 @@ export default function Navbar() {
 
   return (
     <>
+      {/* İstatistik bandı */}
+      <div style={{ background: '#013C26', padding: '0 20px' }}>
+        <div style={{ maxWidth: 1100, margin: '0 auto', height: 50, display: 'flex', alignItems: 'center', gap: 32 }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 24, flexWrap: 'wrap' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+              <span style={{ fontSize: 18, fontWeight: 900, color: '#4BAB42' }}>
+                {stats ? Number(stats.totals.total_incidents).toLocaleString('tr') : '—'}
+              </span>
+              <span style={{ fontSize: 12, color: 'rgba(255,255,255,0.5)', fontWeight: 500 }}>toplam bildirim</span>
+            </div>
+            <div style={{ width: 1, height: 16, background: 'rgba(255,255,255,0.1)' }} />
+            <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+              <span style={{ fontSize: 18, fontWeight: 900, color: '#4BAB42' }}>
+                {stats ? Number(stats.totals.total_votes).toLocaleString('tr') : '—'}
+              </span>
+              <span style={{ fontSize: 12, color: 'rgba(255,255,255,0.5)', fontWeight: 500 }}>değerlendirme</span>
+            </div>
+            <div style={{ width: 1, height: 16, background: 'rgba(255,255,255,0.1)' }} />
+            <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+              <span style={{ fontSize: 18, fontWeight: 900, color: '#4BAB42' }}>
+                {stats ? Number(stats.totals.total_users).toLocaleString('tr') : '—'}
+              </span>
+              <span style={{ fontSize: 12, color: 'rgba(255,255,255,0.5)', fontWeight: 500 }}>kullanıcı</span>
+            </div>
+          </div>
+          <div style={{ marginLeft: 'auto', fontSize: 11, color: 'rgba(255,255,255,0.3)', fontWeight: 600, letterSpacing: 1, textTransform: 'uppercase' }}>
+            Hesap Vakti
+          </div>
+        </div>
+      </div>
+
       {/* Ana Navbar */}
       <nav style={{ background: 'white', position: 'relative', zIndex: 10 }}>
-        <div style={{ maxWidth: 1100, margin: '0 auto', padding: '0 20px', height: 100, display: 'flex', alignItems: 'center', gap: 16 }}>
+        <div style={{ maxWidth: 1100, margin: '0 auto', padding: '0 20px', height: 220, display: 'flex', alignItems: 'center', gap: 16 }}>
 
           {/* Logo */}
           <Link to="/" style={{ display: 'flex', alignItems: 'center', flexShrink: 0 }}>
-            <img src="/logo.png" alt="etikbulmuyorum" style={{ height: 64, width: 'auto' }} />
+            <img src="/logo.png" alt="etikbulmuyorum" style={{ height: 200, width: 'auto' }} />
           </Link>
 
           {/* Sağ taraf */}
           <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginLeft: 'auto', flexShrink: 0 }}>
-            <div id="google-btn" style={{ transform: 'scale(0.85)', transformOrigin: 'right center' }} />
-
             {user ? (
               <>
                 <Link to="/bildir" style={{
@@ -108,36 +137,6 @@ export default function Navbar() {
         </div>
       </nav>
 
-      {/* İstatistik bandı */}
-      <div style={{ background: '#013C26', padding: '0 20px' }}>
-        <div style={{ maxWidth: 1100, margin: '0 auto', height: 50, display: 'flex', alignItems: 'center', gap: 32 }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 24, flexWrap: 'wrap' }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-              <span style={{ fontSize: 18, fontWeight: 900, color: '#4BAB42' }}>
-                {stats ? Number(stats.totals.total_incidents).toLocaleString('tr') : '—'}
-              </span>
-              <span style={{ fontSize: 12, color: 'rgba(255,255,255,0.5)', fontWeight: 500 }}>toplam bildirim</span>
-            </div>
-            <div style={{ width: 1, height: 16, background: 'rgba(255,255,255,0.1)' }} />
-            <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-              <span style={{ fontSize: 18, fontWeight: 900, color: '#4BAB42' }}>
-                {stats ? Number(stats.totals.total_votes).toLocaleString('tr') : '—'}
-              </span>
-              <span style={{ fontSize: 12, color: 'rgba(255,255,255,0.5)', fontWeight: 500 }}>değerlendirme</span>
-            </div>
-            <div style={{ width: 1, height: 16, background: 'rgba(255,255,255,0.1)' }} />
-            <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-              <span style={{ fontSize: 18, fontWeight: 900, color: '#4BAB42' }}>
-                {stats ? Number(stats.totals.total_users).toLocaleString('tr') : '—'}
-              </span>
-              <span style={{ fontSize: 12, color: 'rgba(255,255,255,0.5)', fontWeight: 500 }}>kullanıcı</span>
-            </div>
-          </div>
-          <div style={{ marginLeft: 'auto', fontSize: 11, color: 'rgba(255,255,255,0.3)', fontWeight: 600, letterSpacing: 1, textTransform: 'uppercase' }}>
-            Hesap Vakti
-          </div>
-        </div>
-      </div>
     </>
   );
 }
