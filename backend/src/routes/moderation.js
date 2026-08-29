@@ -77,6 +77,18 @@ router.post('/reports/:id/resolve', [param('id').isUUID()], validate, async (req
   } catch (err) { next(err); }
 });
 
+// POST /api/moderation/subjects/:name/avatar
+router.post('/subjects/avatar', async (req, res, next) => {
+  try {
+    const { name, avatar_url } = req.body;
+    await pool.query(
+      'INSERT INTO subjects (name, avatar_url, count) VALUES ($1, $2, 0) ON CONFLICT (name) DO UPDATE SET avatar_url = $2',
+      [name, avatar_url]
+    );
+    res.json({ message: 'Avatar güncellendi.' });
+  } catch (err) { next(err); }
+});
+
 export default router;
 
 // GET /api/moderation/incidents?status=approved|rejected
