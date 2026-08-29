@@ -61,11 +61,12 @@ export default function HomePage() {
   return (
     <div>
 
-      {/* BÖLÜM 1 — Hero arama - navbar ile birleşik tam ekran */}
+      {/* BÖLÜM 1 — Hero arama */}
       <div style={{
-        minHeight: 'calc(100vh - 128px)', display: 'flex', flexDirection: 'column', justifyContent: 'center',
-        alignItems: 'center', padding: 'clamp(20px, 5vw, 40px) 16px clamp(30px, 5vw, 60px)', textAlign: 'center',
+        height: '100vh', display: 'flex', flexDirection: 'column', justifyContent: 'center',
+        alignItems: 'center', padding: '20px 16px', textAlign: 'center',
         background: 'white', position: 'relative', overflow: 'hidden',
+        marginTop: '-108px', paddingTop: '108px',
       }}>
         {/* Arka plan doku */}
         <div style={{ position: 'absolute', inset: 0, backgroundImage: 'radial-gradient(#e5e7eb 1px, transparent 1px)', backgroundSize: '28px 28px', opacity: 0.5, pointerEvents: 'none' }} />
