@@ -64,7 +64,7 @@ export default function Navbar() {
             </div>
           </div>
           <div style={{ marginLeft: 'auto', fontSize: 11, color: 'rgba(255,255,255,0.3)', fontWeight: 600, letterSpacing: 1, textTransform: 'uppercase' }}>
-            Hesap Vakti
+            Referans değil, gerçek deneyim
           </div>
         </div>
       </div>
