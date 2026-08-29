@@ -327,26 +327,75 @@ export default function ModerationPage() {
 
 function AvatarManager() {
   const [name, setName] = useState('');
-  const [url, setUrl] = useState('');
+  const [photos, setPhotos] = useState([]);
+  const [selected, setSelected] = useState('');
   const [msg, setMsg] = useState('');
+  const [searching, setSearching] = useState(false);
+
+  async function search() {
+    if (!name.trim()) return;
+    setSearching(true);
+    setPhotos([]);
+    setSelected('');
+    try {
+      const data = await apiFetch('/incidents?subject=' + encodeURIComponent(name) + '&limit=20');
+      const allPhotos = (data.data || []).flatMap(inc => inc.images || []);
+      setPhotos([...new Set(allPhotos)]);
+    } catch (e) { setMsg('Hata: ' + e.message); }
+    setSearching(false);
+  }
 
   async function save() {
+    if (!selected) return;
     try {
-      await apiFetch('/moderation/subjects/avatar', { method: 'POST', body: JSON.stringify({ name, avatar_url: url }) });
-      setMsg('Kaydedildi!');
+      await apiFetch('/moderation/subjects/avatar', { method: 'POST', body: JSON.stringify({ name, avatar_url: selected }) });
+      setMsg('✅ Avatar kaydedildi!');
     } catch (e) { setMsg('Hata: ' + e.message); }
   }
 
   return (
     <div style={{ background: 'white', borderRadius: 12, border: '1px solid #e5e7eb', padding: 24 }}>
-      <h3 style={{ marginBottom: 16, fontSize: 16, fontWeight: 700 }}>Kişi Avatar Güncelle</h3>
-      <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
-        <input value={name} onChange={e => setName(e.target.value)} placeholder="Kişi adı (örn: Ahmet Yılmaz)" style={{ padding: '10px 14px', borderRadius: 8, border: '1px solid #e5e7eb', fontSize: 14 }} />
-        <input value={url} onChange={e => setUrl(e.target.value)} placeholder="Fotoğraf URL (Cloudinary linki)" style={{ padding: '10px 14px', borderRadius: 8, border: '1px solid #e5e7eb', fontSize: 14 }} />
-        {url && <img src={url} alt="" style={{ width: 80, height: 80, borderRadius: '50%', objectFit: 'cover', border: '2px solid #e5e7eb' }} />}
-        <button onClick={save} style={{ padding: '10px', borderRadius: 8, background: '#46A53E', color: 'white', border: 'none', fontWeight: 700, cursor: 'pointer' }}>Kaydet</button>
-        {msg && <div style={{ color: '#16a34a', fontSize: 13 }}>{msg}</div>}
+      <h3 style={{ marginBottom: 16, fontSize: 16, fontWeight: 700 }}>Kişi Avatar Seç</h3>
+      <div style={{ display: 'flex', gap: 10, marginBottom: 16 }}>
+        <input value={name} onChange={e => setName(e.target.value)} placeholder="Kişi adı (örn: Ahmet Yılmaz)"
+          style={{ flex: 1, padding: '10px 14px', borderRadius: 8, border: '1px solid #e5e7eb', fontSize: 14 }}
+          onKeyDown={e => e.key === 'Enter' && search()}
+        />
+        <button onClick={search} style={{ padding: '10px 20px', borderRadius: 8, background: '#46A53E', color: 'white', border: 'none', fontWeight: 700, cursor: 'pointer' }}>
+          {searching ? '...' : 'Ara'}
+        </button>
       </div>
+
+      {photos.length > 0 && (
+        <div>
+          <div style={{ fontSize: 13, color: '#6b7280', marginBottom: 10 }}>Fotoğrafa tıklayarak avatar seç:</div>
+          <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap', marginBottom: 16 }}>
+            {photos.map((p, i) => (
+              <img key={i} src={p} alt="" onClick={() => setSelected(p)}
+                style={{ width: 80, height: 80, borderRadius: 8, objectFit: 'cover', cursor: 'pointer',
+                  border: selected === p ? '3px solid #46A53E' : '2px solid #e5e7eb',
+                  opacity: selected && selected !== p ? 0.6 : 1
+                }}
+              />
+            ))}
+          </div>
+          {selected && (
+            <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 12 }}>
+              <img src={selected} alt="" style={{ width: 60, height: 60, borderRadius: '50%', objectFit: 'cover', border: '2px solid #46A53E' }} />
+              <span style={{ fontSize: 13, color: '#374151' }}>Seçili avatar</span>
+              <button onClick={save} style={{ marginLeft: 'auto', padding: '8px 20px', borderRadius: 8, background: '#46A53E', color: 'white', border: 'none', fontWeight: 700, cursor: 'pointer' }}>
+                Kaydet
+              </button>
+            </div>
+          )}
+        </div>
+      )}
+
+      {photos.length === 0 && !searching && name && (
+        <div style={{ color: '#9ca3af', fontSize: 13 }}>Bu kişiye ait fotoğraf bulunamadı.</div>
+      )}
+
+      {msg && <div style={{ color: '#16a34a', fontSize: 13, marginTop: 8 }}>{msg}</div>}
     </div>
   );
 }
