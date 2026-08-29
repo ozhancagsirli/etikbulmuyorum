@@ -4,6 +4,7 @@ import { formatDistanceToNow } from 'date-fns';
 import { tr } from 'date-fns/locale';
 import { Search } from 'lucide-react';
 import { apiFetch } from '../lib/api';
+import Navbar from '../components/Navbar';
 
 export default function HomePage() {
   const navigate = useNavigate();
@@ -61,13 +62,10 @@ export default function HomePage() {
   return (
     <div>
 
-      {/* BÖLÜM 1 — Hero arama */}
-      <div style={{
-        height: '100vh', display: 'flex', flexDirection: 'column', justifyContent: 'center',
-        alignItems: 'center', padding: '20px 16px', textAlign: 'center',
-        background: 'white', position: 'relative', overflow: 'hidden',
-        marginTop: '-108px', paddingTop: '108px',
-      }}>
+      {/* BÖLÜM 1 — Hero = Navbar + Arama tam ekran */}
+      <div style={{ height: '100vh', display: 'flex', flexDirection: 'column', background: 'white', position: 'relative', overflow: 'hidden' }}>
+        <Navbar />
+        <div style={{ flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', padding: '20px 16px', textAlign: 'center' }}>
         {/* Arka plan doku */}
         <div style={{ position: 'absolute', inset: 0, backgroundImage: 'radial-gradient(#e5e7eb 1px, transparent 1px)', backgroundSize: '28px 28px', opacity: 0.5, pointerEvents: 'none' }} />
 
@@ -101,8 +99,9 @@ export default function HomePage() {
           </div>
         </div>
 
+        </div>
         {/* Aşağı ok */}
-        <div style={{ position: 'absolute', bottom: 32, left: '50%', transform: 'translateX(-50%)', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 6, color: '#d1d5db' }}>
+        <div style={{ position: 'absolute', bottom: 24, left: '50%', transform: 'translateX(-50%)', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 6, color: '#d1d5db' }}>
           <span style={{ fontSize: 11, letterSpacing: 1 }}>Son bildirimler</span>
           <div style={{ width: 16, height: 16, borderRight: '1.5px solid #d1d5db', borderBottom: '1.5px solid #d1d5db', transform: 'rotate(45deg)', animation: 'bounce 1.5s infinite' }} />
         </div>

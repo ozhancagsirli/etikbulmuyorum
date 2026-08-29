@@ -13,6 +13,17 @@ import AuthPage         from './pages/AuthPage';
 import StatsPage        from './pages/StatsPage';
 import LeaderboardPage  from './pages/LeaderboardPage';
 
+function WithNav({ children }) {
+  return (
+    <>
+      <Navbar />
+      <div style={{ maxWidth: 1100, margin: '0 auto', padding: '16px 12px' }}>
+        {children}
+      </div>
+    </>
+  );
+}
+
 export default function App() {
   const fetchMe = useAuthStore(s => s.fetchMe);
   useEffect(() => { fetchMe(); }, []);
@@ -20,20 +31,17 @@ export default function App() {
   return (
     <BrowserRouter>
       <Toaster position="top-center" toastOptions={{ style: { fontSize: 14 } }} />
-      <Navbar />
-      <div style={{ background: '#f1f5f9' }}>
-        <Routes>
+      <Routes>
           <Route path="/"             element={<HomePage />} />
-          <Route path="/olay/:id"     element={<IncidentPage />} />
-          <Route path="/bildir"       element={<SubmitPage />} />
-          <Route path="/profil"       element={<ProfilePage />} />
-          <Route path="/moderasyon"   element={<ModerationPage />} />
-          <Route path="/konu/:name"   element={<SubjectPage />} />
-          <Route path="/giris"        element={<AuthPage />} />
-          <Route path="/istatistik"   element={<StatsPage />} />
-          <Route path="/liderboard"   element={<LeaderboardPage />} />
+          <Route path="/olay/:id"     element={<WithNav><IncidentPage /></WithNav>} />
+          <Route path="/bildir"       element={<WithNav><SubmitPage /></WithNav>} />
+          <Route path="/profil"       element={<WithNav><ProfilePage /></WithNav>} />
+          <Route path="/moderasyon"   element={<WithNav><ModerationPage /></WithNav>} />
+          <Route path="/konu/:name"   element={<WithNav><SubjectPage /></WithNav>} />
+          <Route path="/giris"        element={<WithNav><AuthPage /></WithNav>} />
+          <Route path="/istatistik"   element={<WithNav><StatsPage /></WithNav>} />
+          <Route path="/liderboard"   element={<WithNav><LeaderboardPage /></WithNav>} />
         </Routes>
-      </div>
     </BrowserRouter>
   );
 }
