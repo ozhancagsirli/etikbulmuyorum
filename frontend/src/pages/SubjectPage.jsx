@@ -3,8 +3,11 @@ import { useParams, Link } from 'react-router-dom';
 import { formatDistanceToNow } from 'date-fns';
 import { tr } from 'date-fns/locale';
 import { apiFetch } from '../lib/api';
+import { useAuthStore } from '../lib/authStore';
 
 export default function SubjectPage() {
+  const user = useAuthStore(s => s.user);
+  const isAdmin = user && (user.role === 'admin' || user.role === 'moderator');
   const { name } = useParams();
   const [incidents, setIncidents] = useState([]);
   const [loading, setLoading] = useState(true);

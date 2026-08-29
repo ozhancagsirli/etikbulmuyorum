@@ -75,6 +75,7 @@ export default function ModerationPage() {
     { key: 'stats',       label: 'İstatistik' },
     { key: 'leaderboard', label: 'Lider' },
     { key: 'users',       label: 'Kullanıcı' },
+    { key: 'avatar',      label: 'Kişi Avatarı' },
   ];
 
   return (
@@ -314,8 +315,39 @@ export default function ModerationPage() {
               </div>
             ))}
           </div>
+        ) :
+
+        tab === 'avatar' ? (
+          <AvatarManager />
         ) : null
       )}
+    </div>
+  );
+}
+
+function AvatarManager() {
+  const [name, setName] = useState('');
+  const [url, setUrl] = useState('');
+  const [msg, setMsg] = useState('');
+  const { apiFetch } = require('../lib/api');
+
+  async function save() {
+    try {
+      await apiFetch('/moderation/subjects/avatar', { method: 'POST', body: JSON.stringify({ name, avatar_url: url }) });
+      setMsg('Kaydedildi!');
+    } catch (e) { setMsg('Hata: ' + e.message); }
+  }
+
+  return (
+    <div style={{ background: 'white', borderRadius: 12, border: '1px solid #e5e7eb', padding: 24 }}>
+      <h3 style={{ marginBottom: 16, fontSize: 16, fontWeight: 700 }}>Kişi Avatar Güncelle</h3>
+      <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+        <input value={name} onChange={e => setName(e.target.value)} placeholder="Kişi adı (örn: Ahmet Yılmaz)" style={{ padding: '10px 14px', borderRadius: 8, border: '1px solid #e5e7eb', fontSize: 14 }} />
+        <input value={url} onChange={e => setUrl(e.target.value)} placeholder="Fotoğraf URL (Cloudinary linki)" style={{ padding: '10px 14px', borderRadius: 8, border: '1px solid #e5e7eb', fontSize: 14 }} />
+        {url && <img src={url} alt="" style={{ width: 80, height: 80, borderRadius: '50%', objectFit: 'cover', border: '2px solid #e5e7eb' }} />}
+        <button onClick={save} style={{ padding: '10px', borderRadius: 8, background: '#46A53E', color: 'white', border: 'none', fontWeight: 700, cursor: 'pointer' }}>Kaydet</button>
+        {msg && <div style={{ color: '#16a34a', fontSize: 13 }}>{msg}</div>}
+      </div>
     </div>
   );
 }
