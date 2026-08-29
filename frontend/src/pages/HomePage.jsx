@@ -61,10 +61,10 @@ export default function HomePage() {
   return (
     <div>
 
-      {/* BÖLÜM 1 — Hero arama */}
+      {/* BÖLÜM 1 — Hero arama - navbar ile birleşik */}
       <div style={{
-        minHeight: '100vh', display: 'flex', flexDirection: 'column', justifyContent: 'center',
-        alignItems: 'center', padding: '60px 24px', textAlign: 'center',
+        minHeight: 'calc(100vh - 270px)', display: 'flex', flexDirection: 'column', justifyContent: 'center',
+        alignItems: 'center', padding: '40px 24px 60px', textAlign: 'center',
         background: 'white', position: 'relative', overflow: 'hidden',
       }}>
         {/* Arka plan doku */}
