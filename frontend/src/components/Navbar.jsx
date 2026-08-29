@@ -91,7 +91,7 @@ export default function Navbar() {
                   </button>
 
                   {menuOpen && (
-                    <div style={{ position: 'absolute', right: 0, top: 44, background: 'white', borderRadius: 12, border: '1px solid #e5e7eb', boxShadow: '0 8px 24px rgba(0,0,0,0.12)', minWidth: 190, overflow: 'hidden', zIndex: 200 }}
+                    <div style={{ position: 'fixed', right: 8, top: 'auto', background: 'white', borderRadius: 12, border: '1px solid #e5e7eb', boxShadow: '0 8px 24px rgba(0,0,0,0.12)', minWidth: 190, width: 'calc(100vw - 16px)', maxWidth: 280, overflow: 'hidden', zIndex: 1000 }}
                       onClick={() => setMenuOpen(false)}>
                       <Link to="/profil" style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '12px 16px', color: '#374151', fontSize: 14, borderBottom: '1px solid #f3f4f6' }}>
                         {user.avatarUrl ? <img src={user.avatarUrl} alt="" style={{ width: 28, height: 28, borderRadius: '50%' }} /> : <User size={18} color="#9ca3af" />}
