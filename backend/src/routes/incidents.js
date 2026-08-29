@@ -43,7 +43,7 @@ router.get('/persons', async (req, res, next) => {
       GROUP BY subject
       ORDER BY last_incident DESC
       LIMIT 20
-    \`);
+    `);
     res.json({ data: rows });
   } catch (err) { next(err); }
 });
