@@ -51,7 +51,6 @@ export default function Navbar() {
             <span style={{ fontSize: 13, fontWeight: 900, color: '#4BAB42' }}>{stats ? Number(stats.totals.total_users).toLocaleString('tr') : '—'}</span>
             <span style={{ fontSize: 11, color: 'rgba(255,255,255,0.5)' }}>kullanıcı</span>
           </div>
-          <span style={{ fontSize: 11, color: 'rgba(255,255,255,0.3)', fontWeight: 600, letterSpacing: 1, textTransform: 'uppercase' }}>Referans değil, gerçek deneyim</span>
         </div>
       </div>
 
@@ -115,7 +114,6 @@ export default function Navbar() {
               </>
             ) : (
               <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
-                <div id="google-btn" style={{ transform: 'scale(0.8)', transformOrigin: 'right center' }} />
                 <Link to="/giris" style={{ color: '#374151', fontSize: 12, fontWeight: 600, padding: '7px 12px', borderRadius: 8, border: '1.5px solid #e5e7eb', whiteSpace: 'nowrap' }}>Giriş</Link>
                 <Link to="/giris?tab=register" style={{ background: '#46A53E', color: 'white', fontSize: 12, fontWeight: 700, padding: '7px 14px', borderRadius: 8, whiteSpace: 'nowrap' }}>Kayıt Ol</Link>
               </div>
