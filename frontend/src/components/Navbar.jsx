@@ -57,7 +57,7 @@ export default function Navbar() {
       <nav style={{ background: 'white', borderBottom: '1px solid #f3f4f6', position: 'relative', zIndex: 10 }}>
         <div style={{ maxWidth: 1100, margin: '0 auto', padding: '0 16px', height: 60, display: 'flex', alignItems: 'center', gap: 10 }}>
           <Link to="/" style={{ display: 'flex', alignItems: 'center', flexShrink: 0 }}>
-            <img src="/logo.png" alt="etikbulmuyorum" style={{ height: 30, width: 'auto', maxWidth: 140 }} />
+            <img src="/logo.png" alt="etikbulmuyorum" style={{ height: 28, width: 'auto', maxWidth: 120 }} />
           </Link>
 
           <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginLeft: 'auto', flexShrink: 0 }}>
