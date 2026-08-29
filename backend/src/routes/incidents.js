@@ -51,17 +51,18 @@ router.get('/', optionalAuth, async (req, res, next) => {
     const sql = `
       SELECT i.id, i.title, i.description, i.location, i.is_anonymous,
         i.vote_ethical, i.vote_unethical, i.view_count, i.created_at,
-        i.images, i.tags, i.subject, i.person_name, i.profession, i.trust_score,
+        i.images, i.tags, i.subject, i.person_name, i.profession, i.trust_score, s.avatar_url AS subject_avatar,
         c.slug AS category_slug, c.name_tr AS category_name, c.icon AS category_icon,
         CASE WHEN i.is_anonymous THEN NULL ELSE u.name END AS author_name,
         CASE WHEN i.is_anonymous THEN NULL ELSE u.avatar_url END AS author_avatar,
         COUNT(cm.id)::INT AS comment_count
       FROM incidents i
       LEFT JOIN categories c ON c.id = i.category_id
+      LEFT JOIN subjects s ON s.name = i.subject
       LEFT JOIN users u ON u.id = i.author_id
       LEFT JOIN comments cm ON cm.incident_id = i.id AND NOT cm.is_removed
       WHERE ${where}
-      GROUP BY i.id, c.slug, c.name_tr, c.icon, u.name, u.avatar_url
+      GROUP BY i.id, c.slug, c.name_tr, c.icon, u.name, u.avatar_url, s.avatar_url
       ORDER BY ${orderMap[sort] || orderMap.newest}
       LIMIT $${params.length + 1} OFFSET $${params.length + 2}
     `;
