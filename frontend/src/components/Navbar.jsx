@@ -126,9 +126,9 @@ export default function Navbar() {
                 </div>
               </>
             ) : (
-              <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-                <Link to="/giris" style={{ color: '#374151', fontSize: 13, fontWeight: 600, padding: '8px 16px', borderRadius: 8, border: '1.5px solid #e5e7eb', whiteSpace: 'nowrap' }}>Giriş Yap</Link>
-                <Link to="/giris?tab=register" style={{ background: '#46A53E', color: 'white', fontSize: 13, fontWeight: 700, padding: '9px 18px', borderRadius: 8, whiteSpace: 'nowrap' }}>Kayıt Ol</Link>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+                <Link to="/giris" style={{ color: '#374151', fontSize: 12, fontWeight: 600, padding: '7px 12px', borderRadius: 8, border: '1.5px solid #e5e7eb', whiteSpace: 'nowrap' }}>Giriş</Link>
+                <Link to="/giris?tab=register" style={{ background: '#46A53E', color: 'white', fontSize: 12, fontWeight: 700, padding: '7px 14px', borderRadius: 8, whiteSpace: 'nowrap' }}>Kayıt Ol</Link>
               </div>
             )}
           </div>
