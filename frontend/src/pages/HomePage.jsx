@@ -64,7 +64,7 @@ export default function HomePage() {
       {/* BÖLÜM 1 — Hero arama - navbar ile birleşik tam ekran */}
       <div style={{
         minHeight: 'calc(100vh - 128px)', display: 'flex', flexDirection: 'column', justifyContent: 'center',
-        alignItems: 'center', padding: '40px 24px 60px', textAlign: 'center',
+        alignItems: 'center', padding: 'clamp(20px, 5vw, 40px) 16px clamp(30px, 5vw, 60px)', textAlign: 'center',
         background: 'white', position: 'relative', overflow: 'hidden',
       }}>
         {/* Arka plan doku */}
@@ -72,14 +72,14 @@ export default function HomePage() {
 
         <div style={{ position: 'relative', zIndex: 1, maxWidth: 600, width: '100%' }}>
           <div style={{ fontSize: 11, fontWeight: 700, letterSpacing: 2, textTransform: 'uppercase', color: '#9ca3af', marginBottom: 16 }}>Güven platformu</div>
-          <h1 style={{ fontSize: 38, fontWeight: 900, color: '#111827', lineHeight: 1.2, marginBottom: 14, letterSpacing: -1 }}>
+          <h1 style={{ fontSize: 'clamp(22px, 5vw, 38px)', fontWeight: 900, color: '#111827', lineHeight: 1.2, marginBottom: 14, letterSpacing: -1 }}>
             Birisiyle çalışmadan önce<br />araştır
           </h1>
           <p style={{ fontSize: 16, color: '#6b7280', marginBottom: 36, lineHeight: 1.7 }}>
             Usta, müteahhit, avukat... Başkalarının yaşadıklarını oku, kendi deneyimini paylaş.
           </p>
 
-          <form onSubmit={handleHeroSearch} style={{ display: 'flex', background: 'white', border: '1.5px solid #e5e7eb', borderRadius: 12, overflow: 'hidden', width: '100%', boxShadow: '0 4px 24px rgba(0,0,0,0.06)' }}>
+          <form onSubmit={handleHeroSearch} style={{ display: 'flex', background: 'white', border: '1.5px solid #e5e7eb', borderRadius: 12, overflow: 'hidden', width: '100%', maxWidth: '100%', boxShadow: '0 4px 24px rgba(0,0,0,0.06)' }}>
             <Search size={18} color="#9ca3af" style={{ alignSelf: 'center', marginLeft: 18, flexShrink: 0 }} />
             <input value={heroSearch} onChange={e => setHeroSearch(e.target.value)}
               placeholder="Kişi adı ile ara... örn: Ahmet Yılmaz"

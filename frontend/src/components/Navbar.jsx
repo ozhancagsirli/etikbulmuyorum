@@ -41,37 +41,35 @@ export default function Navbar() {
       {/* İstatistik bandı */}
       <div style={{ background: '#013C26', padding: '0 20px' }}>
         <div style={{ maxWidth: 1100, margin: '0 auto', height: 38, display: 'flex', alignItems: 'center', gap: 32 }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 24, flexWrap: 'wrap' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 16, overflowX: 'auto' }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-              <span style={{ fontSize: 18, fontWeight: 900, color: '#4BAB42' }}>
+              <span style={{ fontSize: 15, fontWeight: 900, color: '#4BAB42', flexShrink: 0 }}>
                 {stats ? Number(stats.totals.total_incidents).toLocaleString('tr') : '—'}
               </span>
-              <span style={{ fontSize: 12, color: 'rgba(255,255,255,0.5)', fontWeight: 500 }}>toplam bildirim</span>
+              <span style={{ fontSize: 11, color: 'rgba(255,255,255,0.5)', fontWeight: 500, flexShrink: 0 }}>bildirim</span>
             </div>
             <div style={{ width: 1, height: 16, background: 'rgba(255,255,255,0.1)' }} />
             <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-              <span style={{ fontSize: 18, fontWeight: 900, color: '#4BAB42' }}>
+              <span style={{ fontSize: 15, fontWeight: 900, color: '#4BAB42', flexShrink: 0 }}>
                 {stats ? Number(stats.totals.total_votes).toLocaleString('tr') : '—'}
               </span>
-              <span style={{ fontSize: 12, color: 'rgba(255,255,255,0.5)', fontWeight: 500 }}>değerlendirme</span>
+              <span style={{ fontSize: 11, color: 'rgba(255,255,255,0.5)', fontWeight: 500, flexShrink: 0 }}>değerlendirme</span>
             </div>
             <div style={{ width: 1, height: 16, background: 'rgba(255,255,255,0.1)' }} />
             <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-              <span style={{ fontSize: 18, fontWeight: 900, color: '#4BAB42' }}>
+              <span style={{ fontSize: 15, fontWeight: 900, color: '#4BAB42', flexShrink: 0 }}>
                 {stats ? Number(stats.totals.total_users).toLocaleString('tr') : '—'}
               </span>
-              <span style={{ fontSize: 12, color: 'rgba(255,255,255,0.5)', fontWeight: 500 }}>kullanıcı</span>
+              <span style={{ fontSize: 11, color: 'rgba(255,255,255,0.5)', fontWeight: 500, flexShrink: 0 }}>kullanıcı</span>
             </div>
           </div>
-          <div style={{ marginLeft: 'auto', fontSize: 11, color: 'rgba(255,255,255,0.3)', fontWeight: 600, letterSpacing: 1, textTransform: 'uppercase' }}>
-            Referans değil, gerçek deneyim
-          </div>
+
         </div>
       </div>
 
       {/* Ana Navbar */}
       <nav style={{ background: 'white', position: 'relative', zIndex: 10 }}>
-        <div style={{ maxWidth: 1100, margin: '0 auto', padding: '0 20px', height: 90, display: 'flex', alignItems: 'center', gap: 16 }}>
+        <div style={{ maxWidth: 1100, margin: '0 auto', padding: '0 20px', height: 70, display: 'flex', alignItems: 'center', gap: 16 }}>
 
           {/* Logo */}
           <Link to="/" style={{ display: 'flex', alignItems: 'center', flexShrink: 0 }}>
