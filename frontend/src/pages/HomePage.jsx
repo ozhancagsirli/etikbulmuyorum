@@ -24,7 +24,13 @@ export default function HomePage() {
   }, []);
 
   useEffect(() => {
-    if (!search) { setLoading(false); return; }
+    if (!search) {
+      setLoading(true);
+      apiFetch('/incidents/persons')
+        .then(d => { setIncidents(d.data || []); setLoading(false); })
+        .catch(() => setLoading(false));
+      return;
+    }
     setLoading(true);
     apiFetch('/incidents?search=' + encodeURIComponent(search) + '&limit=15')
       .then(d => { setIncidents(d.data || []); setLoading(false); })
