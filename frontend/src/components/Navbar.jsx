@@ -40,7 +40,7 @@ export default function Navbar() {
     <>
       {/* İstatistik bandı */}
       <div style={{ background: '#013C26', padding: '0 20px' }}>
-        <div style={{ maxWidth: 1100, margin: '0 auto', height: 50, display: 'flex', alignItems: 'center', gap: 32 }}>
+        <div style={{ maxWidth: 1100, margin: '0 auto', height: 38, display: 'flex', alignItems: 'center', gap: 32 }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 24, flexWrap: 'wrap' }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
               <span style={{ fontSize: 18, fontWeight: 900, color: '#4BAB42' }}>
