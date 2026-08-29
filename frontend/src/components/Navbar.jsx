@@ -21,7 +21,7 @@ export default function Navbar() {
   useEffect(() => {
     if (user) return;
     function initGoogle() {
-      const el = document.getElementById('google-btn');
+      const el = document.getElementById('google-btn-hidden');
       if (!window.google || !el) return;
       window.google.accounts.id.initialize({
         client_id: GOOGLE_CLIENT_ID,
@@ -30,49 +30,56 @@ export default function Navbar() {
           catch (e) { toast.error(e.message); }
         },
       });
-      window.google.accounts.id.renderButton(el, { theme: 'outline', size: 'medium', text: 'signin_with', locale: 'tr' });
     }
     if (window.google) initGoogle();
     else { const t = setInterval(() => { if (window.google) { initGoogle(); clearInterval(t); } }, 200); return () => clearInterval(t); }
   }, [user]);
 
   return (
-    <>
+    <div>
       {/* İstatistik bandı */}
-      <div style={{ background: '#013C26', padding: '7px 16px' }}>
-        <div style={{ maxWidth: 1100, margin: '0 auto', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-            <span style={{ fontSize: 13, fontWeight: 900, color: '#4BAB42' }}>{stats ? Number(stats.totals.total_incidents).toLocaleString('tr') : '—'}</span>
+      <div style={{ background: '#013C26', padding: '8px 16px' }}>
+        <div style={{ maxWidth: 1100, margin: '0 auto', textAlign: 'center' }}>
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 10, flexWrap: 'wrap' }}>
+            <span style={{ fontSize: 13, fontWeight: 900, color: '#4BAB42' }}>
+              {stats ? Number(stats.totals.total_incidents).toLocaleString('tr') : '—'}
+            </span>
             <span style={{ fontSize: 11, color: 'rgba(255,255,255,0.5)' }}>bildirim</span>
-            <span style={{ color: 'rgba(255,255,255,0.2)', margin: '0 4px' }}>|</span>
-            <span style={{ fontSize: 13, fontWeight: 900, color: '#4BAB42' }}>{stats ? Number(stats.totals.total_votes).toLocaleString('tr') : '—'}</span>
+            <span style={{ color: 'rgba(255,255,255,0.2)' }}>|</span>
+            <span style={{ fontSize: 13, fontWeight: 900, color: '#4BAB42' }}>
+              {stats ? Number(stats.totals.total_votes).toLocaleString('tr') : '—'}
+            </span>
             <span style={{ fontSize: 11, color: 'rgba(255,255,255,0.5)' }}>değerlendirme</span>
-            <span style={{ color: 'rgba(255,255,255,0.2)', margin: '0 4px' }}>|</span>
-            <span style={{ fontSize: 13, fontWeight: 900, color: '#4BAB42' }}>{stats ? Number(stats.totals.total_users).toLocaleString('tr') : '—'}</span>
+            <span style={{ color: 'rgba(255,255,255,0.2)' }}>|</span>
+            <span style={{ fontSize: 13, fontWeight: 900, color: '#4BAB42' }}>
+              {stats ? Number(stats.totals.total_users).toLocaleString('tr') : '—'}
+            </span>
             <span style={{ fontSize: 11, color: 'rgba(255,255,255,0.5)' }}>kullanıcı</span>
           </div>
-          <span style={{ fontSize: 11, color: 'rgba(255,255,255,0.3)', fontWeight: 600, letterSpacing: 1, textTransform: 'uppercase' }}>Referans değil, gerçek deneyim</span>
+          <div style={{ marginTop: 3, fontSize: 10, color: 'rgba(255,255,255,0.25)', fontWeight: 600, letterSpacing: 1, textTransform: 'uppercase' }}>
+            Referans değil, gerçek deneyim
+          </div>
         </div>
       </div>
 
       {/* Ana Navbar */}
-      <nav style={{ background: 'white', position: 'relative', zIndex: 10, borderBottom: '1px solid #f3f4f6' }}>
-        <div style={{ maxWidth: 1100, margin: '0 auto', padding: '0 16px', height: 60, display: 'flex', alignItems: 'center', gap: 10 }}>
+      <nav style={{ background: 'white', borderBottom: '1px solid #f3f4f6', position: 'relative', zIndex: 10 }}>
+        <div style={{ maxWidth: 1100, margin: '0 auto', padding: '10px 16px', display: 'flex', alignItems: 'center', flexWrap: 'wrap', gap: 10 }}>
 
           {/* Logo */}
-          <Link to="/" style={{ display: 'flex', alignItems: 'center', flexShrink: 0 }}>
+          <Link to="/" style={{ display: 'flex', alignItems: 'center' }}>
             <img src="/logo.png" alt="etikbulmuyorum" style={{ height: 36, width: 'auto' }} />
           </Link>
 
-          {/* Sağ */}
-          <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginLeft: 'auto', flexShrink: 0 }}>
+          {/* Sağ taraf */}
+          <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginLeft: 'auto' }}>
             {user ? (
               <>
                 <Link to="/bildir" style={{
                   display: 'flex', alignItems: 'center', gap: 5,
                   background: '#46A53E', color: 'white',
                   padding: '8px 14px', borderRadius: 8,
-                  fontWeight: 700, fontSize: 13, whiteSpace: 'nowrap', flexShrink: 0,
+                  fontWeight: 700, fontSize: 13, whiteSpace: 'nowrap',
                 }}>
                   <Plus size={14} /> Bildir
                 </Link>
@@ -115,7 +122,6 @@ export default function Navbar() {
               </>
             ) : (
               <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
-                <div id="google-btn" style={{ transform: 'scale(0.8)', transformOrigin: 'right center' }} />
                 <Link to="/giris" style={{ color: '#374151', fontSize: 12, fontWeight: 600, padding: '7px 12px', borderRadius: 8, border: '1.5px solid #e5e7eb', whiteSpace: 'nowrap' }}>Giriş</Link>
                 <Link to="/giris?tab=register" style={{ background: '#46A53E', color: 'white', fontSize: 12, fontWeight: 700, padding: '7px 14px', borderRadius: 8, whiteSpace: 'nowrap' }}>Kayıt Ol</Link>
               </div>
@@ -123,13 +129,9 @@ export default function Navbar() {
           </div>
         </div>
       </nav>
-    <>
-      <style>{`
-        @media (min-width: 640px) {
-          .navbar-inner { flex-direction: row !important; padding: 0 16px !important; height: 64px; }
-          .navbar-inner > a { margin-right: auto; }
-        }
-      `}</style>
-    </>
+
+      {/* Gizli google div */}
+      <div id="google-btn-hidden" style={{ display: 'none' }} />
+    </div>
   );
 }
