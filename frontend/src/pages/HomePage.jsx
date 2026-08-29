@@ -19,7 +19,17 @@ export default function HomePage() {
 
   useEffect(() => {
     apiFetch('/stats').then(setStats).catch(() => {});
-    apiFetch('/incidents?sort=most_voted&limit=3').then(d => setTopVoted(d.data || [])).catch(() => {});
+    apiFetch('/incidents?sort=most_voted&limit=10').then(d => {
+      const all = d.data || [];
+      const seen = new Set();
+      const unique = all.filter(inc => {
+        const key = inc.subject || inc.id;
+        if (seen.has(key)) return false;
+        seen.add(key);
+        return true;
+      }).slice(0, 3);
+      setTopVoted(unique);
+    }).catch(() => {});
     apiFetch('/incidents?sort=newest&limit=3').then(d => setRecentIncidents(d.data || [])).catch(() => {});
   }, []);
 
