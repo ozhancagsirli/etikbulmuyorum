@@ -71,11 +71,11 @@ export default function Navbar() {
 
       {/* Ana Navbar */}
       <nav style={{ background: 'white', position: 'relative', zIndex: 10 }}>
-        <div style={{ maxWidth: 1100, margin: '0 auto', padding: '0 20px', height: 220, display: 'flex', alignItems: 'center', gap: 16 }}>
+        <div style={{ maxWidth: 1100, margin: '0 auto', padding: '0 20px', height: 90, display: 'flex', alignItems: 'center', gap: 16 }}>
 
           {/* Logo */}
           <Link to="/" style={{ display: 'flex', alignItems: 'center', flexShrink: 0 }}>
-            <img src="/logo.png" alt="etikbulmuyorum" style={{ height: 200, width: 'auto' }} />
+            <img src="/logo.png" alt="etikbulmuyorum" style={{ height: 60, width: 'auto' }} />
           </Link>
 
           {/* Sağ taraf */}
