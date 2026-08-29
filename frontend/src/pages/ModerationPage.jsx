@@ -329,7 +329,6 @@ function AvatarManager() {
   const [name, setName] = useState('');
   const [url, setUrl] = useState('');
   const [msg, setMsg] = useState('');
-  const { apiFetch } = require('../lib/api');
 
   async function save() {
     try {
