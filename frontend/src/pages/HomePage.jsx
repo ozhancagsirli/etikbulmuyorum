@@ -95,7 +95,7 @@ export default function HomePage() {
       {/* BÖLÜM 1 — Hero = Navbar + Arama tam ekran */}
       <div style={{ height: '100vh', display: 'flex', flexDirection: 'column', background: 'white', position: 'relative', overflow: 'hidden' }}>
         <Navbar />
-        <div style={{ flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', padding: '20px 16px', textAlign: 'center' }}>
+        <div style={{ flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'flex-start', alignItems: 'center', padding: '60px 16px 40px', textAlign: 'center' }}>
         {/* Arka plan doku */}
 
         <div style={{ position: 'relative', zIndex: 1, maxWidth: 600, width: '100%' }}>
