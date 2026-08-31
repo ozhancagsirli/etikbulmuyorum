@@ -100,9 +100,8 @@ export default function HomePage() {
 
         <div style={{ position: 'relative', zIndex: 1, maxWidth: 600, width: '100%' }}>
 
-          {/* En çok oylanan 3 kişi */}
-          {topVoted.length > 0 && (
-            <div style={{ display: 'flex', gap: 8, justifyContent: 'center', marginBottom: 24, flexWrap: 'wrap' }}>
+          {/* placeholder - kartlar asagida */}
+          {false && (
               {topVoted.slice(0, 3).map(inc => {
                 const ts = inc.trust_score || 0;
                 return (
@@ -129,10 +128,9 @@ export default function HomePage() {
                   </Link>
                 );
               })}
-            </div>
           )}
 
-          <div style={{ fontSize: 11, fontWeight: 700, letterSpacing: 2, textTransform: 'uppercase', color: '#9ca3af', marginBottom: 16 }}>Güven platformu</div>
+          <div style={{ fontSize: 11, fontWeight: 700, letterSpacing: 2, textTransform: 'uppercase', color: '#9ca3af', marginBottom: 8 }}>Güven platformu</div>
           <h1 style={{ fontSize: 'clamp(22px, 5vw, 38px)', fontWeight: 900, color: '#111827', lineHeight: 1.2, marginBottom: 14, letterSpacing: -1 }}>
             Birisiyle çalışmadan önce<br />araştır
           </h1>
@@ -151,7 +149,7 @@ export default function HomePage() {
             </button>
           </form>
 
-          <div style={{ display: 'flex', gap: 8, justifyContent: 'center', marginTop: 18, flexWrap: 'wrap' }}>
+          <div style={{ display: 'flex', gap: 8, justifyContent: 'center', marginBottom: 24, flexWrap: 'wrap' }}>
             {['Ahmet Y.', 'Mehmet Usta', 'Ali Kaya', 'Ayşe Av.'].map(name => (
               <button key={name} onClick={() => navigate('/?search=' + encodeURIComponent(name))}
                 style={{ fontSize: 12, color: '#9ca3af', background: '#f9fafb', border: '1px solid #e5e7eb', padding: '5px 12px', borderRadius: 20, cursor: 'pointer', fontFamily: 'inherit' }}>
@@ -159,6 +157,38 @@ export default function HomePage() {
               </button>
             ))}
           </div>
+
+          {/* En çok oylanan kişiler - arama altında */}
+          {topVoted.length > 0 && (
+            <div style={{ display: 'flex', gap: 12, justifyContent: 'center', flexWrap: 'wrap', width: '100%' }}>
+              {topVoted.map(inc => {
+                const ts = inc.trust_score || 0;
+                return (
+                  <Link key={inc.id} to={'/konu/' + encodeURIComponent(inc.subject || inc.title)} style={{
+                    display: 'flex', alignItems: 'center', gap: 10,
+                    background: 'white', border: '1px solid #e5e7eb',
+                    borderRadius: 12, padding: '12px 16px',
+                    boxShadow: '0 1px 4px rgba(0,0,0,0.06)',
+                    color: 'inherit', minWidth: 180,
+                  }}>
+                    <div style={{ width: 44, height: 44, borderRadius: '50%', background: '#f3f4f6', flexShrink: 0, overflow: 'hidden', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                      {inc.subject_avatar
+                        ? <img src={inc.subject_avatar} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                        : <span style={{ fontSize: 20 }}>{inc.category_icon || '👤'}</span>
+                      }
+                    </div>
+                    <div style={{ flex: 1, minWidth: 0 }}>
+                      <div style={{ fontSize: 14, fontWeight: 700, color: '#111827', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{inc.subject || inc.title}</div>
+                      <div style={{ fontSize: 11, color: '#9ca3af' }}>{inc.category_name}</div>
+                      <div style={{ fontSize: 12, fontWeight: 700, color: ts >= 50 ? '#16a34a' : ts >= -10 ? '#d97706' : '#dc2626', marginTop: 2 }}>
+                        {ts > 0 ? '+' : ''}{ts} {ts >= 50 ? 'Güvenilir' : ts >= -10 ? 'Dikkatli' : 'Güvenilmez'}
+                      </div>
+                    </div>
+                  </Link>
+                );
+              })}
+            </div>
+          )}
         </div>
 
         </div>
