@@ -154,13 +154,14 @@ export default function ProfilePage() {
                       }
                       {inc.reject_reason && <div style={{ fontSize: 12, color: '#013C26', background: '#f0fdf4', padding: '6px 10px', borderRadius: 6, marginTop: 4 }}>Red: {inc.reject_reason}</div>}
                       <div style={{ display: 'flex', gap: 12, fontSize: 12, color: '#9ca3af', marginTop: 6, alignItems: 'center' }}>
-                        <Link to={'/olay-duzenle/' + inc.id} style={{ display: 'inline-flex', alignItems: 'center', gap: 4, border: '1px solid #e5e7eb', color: '#374151', fontSize: 12, padding: '4px 8px', borderRadius: 6, marginLeft: 'auto', background: 'none' }}>
-                          ✏️ Düzenle
+                        <Link to={'/olay-duzenle/' + inc.id} style={{ display: 'inline-flex', alignItems: 'center', gap: 5, border: '1px solid #e5e7eb', color: '#374151', fontSize: 12, padding: '6px 12px', borderRadius: 8, marginLeft: 'auto', background: 'white', fontWeight: 500 }}>
+                          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+                          Düzenle
                         </Link>
                         <span>{total} oy</span>
                         {ethPct !== null && <span style={{ color: ethPct >= 50 ? '#16a34a' : '#dc2626' }}>{ethPct}% Güvenilir</span>}
-                        <button onClick={() => deleteIncident(inc.id)} style={{ marginLeft: 'auto', display: 'flex', alignItems: 'center', gap: 4, background: 'none', border: 'none', color: '#013C26', cursor: 'pointer', fontSize: 12, padding: '4px 8px', borderRadius: 6 }}>
-                          <Trash2 size={13} /> Sil
+                        <button onClick={() => deleteIncident(inc.id)} style={{ display: 'flex', alignItems: 'center', gap: 5, background: 'white', border: '1px solid #fecaca', color: '#dc2626', cursor: 'pointer', fontSize: 12, padding: '6px 12px', borderRadius: 8, fontWeight: 500 }}>
+                          <Trash2 size={12} /> Sil
                         </button>
                       </div>
                     </div>
