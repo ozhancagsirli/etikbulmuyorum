@@ -93,7 +93,7 @@ router.get('/:id', optionalAuth, async (req, res, next) => {
       LEFT JOIN categories c ON c.id = i.category_id
       
       LEFT JOIN users u ON u.id = i.author_id
-      WHERE i.id = $1 AND i.status = 'approved'
+      WHERE i.id = $1
     `, [req.params.id]);
     if (!rows.length) return res.status(404).json({ error: 'Olay bulunamadı.' });
     pool.query('UPDATE incidents SET view_count = view_count + 1 WHERE id = $1', [req.params.id]);
