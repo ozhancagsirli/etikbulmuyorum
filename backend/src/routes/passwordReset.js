@@ -19,8 +19,9 @@ router.post('/forgot-password', async (req, res, next) => {
     const token = crypto.randomBytes(32).toString('hex');
     const expiresAt = new Date(Date.now() + 60 * 60 * 1000); // 1 saat
 
+    await pool.query('DELETE FROM password_resets WHERE user_id = $1', [rows[0].id]);
     await pool.query(
-      'INSERT INTO password_resets (user_id, token, expires_at) VALUES ($1, $2, $3) ON CONFLICT DO NOTHING',
+      'INSERT INTO password_resets (user_id, token, expires_at) VALUES ($1, $2, $3)',
       [rows[0].id, token, expiresAt]
     );
 
