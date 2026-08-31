@@ -5,6 +5,7 @@ import { tr } from 'date-fns/locale';
 import { Shield, CheckCircle, XCircle, BarChart2, Trophy, Users, FileText, ThumbsUp, Eye, Building2 } from 'lucide-react';
 import toast from 'react-hot-toast';
 import { apiFetch } from '../lib/api';
+import AIAnalysis from '../components/AIAnalysis';
 import { useAuthStore } from '../lib/authStore';
 
 export default function ModerationPage() {
@@ -143,6 +144,8 @@ export default function ModerationPage() {
                   </button>
                 )}
                 {tab === 'pending' && (
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+                  <AIAnalysis incident={inc} />
                   <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
                     <input
                       placeholder="Red sebebi (isteğe bağlı)..."
