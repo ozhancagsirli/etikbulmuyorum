@@ -190,12 +190,12 @@ export default function SubmitPage() {
                   📎 Kanıt Fotoğrafı <span style={{ color: '#46A53E' }}>*</span>
                   <span style={{ fontSize: 11, color: '#9ca3af', fontWeight: 400, marginLeft: 6 }}>Dekont, mesaj, sözleşme vb.</span>
                 </label>
-                <ImageUploader value={form.images} onChange={imgs => setForm(f => ({ ...f, images: imgs }))} />
+                <ImageUploader value={form.images || []} onChange={imgs => setForm(f => ({ ...f, images: Array.isArray(imgs) ? imgs : [] }))} />
               </div>
 
               <div>
                 <label style={{ display: 'block', fontWeight: 600, fontSize: 13, marginBottom: 8 }}>Etiketler</label>
-                <TagInput value={form.tags} onChange={tags => setForm(f => ({ ...f, tags }))} />
+                <TagInput value={form.tags || []} onChange={tags => setForm(f => ({ ...f, tags: Array.isArray(tags) ? tags : [] }))} />
               </div>
             </div>
           </div>
