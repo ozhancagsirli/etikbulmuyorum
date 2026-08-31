@@ -128,6 +128,32 @@ router.post('/', authenticate, spamFilter, async (req, res, next) => {
   } catch (err) { next(err); }
 });
 
+// PUT /api/incidents/:id
+router.put('/:id', authenticate, async (req, res, next) => {
+  try {
+    const { title, description, location, incidentDate, tags, subject } = req.body;
+    const { rows: inc } = await pool.query('SELECT author_id, status FROM incidents WHERE id = $1', [req.params.id]);
+    if (!inc.length) return res.status(404).json({ error: 'Olay bulunamadı.' });
+    if (inc[0].author_id !== req.user.id && req.user.role !== 'admin') return res.status(403).json({ error: 'Yetkisiz.' });
+
+    const { rows } = await pool.query(`
+      UPDATE incidents SET
+        title = COALESCE($1, title),
+        description = COALESCE($2, description),
+        location = COALESCE($3, location),
+        incident_date = COALESCE($4, incident_date),
+        tags = COALESCE($5, tags),
+        subject = COALESCE($6, subject),
+        status = 'pending',
+        updated_at = NOW()
+      WHERE id = $7
+      RETURNING id, title, status
+    `, [title||null, description||null, location||null, incidentDate||null, tags||null, subject||null, req.params.id]);
+
+    res.json(rows[0]);
+  } catch (err) { next(err); }
+});
+
 router.delete('/:id', authenticate, async (req, res, next) => {
   try {
     const { rows } = await pool.query('SELECT author_id FROM incidents WHERE id = $1', [req.params.id]);
