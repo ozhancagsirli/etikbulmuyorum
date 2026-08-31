@@ -273,8 +273,22 @@ function IncidentCard({ incident: inc }) {
           <span style={{ fontSize: 11, color: '#d1d5db', marginLeft: 'auto' }}>{formatDistanceToNow(new Date(inc.created_at), { locale: tr, addSuffix: true })}</span>
         </div>
         {inc.subject && (
-          <Link to={'/konu/' + encodeURIComponent(inc.subject)}>
-            <div style={{ fontSize: 18, fontWeight: 900, color: '#111827', marginBottom: 4, letterSpacing: -0.3 }}>{inc.subject}</div>
+          <Link to={'/konu/' + encodeURIComponent(inc.subject)} style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 10, padding: '10px 12px', background: '#f9fafb', borderRadius: 10, border: '1px solid #e5e7eb' }}>
+            <div style={{ width: 40, height: 40, borderRadius: '50%', background: '#e5e7eb', flexShrink: 0, overflow: 'hidden', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+              {inc.subject_avatar
+                ? <img src={inc.subject_avatar} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                : <span style={{ fontSize: 18 }}>{inc.category_icon || '👤'}</span>
+              }
+            </div>
+            <div style={{ flex: 1, minWidth: 0 }}>
+              <div style={{ fontSize: 15, fontWeight: 800, color: '#111827', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{inc.subject}</div>
+              <div style={{ fontSize: 11, color: '#9ca3af' }}>{inc.category_name}</div>
+            </div>
+            {(inc.vote_correct || inc.vote_wrong) ? (
+              <div style={{ fontSize: 14, fontWeight: 800, color: ts >= 50 ? '#16a34a' : ts >= -10 ? '#d97706' : '#dc2626', flexShrink: 0 }}>
+                {ts > 0 ? '+' : ''}{ts}
+              </div>
+            ) : null}
           </Link>
         )}
         <Link to={'/olay/' + inc.id}>
