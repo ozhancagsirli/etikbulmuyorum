@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import { Resend } from 'resend';
-import bcrypt from 'bcryptjs';
+import bcrypt from 'bcrypt';
 import crypto from 'crypto';
 import pool from '../db/pool.js';
 
