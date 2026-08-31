@@ -137,7 +137,7 @@ export default function SubmitPage() {
             {/* Instagram profil önizleme */}
             {igProfile && (
               <div style={{ display: 'flex', alignItems: 'center', gap: 14, padding: '14px 16px', background: '#f9fafb', borderRadius: 12, border: '1.5px solid #46A53E', marginBottom: 20 }}>
-                <img src={igProfile.profile_pic_url} alt="" style={{ width: 56, height: 56, borderRadius: '50%', objectFit: 'cover', flexShrink: 0 }} />
+                <img src={`${import.meta.env.VITE_API_URL}/instagram/proxy?url=${encodeURIComponent(igProfile.profile_pic_url)}`} alt="" style={{ width: 56, height: 56, borderRadius: '50%', objectFit: 'cover', flexShrink: 0 }} />
                 <div style={{ flex: 1 }}>
                   <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
                     <span style={{ fontWeight: 800, fontSize: 16, color: '#111827' }}>@{igProfile.username}</span>
@@ -169,7 +169,7 @@ export default function SubmitPage() {
 
             {igProfile && (
               <div style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '10px 14px', background: '#f0fdf4', borderRadius: 10, border: '1px solid #bbf7d0', marginBottom: 16 }}>
-                <img src={igProfile.profile_pic_url} alt="" style={{ width: 36, height: 36, borderRadius: '50%', objectFit: 'cover' }} />
+                <img src={`${import.meta.env.VITE_API_URL}/instagram/proxy?url=${encodeURIComponent(igProfile.profile_pic_url)}`} alt="" style={{ width: 36, height: 36, borderRadius: '50%', objectFit: 'cover' }} />
                 <span style={{ fontWeight: 700, fontSize: 14 }}>@{igProfile.username}</span>
                 {igProfile.is_verified && <span>✅</span>}
               </div>
@@ -229,7 +229,7 @@ export default function SubmitPage() {
                 <div style={{ fontWeight: 700, fontSize: 13, marginBottom: 10, color: '#374151' }}>Özet</div>
                 {igProfile && (
                   <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 8 }}>
-                    <img src={igProfile.profile_pic_url} alt="" style={{ width: 28, height: 28, borderRadius: '50%' }} />
+                    <img src={`${import.meta.env.VITE_API_URL}/instagram/proxy?url=${encodeURIComponent(igProfile.profile_pic_url)}`} alt="" style={{ width: 28, height: 28, borderRadius: '50%' }} />
                     <span style={{ fontWeight: 600, fontSize: 13 }}>@{igProfile.username}</span>
                     {igProfile.is_verified && <span>✅</span>}
                   </div>

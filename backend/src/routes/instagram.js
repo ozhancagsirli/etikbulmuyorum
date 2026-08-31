@@ -32,4 +32,17 @@ router.get('/lookup', async (req, res, next) => {
   } catch (err) { next(err); }
 });
 
+// GET /api/instagram/proxy?url=...
+router.get('/proxy', async (req, res, next) => {
+  try {
+    const { url } = req.query;
+    if (!url || !url.includes('cdninstagram.com')) return res.status(400).json({ error: 'Geçersiz URL.' });
+    const response = await fetch(url);
+    const buffer = await response.arrayBuffer();
+    res.setHeader('Content-Type', response.headers.get('content-type') || 'image/jpeg');
+    res.setHeader('Cache-Control', 'public, max-age=86400');
+    res.send(Buffer.from(buffer));
+  } catch (err) { next(err); }
+});
+
 export default router;
