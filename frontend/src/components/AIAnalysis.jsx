@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { Sparkles, CheckCircle, XCircle, AlertTriangle } from 'lucide-react';
+import { apiFetch } from '../lib/api';
 
 export default function AIAnalysis({ incident }) {
   const [result, setResult] = useState(null);
