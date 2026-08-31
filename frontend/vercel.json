@@ -1,5 +1,7 @@
 {
   "rewrites": [
+    { "source": "/sitemap.xml", "destination": "https://etikbulmuyorum-production.up.railway.app/sitemap.xml" },
+    { "source": "/robots.txt", "destination": "https://etikbulmuyorum-production.up.railway.app/robots.txt" },
     { "source": "/(.*)", "destination": "/index.html" }
   ]
 }
