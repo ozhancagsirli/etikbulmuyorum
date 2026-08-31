@@ -162,6 +162,11 @@ export default function AuthPage() {
             </div>
           )}
 
+          {tab === 'login' && (
+            <div style={{ textAlign: 'right', marginBottom: 4 }}>
+              <a href="/sifre-sifirla" style={{ fontSize: 12, color: '#46A53E', textDecoration: 'none' }}>Şifremi unuttum</a>
+            </div>
+          )}
           <button type="submit" disabled={loading} style={{
             padding: '12px', borderRadius: 10, border: 'none',
             background: loading ? '#e5e7eb' : '#46A53E',
