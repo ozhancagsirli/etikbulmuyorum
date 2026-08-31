@@ -132,7 +132,7 @@ export default function HomePage() {
           {/* En çok oylanan kişiler - arama altında */}
           {topVoted.length > 0 && (
             <div style={{ width: '100%' }}>
-              <div style={{ fontSize: 11, fontWeight: 700, letterSpacing: 1.5, textTransform: 'uppercase', color: '#9ca3af', marginBottom: 10, textAlign: 'center' }}>En çok değerlendirilen</div>
+              <div style={{ fontSize: 11, fontWeight: 700, letterSpacing: 1.5, textTransform: 'uppercase', color: '#9ca3af', marginBottom: 10, marginTop: 24, textAlign: 'center' }}>En çok değerlendirilen</div>
             <div style={{ display: 'flex', gap: 12, justifyContent: 'center', flexWrap: 'wrap' }}>
               {topVoted.map(inc => {
                 const ts = inc.trust_score || 0;
