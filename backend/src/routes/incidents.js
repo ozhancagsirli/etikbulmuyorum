@@ -103,15 +103,15 @@ router.get('/:id', optionalAuth, async (req, res, next) => {
 
 router.post('/', authenticate, spamFilter, async (req, res, next) => {
   try {
-    const { title, description, categoryId, location, incidentDate, isAnonymous, images, tags, subject, personName, profession } = req.body;
+    const { title, description, categoryId, location, incidentDate, isAnonymous, images, tags, subject, person_name, instagram_username, instagram_avatar, instagram_verified, instagram_followers } = req.body;
     if (!title || title.length < 3) return res.status(422).json({ error: 'Başlık en az 3 karakter olmalı.' });
     if (!description || description.length < 50) return res.status(422).json({ error: 'Açıklama en az 50 karakter olmalı.' });
     if (!categoryId) return res.status(422).json({ error: 'Kategori gerekli.' });
     const { rows } = await pool.query(`
-      INSERT INTO incidents (author_id, category_id, title, description, location, incident_date, is_anonymous, status, images, tags, subject, person_name, profession)
-      VALUES ($1,$2,$3,$4,$5,$6,$7,'pending',$8,$9,$10,$11,$12)
+      INSERT INTO incidents (author_id, category_id, title, description, location, incident_date, is_anonymous, status, images, tags, subject, person_name, instagram_username, instagram_avatar, instagram_verified, instagram_followers)
+      VALUES ($1,$2,$3,$4,$5,$6,$7,'pending',$8,$9,$10,$11,$12,$13,$14,$15)
       RETURNING id, title, status, created_at
-    `, [req.user.id, categoryId, title, description, location||null, incidentDate||null, isAnonymous||false, images||[], tags||[], subject||null, personName||null, profession||null]);
+    `, [req.user.id, categoryId, title, description, location||null, incidentDate||null, isAnonymous||false, images||[], tags||[], subject||null, person_name||null, instagram_username||null, instagram_avatar||null, instagram_verified||false, instagram_followers||0]);
     if (subject) {
       await pool.query(
         'INSERT INTO subjects (name, count) VALUES ($1, 1) ON CONFLICT (name) DO UPDATE SET count = subjects.count + 1',
