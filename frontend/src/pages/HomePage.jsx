@@ -167,9 +167,9 @@ export default function HomePage() {
 
         </div>
         {/* Aşağı ok */}
-        <div style={{ position: 'absolute', bottom: 24, left: '50%', transform: 'translateX(-50%)', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 6, color: '#d1d5db' }}>
-          <span style={{ fontSize: 11, letterSpacing: 1 }}>Son bildirimler</span>
-          <div style={{ width: 16, height: 16, borderRight: '1.5px solid #d1d5db', borderBottom: '1.5px solid #d1d5db', transform: 'rotate(45deg)', animation: 'bounce 1.5s infinite' }} />
+        <div style={{ paddingBottom: 32, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 8, color: '#d1d5db' }}>
+          <span style={{ fontSize: 11, letterSpacing: 1, color: '#9ca3af' }}>Son bildirimler</span>
+          <div style={{ width: 16, height: 16, borderRight: '2px solid #d1d5db', borderBottom: '2px solid #d1d5db', transform: 'rotate(45deg)', animation: 'bounce 1.5s infinite' }} />
         </div>
       </div>
 
