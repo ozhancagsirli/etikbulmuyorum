@@ -12,6 +12,7 @@ import SubjectPage      from './pages/SubjectPage';
 import AuthPage         from './pages/AuthPage';
 import StatsPage        from './pages/StatsPage';
 import LeaderboardPage  from './pages/LeaderboardPage';
+import ResetPasswordPage from './pages/ResetPasswordPage';
 
 function WithNav({ children }) {
   return (
@@ -40,6 +41,7 @@ export default function App() {
           <Route path="/konu/:name"   element={<WithNav><SubjectPage /></WithNav>} />
           <Route path="/giris"        element={<WithNav><AuthPage /></WithNav>} />
           <Route path="/istatistik"   element={<WithNav><StatsPage /></WithNav>} />
+          <Route path="/sifre-sifirla" element={<WithNav><ResetPasswordPage /></WithNav>} />
           <Route path="/liderboard"   element={<WithNav><LeaderboardPage /></WithNav>} />
         </Routes>
     </BrowserRouter>
