@@ -321,10 +321,57 @@ export default function ModerationPage() {
           </div>
         ) :
 
+        tab === 'appeals' ? (
+          <AppealsList />
+        ) :
         tab === 'avatar' ? (
           <AvatarManager />
         ) : null
       )}
+    </div>
+  );
+}
+
+function AppealsList() {
+  const [appeals, setAppeals] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    apiFetch('/appeals').then(setAppeals).catch(() => {}).finally(() => setLoading(false));
+  }, []);
+
+  async function updateStatus(id, status) {
+    try {
+      await apiFetch('/appeals/' + id, { method: 'PUT', body: JSON.stringify({ status }) });
+      setAppeals(prev => prev.map(a => a.id === id ? { ...a, status } : a));
+      toast.success('Güncellendi.');
+    } catch (e) { toast.error(e.message); }
+  }
+
+  if (loading) return <div style={{ padding: 40, textAlign: 'center', color: '#9ca3af' }}>Yükleniyor...</div>;
+  if (appeals.length === 0) return <div style={{ background: 'white', borderRadius: 12, border: '1px solid #e5e7eb', padding: 40, textAlign: 'center', color: '#9ca3af' }}>İtiraz yok.</div>;
+
+  return (
+    <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+      {appeals.map(a => (
+        <div key={a.id} style={{ background: 'white', borderRadius: 12, border: '1px solid #e5e7eb', padding: '16px 20px' }}>
+          <div style={{ display: 'flex', gap: 8, marginBottom: 8, alignItems: 'center' }}>
+            <span style={{ fontWeight: 700, fontSize: 15 }}>{a.subject_name}</span>
+            <span style={{ fontSize: 11, padding: '2px 8px', borderRadius: 20, background: a.status === 'pending' ? '#fffbeb' : a.status === 'approved' ? '#f0fdf4' : '#fef2f2', color: a.status === 'pending' ? '#d97706' : a.status === 'approved' ? '#16a34a' : '#dc2626', fontWeight: 600 }}>
+              {a.status === 'pending' ? 'Bekliyor' : a.status === 'approved' ? 'Onaylandı' : 'Reddedildi'}
+            </span>
+            <span style={{ fontSize: 11, color: '#9ca3af', marginLeft: 'auto' }}>{new Date(a.created_at).toLocaleDateString('tr')}</span>
+          </div>
+          <div style={{ fontSize: 13, color: '#374151', marginBottom: 4 }}><strong>{a.name}</strong> — {a.email}</div>
+          <div style={{ fontSize: 13, color: '#6b7280', marginBottom: 12, lineHeight: 1.6 }}>{a.message}</div>
+          {a.status === 'pending' && (
+            <div style={{ display: 'flex', gap: 8 }}>
+              <button onClick={() => updateStatus(a.id, 'approved')} style={{ padding: '6px 14px', borderRadius: 8, border: 'none', background: '#dcfce7', color: '#16a34a', fontWeight: 600, fontSize: 12, cursor: 'pointer' }}>Onayla</button>
+              <button onClick={() => updateStatus(a.id, 'rejected')} style={{ padding: '6px 14px', borderRadius: 8, border: 'none', background: '#fef2f2', color: '#dc2626', fontWeight: 600, fontSize: 12, cursor: 'pointer' }}>Reddet</button>
+            </div>
+          )}
+        </div>
+      ))}
     </div>
   );
 }

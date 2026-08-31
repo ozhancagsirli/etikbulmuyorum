@@ -8,10 +8,21 @@ import { useAuthStore } from '../lib/authStore';
 export default function SubjectPage() {
   const user = useAuthStore(s => s.user);
   const isAdmin = user && (user.role === 'admin' || user.role === 'moderator');
+  const [showAppeal, setShowAppeal] = useState(false);
+  const [appeal, setAppeal] = useState({ name: '', email: '', message: '' });
+  const [appealSent, setAppealSent] = useState(false);
   const { name } = useParams();
   const [incidents, setIncidents] = useState([]);
   const [loading, setLoading] = useState(true);
   const decodedName = decodeURIComponent(name);
+
+  async function submitAppeal(e) {
+    e.preventDefault();
+    try {
+      await apiFetch('/appeals', { method: 'POST', body: JSON.stringify({ subject_name: decodedName, ...appeal }) });
+      setAppealSent(true);
+    } catch (err) { alert(err.message); }
+  }
 
   useEffect(() => {
     apiFetch('/incidents?subject=' + encodeURIComponent(decodedName) + '&limit=15')
@@ -54,6 +65,37 @@ export default function SubjectPage() {
           </div>
         );
       })()}
+
+      {/* İtiraz butonu */}
+      {!showAppeal && !appealSent && (
+        <div style={{ textAlign: 'center', marginBottom: 12 }}>
+          <button onClick={() => setShowAppeal(true)} style={{ fontSize: 13, color: '#6b7280', background: 'white', border: '1px solid #e5e7eb', padding: '8px 18px', borderRadius: 8, cursor: 'pointer' }}>
+            ⚖️ Bu kişiyim, itiraz etmek istiyorum
+          </button>
+        </div>
+      )}
+
+      {showAppeal && !appealSent && (
+        <div style={{ background: 'white', borderRadius: 12, border: '1px solid #e5e7eb', padding: '20px 24px', marginBottom: 16 }}>
+          <h3 style={{ fontWeight: 700, marginBottom: 4, fontSize: 16 }}>İtiraz Formu</h3>
+          <p style={{ fontSize: 13, color: '#6b7280', marginBottom: 16 }}>Bilgileriniz moderatörlerimiz tarafından incelenecek.</p>
+          <form onSubmit={submitAppeal} style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+            <input value={appeal.name} onChange={e => setAppeal(a => ({...a, name: e.target.value}))} placeholder="Adınız Soyadınız" required style={{ padding: '10px 14px', borderRadius: 8, border: '1px solid #e5e7eb', fontSize: 14 }} />
+            <input type="email" value={appeal.email} onChange={e => setAppeal(a => ({...a, email: e.target.value}))} placeholder="Email adresiniz" required style={{ padding: '10px 14px', borderRadius: 8, border: '1px solid #e5e7eb', fontSize: 14 }} />
+            <textarea value={appeal.message} onChange={e => setAppeal(a => ({...a, message: e.target.value}))} placeholder="İtiraz gerekçenizi açıklayın..." required rows={4} style={{ padding: '10px 14px', borderRadius: 8, border: '1px solid #e5e7eb', fontSize: 14, resize: 'vertical' }} />
+            <div style={{ display: 'flex', gap: 8 }}>
+              <button type="button" onClick={() => setShowAppeal(false)} style={{ flex: 1, padding: '10px', borderRadius: 8, border: '1px solid #e5e7eb', background: 'white', cursor: 'pointer', fontSize: 13 }}>İptal</button>
+              <button type="submit" style={{ flex: 2, padding: '10px', borderRadius: 8, background: '#46A53E', color: 'white', border: 'none', fontWeight: 700, fontSize: 13, cursor: 'pointer' }}>Gönder</button>
+            </div>
+          </form>
+        </div>
+      )}
+
+      {appealSent && (
+        <div style={{ background: '#f0fdf4', borderRadius: 12, border: '1px solid #bbf7d0', padding: '16px 20px', marginBottom: 16, textAlign: 'center', color: '#16a34a', fontWeight: 600 }}>
+          ✅ İtirazınız alındı! Moderatörlerimiz inceleyecek.
+        </div>
+      )}
 
       {loading ? (
         <div style={{ textAlign: 'center', padding: 40, color: '#888' }}>Yükleniyor...</div>
