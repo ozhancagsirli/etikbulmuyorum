@@ -145,20 +145,21 @@ export default function ModerationPage() {
                 )}
                 {tab === 'pending' && (
                   <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
-                  <AIAnalysis incident={inc} />
-                  <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
-                    <input
-                      placeholder="Red sebebi (isteğe bağlı)..."
-                      value={rejectReason[inc.id] || ''}
-                      onChange={e => setRejectReason(r => ({ ...r, [inc.id]: e.target.value }))}
-                      style={{ flex: 1, padding: '7px 12px', borderRadius: 8, border: '1px solid #e5e7eb', fontSize: 13, minWidth: 150 }}
-                    />
-                    <button onClick={() => approve(inc.id)} style={{ display: 'flex', alignItems: 'center', gap: 5, padding: '7px 16px', borderRadius: 8, border: 'none', background: '#dcfce7', color: '#16a34a', fontWeight: 600, fontSize: 13, cursor: 'pointer' }}>
-                      <CheckCircle size={14} /> Onayla
-                    </button>
-                    <button onClick={() => reject(inc.id)} style={{ display: 'flex', alignItems: 'center', gap: 5, padding: '7px 16px', borderRadius: 8, border: 'none', background: '#f0fdf4', color: '#013C26', fontWeight: 600, fontSize: 13, cursor: 'pointer' }}>
-                      <XCircle size={14} /> Reddet
-                    </button>
+                    <AIAnalysis incident={inc} />
+                    <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
+                      <input
+                        placeholder="Red sebebi (isteğe bağlı)..."
+                        value={rejectReason[inc.id] || ''}
+                        onChange={e => setRejectReason(r => ({ ...r, [inc.id]: e.target.value }))}
+                        style={{ flex: 1, padding: '7px 12px', borderRadius: 8, border: '1px solid #e5e7eb', fontSize: 13, minWidth: 150 }}
+                      />
+                      <button onClick={() => approve(inc.id)} style={{ display: 'flex', alignItems: 'center', gap: 5, padding: '7px 16px', borderRadius: 8, border: 'none', background: '#dcfce7', color: '#16a34a', fontWeight: 600, fontSize: 13, cursor: 'pointer' }}>
+                        <CheckCircle size={14} /> Onayla
+                      </button>
+                      <button onClick={() => reject(inc.id)} style={{ display: 'flex', alignItems: 'center', gap: 5, padding: '7px 16px', borderRadius: 8, border: 'none', background: '#f0fdf4', color: '#013C26', fontWeight: 600, fontSize: 13, cursor: 'pointer' }}>
+                        <XCircle size={14} /> Reddet
+                      </button>
+                    </div>
                   </div>
                 )}
                 {tab === 'rejected' && inc.reject_reason && (
