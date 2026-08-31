@@ -1,4 +1,11 @@
 import { Router } from 'express';
+import { v2 as cloudinary } from 'cloudinary';
+
+cloudinary.config({
+  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+  api_key: process.env.CLOUDINARY_API_KEY,
+  api_secret: process.env.CLOUDINARY_API_SECRET,
+});
 
 const router = Router();
 
@@ -21,27 +28,27 @@ router.get('/lookup', async (req, res, next) => {
     if (!data.data) return res.status(404).json({ error: 'Kullanıcı bulunamadı.' });
 
     const u = data.data;
+    // Profil fotoğrafını Cloudinary'e yükle
+    let avatarUrl = u.profile_pic_url_hd || u.profile_pic_url;
+    try {
+      const upload = await cloudinary.uploader.upload(avatarUrl, {
+        folder: 'etikbulmuyorum/instagram',
+        public_id: 'ig_' + u.username,
+        overwrite: true,
+      });
+      avatarUrl = upload.secure_url;
+    } catch (e) {
+      console.error('Cloudinary upload failed:', e.message);
+    }
+
     res.json({
       username: u.username,
       full_name: u.full_name,
-      profile_pic_url: u.profile_pic_url_hd || u.profile_pic_url,
+      profile_pic_url: avatarUrl,
       is_verified: u.is_verified,
       biography: u.biography,
       follower_count: u.edge_followed_by?.count || u.follower_count || 0,
     });
-  } catch (err) { next(err); }
-});
-
-// GET /api/instagram/proxy?url=...
-router.get('/proxy', async (req, res, next) => {
-  try {
-    const { url } = req.query;
-    if (!url || !url.includes('cdninstagram.com')) return res.status(400).json({ error: 'Geçersiz URL.' });
-    const response = await fetch(url);
-    const buffer = await response.arrayBuffer();
-    res.setHeader('Content-Type', response.headers.get('content-type') || 'image/jpeg');
-    res.setHeader('Cache-Control', 'public, max-age=86400');
-    res.send(Buffer.from(buffer));
   } catch (err) { next(err); }
 });
 
