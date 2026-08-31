@@ -18,6 +18,7 @@ import statsRoutes from './routes/stats.js';
 import notificationRoutes from './routes/notifications.js';
 import leaderboardRoutes from './routes/leaderboard.js';
 import aiRoutes from './routes/ai.js';
+import passwordResetRoutes from './routes/passwordReset.js';
 
 const app = express();
 const PORT = process.env.PORT || 4000;
@@ -41,6 +42,7 @@ app.use('/api/stats', statsRoutes);
 app.use('/api/notifications', notificationRoutes);
 app.use('/api/leaderboard', leaderboardRoutes);
 app.use('/api/ai', aiRoutes);
+app.use('/api/auth', passwordResetRoutes);
 app.use('/', sitemapRoutes);
 
 app.get('/api/health', (_req, res) => res.json({ status: 'ok', ts: new Date() }));
