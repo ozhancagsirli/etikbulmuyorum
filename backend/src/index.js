@@ -19,6 +19,7 @@ import notificationRoutes from './routes/notifications.js';
 import leaderboardRoutes from './routes/leaderboard.js';
 import aiRoutes from './routes/ai.js';
 import appealsRoutes from './routes/appeals.js';
+import instagramRoutes from './routes/instagram.js';
 import passwordResetRoutes from './routes/passwordReset.js';
 
 const app = express();
@@ -44,6 +45,7 @@ app.use('/api/notifications', notificationRoutes);
 app.use('/api/leaderboard', leaderboardRoutes);
 app.use('/api/ai', aiRoutes);
 app.use('/api/appeals', appealsRoutes);
+app.use('/api/instagram', instagramRoutes);
 app.use('/api/auth', passwordResetRoutes);
 app.use('/', sitemapRoutes);
 
