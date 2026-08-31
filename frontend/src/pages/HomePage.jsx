@@ -107,18 +107,24 @@ export default function HomePage() {
                 const ts = inc.trust_score || 0;
                 return (
                   <Link key={inc.id} to={'/konu/' + encodeURIComponent(inc.subject || inc.title)} style={{
-                    display: 'flex', alignItems: 'center', gap: 8,
+                    display: 'flex', alignItems: 'center', gap: 10,
                     background: 'white', border: '1px solid #e5e7eb',
-                    borderRadius: 10, padding: '8px 14px',
+                    borderRadius: 12, padding: '10px 14px',
                     boxShadow: '0 1px 4px rgba(0,0,0,0.06)',
-                    color: 'inherit', minWidth: 140, maxWidth: 180,
+                    color: 'inherit', minWidth: 160,
                   }}>
+                    <div style={{ width: 38, height: 38, borderRadius: '50%', background: '#f3f4f6', flexShrink: 0, overflow: 'hidden', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                      {inc.subject_avatar
+                        ? <img src={inc.subject_avatar} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                        : <span style={{ fontSize: 18 }}>{inc.category_icon || '👤'}</span>
+                      }
+                    </div>
                     <div style={{ flex: 1, minWidth: 0 }}>
                       <div style={{ fontSize: 13, fontWeight: 700, color: '#111827', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{inc.subject || inc.title}</div>
                       <div style={{ fontSize: 11, color: '#9ca3af' }}>{inc.category_name}</div>
-                    </div>
-                    <div style={{ fontSize: 13, fontWeight: 900, color: ts >= 50 ? '#16a34a' : ts >= -10 ? '#d97706' : '#dc2626', flexShrink: 0 }}>
-                      {ts > 0 ? '+' : ''}{ts}
+                      <div style={{ fontSize: 12, fontWeight: 700, color: ts >= 50 ? '#16a34a' : ts >= -10 ? '#d97706' : '#dc2626', marginTop: 2 }}>
+                        {ts > 0 ? '+' : ''}{ts} {ts >= 50 ? 'Güvenilir' : ts >= -10 ? 'Dikkatli' : 'Güvenilmez'}
+                      </div>
                     </div>
                   </Link>
                 );
