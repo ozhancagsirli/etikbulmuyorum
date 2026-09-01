@@ -192,8 +192,11 @@ export default function IncidentPage() {
             </div>
           </form>
         ) : (
-          <div style={{ padding: '12px 16px', background: '#f9fafb', borderRadius: 10, marginBottom: 16, fontSize: 13, color: '#6b7280' }}>
-            Yorum yapmak için <Link to="/giris" style={{ color: '#46A53E', fontWeight: 600 }}>giriş yapın</Link>.
+          <div style={{ padding: '14px 16px', background: '#f9fafb', borderRadius: 10, marginBottom: 16, fontSize: 13, color: '#6b7280', display: 'flex', alignItems: 'center', gap: 8 }}>
+            <span>Yorum yapmak için</span>
+            <Link to="/giris" style={{ color: '#46A53E', fontWeight: 700 }}>Giriş Yap</Link>
+            <span>veya</span>
+            <Link to="/giris?tab=register" style={{ color: '#46A53E', fontWeight: 700 }}>Kayıt Ol</Link>
           </div>
         )}
 
@@ -228,7 +231,7 @@ export default function IncidentPage() {
 
       {/* İtiraz ve Şikayet */}
       <div style={{ display: 'flex', justifyContent: 'center', gap: 16, paddingBottom: 8 }}>
-        <button onClick={() => setShowAppeal(s => !s)} style={{ display: 'inline-flex', alignItems: 'center', gap: 5, background: 'none', border: 'none', cursor: 'pointer', fontSize: 12, color: '#9ca3af' }}>
+        <button onClick={() => user ? setShowAppeal(s => !s) : navigate('/giris')} style={{ display: 'inline-flex', alignItems: 'center', gap: 5, background: 'none', border: 'none', cursor: 'pointer', fontSize: 12, color: '#9ca3af' }}>
           ⚖️ Bu bildiriye itiraz et
         </button>
 
