@@ -42,20 +42,16 @@ router.post('/:incidentId', authenticate, async (req, res, next) => {
       [userId, incidentId]
     );
 
-    if (existing.length > 0) {
-      if (existing[0].sentiment === vote) {
-        // Oyu geri al
-        await pool.query('DELETE FROM votes WHERE id = $1', [existing[0].id]);
-      } else {
-        // Oyu güncelle
-        await pool.query('UPDATE votes SET sentiment = $1 WHERE id = $2', [vote, existing[0].id]);
-      }
+    if (existing.length > 0 && existing[0].sentiment === vote) {
+      // Aynı oyu tekrar tıkladı — geri al
+      await pool.query('DELETE FROM votes WHERE user_id = $1 AND incident_id = $2', [userId, incidentId]);
     } else {
-      // Yeni oy
-      await pool.query(
-        'INSERT INTO votes (user_id, incident_id, sentiment) VALUES ($1, $2, $3)',
-        [userId, incidentId, vote]
-      );
+      // Yeni oy veya güncelle — UPSERT
+      await pool.query(`
+        INSERT INTO votes (user_id, incident_id, sentiment, verdict)
+        VALUES ($1, $2, $3, 'sentiment')
+        ON CONFLICT (incident_id, user_id) DO UPDATE SET sentiment = $3
+      `, [userId, incidentId, vote]);
     }
 
     // Kişinin skorunu yeniden hesapla

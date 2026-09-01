@@ -48,6 +48,19 @@ app.use('/api/ai', aiRoutes);
 app.use('/api/appeals', appealsRoutes);
 app.use('/api/instagram', instagramRoutes);
 app.use('/api/sentiment', sentimentRoutes);
+
+// Person scores endpoint
+app.get('/api/person-scores/:username', async (req, res) => {
+  try {
+    const pool = (await import('./db/pool.js')).default;
+    const { rows } = await pool.query(
+      'SELECT score, total_votes FROM person_scores WHERE instagram_username = $1',
+      [req.params.username]
+    );
+    if (!rows.length) return res.json({ score: 1000, total_votes: 0 });
+    res.json(rows[0]);
+  } catch (e) { res.json({ score: 1000, total_votes: 0 }); }
+});
 app.use('/api/auth', passwordResetRoutes);
 app.use('/', sitemapRoutes);
 

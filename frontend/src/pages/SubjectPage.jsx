@@ -7,13 +7,20 @@ import { apiFetch } from '../lib/api';
 export default function SubjectPage() {
   const { name } = useParams();
   const [incidents, setIncidents] = useState([]);
+  const [personScore, setPersonScore] = useState(null);
   const [loading, setLoading] = useState(true);
   const decodedName = decodeURIComponent(name);
 
   useEffect(() => {
-    apiFetch('/incidents?subject=' + encodeURIComponent(decodedName) + '&limit=20')
-      .then(data => { setIncidents(data.data || []); setLoading(false); })
-      .catch(() => setLoading(false));
+    const igUsername = decodeURIComponent(name);
+    Promise.all([
+      apiFetch('/incidents?subject=' + encodeURIComponent(decodedName) + '&limit=20'),
+      fetch(import.meta.env.VITE_API_URL + '/person-scores/' + encodeURIComponent(igUsername)).then(r => r.json()).catch(() => null)
+    ]).then(([data, score]) => {
+      setIncidents(data.data || []);
+      if (score) setPersonScore(score.score);
+      setLoading(false);
+    }).catch(() => setLoading(false));
   }, [name]);
 
   const firstInc = incidents[0];
@@ -22,9 +29,7 @@ export default function SubjectPage() {
   const isVerified = firstInc?.instagram_verified;
   const followers = firstInc?.instagram_followers;
   const igUsername = firstInc?.instagram_username;
-  const ts = incidents.length > 0
-    ? Math.round(incidents.reduce((a, i) => a + (i.trust_score || 0), 0) / incidents.length)
-    : null;
+  const ts = personScore;
   const tsColor = ts === null ? '#9ca3af' : ts >= 50 ? '#16a34a' : ts >= -10 ? '#d97706' : '#dc2626';
   const tsEmoji = ts === null ? '—' : ts >= 50 ? '😊' : ts >= -10 ? '😐' : '😠';
   const tsLabel = ts === null ? 'Değerlendirme yok' : ts >= 50 ? 'Güvenilir' : ts >= -10 ? 'Dikkatli Ol' : 'Güvenilmez';

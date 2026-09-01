@@ -41,6 +41,16 @@ router.get('/lookup', async (req, res, next) => {
       console.error('Cloudinary upload failed:', e.message);
     }
 
+    // Person score başlat — yoksa 1000 ile ekle
+    if (u.username) {
+      const pool = (await import('../db/pool.js')).default;
+      await pool.query(`
+        INSERT INTO person_scores (instagram_username, score, total_votes)
+        VALUES ($1, 1000, 0)
+        ON CONFLICT (instagram_username) DO NOTHING
+      `, [u.username]);
+    }
+
     res.json({
       username: u.username,
       full_name: u.full_name,
