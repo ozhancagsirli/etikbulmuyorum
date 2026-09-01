@@ -118,10 +118,10 @@ router.post('/', authenticate, spamFilter, async (req, res, next) => {
         [subject.trim()]
       );
     }
-    if (personName) {
+    if (person_name) {
       await pool.query(
         'INSERT INTO persons (name, profession, count) VALUES ($1, $2, 1) ON CONFLICT (name) DO UPDATE SET count = persons.count + 1, profession = COALESCE($2, persons.profession)',
-        [personName.trim(), profession?.trim() || null]
+        [person_name.trim(), null]
       );
     }
     res.status(201).json({ ...rows[0], message: 'Olayınız inceleme sonrası yayınlanacak!' });
