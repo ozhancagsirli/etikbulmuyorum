@@ -21,6 +21,7 @@ export default function IncidentPage() {
   const [anon, setAnon] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [lightbox, setLightbox] = useState(null);
+  const [personScore, setPersonScore] = useState(null);
   const [showAppeal, setShowAppeal] = useState(false);
   const [appeal, setAppeal] = useState({ reason: '', message: '' });
   const [appealSent, setAppealSent] = useState(false);
@@ -42,6 +43,20 @@ export default function IncidentPage() {
   }
 
   useEffect(() => {
+    Promise.all([
+      apiFetch('/incidents/' + id),
+      apiFetch('/comments?incidentId=' + id),
+    ]).then(([inc, cmts]) => {
+      setIncident(inc);
+      setComments(cmts);
+      setLoading(false);
+      // Kişi skorunu çek
+      if (inc.instagram_username) {
+        fetch(import.meta.env.VITE_API_URL + '/person-scores/' + inc.instagram_username)
+          .then(r => r.json()).then(d => setPersonScore(d.score)).catch(() => {});
+      }
+    }).catch(() => setLoading(false));
+    // dummy to replace original
     Promise.all([apiFetch('/incidents/' + id), apiFetch('/comments?incidentId=' + id)])
       .then(([inc, cmts]) => { setIncident(inc); setComments(cmts); setLoading(false); })
       .catch(() => setLoading(false));

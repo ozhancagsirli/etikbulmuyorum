@@ -90,19 +90,18 @@ export default function SubjectPage() {
             const total = (inc.vote_correct||0)+(inc.vote_wrong||0)+(inc.vote_neutral||0)+(inc.vote_insufficient||0);
             const score = inc.trust_score || 0;
             // Heatmap renkleri
-            const getBg = (s) => {
-              if (total === 0) return { bg: 'white', border: '#e5e7eb', emoji: '❔', label: 'Oylanmadı' };
-              if (s >= 60) return { bg: '#f0fdf4', border: '#86efac', emoji: '😊', label: 'Olumlu' };
-              if (s >= 20) return { bg: '#f7fef0', border: '#bef264', emoji: '🙂', label: 'Çoğunlukla Olumlu' };
-              if (s >= -20) return { bg: '#fffbeb', border: '#fde68a', emoji: '😐', label: 'Nötr' };
-              if (s >= -60) return { bg: '#fff7ed', border: '#fdba74', emoji: '😟', label: 'Çoğunlukla Olumsuz' };
-              return { bg: '#fef2f2', border: '#fca5a5', emoji: '😠', label: 'Olumsuz' };
+            const getStyle = (verdict, total) => {
+              if (!total || total < 10) return { bg: 'white', border: '#e5e7eb', emoji: '❔', label: 'Oylanıyor' };
+              if (verdict === 'positive') return { bg: '#f0fdf4', border: '#86efac', emoji: '✅', label: 'Doğrulandı' };
+              if (verdict === 'negative') return { bg: '#fef2f2', border: '#fca5a5', emoji: '❌', label: 'Reddedildi' };
+              return { bg: '#fffbeb', border: '#fde68a', emoji: '🤷', label: 'Kararsız' };
             };
-            const { bg, border, emoji, label } = getBg(score);
+            const vTotal = (inc.vote_correct_new||0) + (inc.vote_wrong_new||0);
+            const { bg, border, emoji, label } = getStyle(inc.verdict, vTotal);
             const images = inc.images || [];
             const imgUrl = images.length > 0 ? (typeof images[0] === 'string' ? images[0] : images[0]?.url) : null;
             return (
-              <Link key={inc.id} to={'/olay/' + inc.id} style={{ background: bg, borderRadius: 12, border: `1.5px solid ${border}`, display: 'block', color: 'inherit', overflow: 'hidden', transition: 'all 0.2s' }}>
+              <Link key={inc.id} to={'/olay/' + inc.id} style={{ background: bg, borderRadius: 12, border: '1.5px solid ' + border, display: 'block', color: 'inherit', overflow: 'hidden', transition: 'all 0.2s' }}>
                 {imgUrl && <img src={imgUrl} alt="" style={{ width: '100%', height: 140, objectFit: 'cover', display: 'block' }} />}
                 <div style={{ padding: '12px 14px' }}>
                   <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 6 }}>
@@ -112,7 +111,7 @@ export default function SubjectPage() {
                   <p style={{ fontSize: 12, color: '#6b7280', margin: '0 0 8px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{inc.description}</p>
                   <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 11, alignItems: 'center' }}>
                     <span style={{ fontSize: 11, fontWeight: 600, color: '#6b7280' }}>
-                      {label} {total > 0 && `· ${total} değerlendirme`}
+                      {emoji} {label} {vTotal > 0 && `· ${vTotal} oy`}
                     </span>
                     <span style={{ color: '#d1d5db' }}>{formatDistanceToNow(new Date(inc.created_at), { locale: tr, addSuffix: true })}</span>
                   </div>
