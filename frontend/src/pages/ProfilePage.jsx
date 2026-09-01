@@ -15,6 +15,21 @@ const STATUS = {
 };
 
 export default function ProfilePage() {
+  const [igUsername, setIgUsername] = useState('');
+  const [igVerifying, setIgVerifying] = useState(false);
+  const [igResult, setIgResult] = useState(null);
+
+  async function verifyInstagram() {
+    if (!igUsername.trim()) return;
+    setIgVerifying(true);
+    setIgResult(null);
+    try {
+      const { apiFetch } = await import('../lib/api');
+      const result = await apiFetch('/instagram/verify', { method: 'POST', body: JSON.stringify({ username: igUsername.replace('@','').trim() }) });
+      setIgResult(result);
+    } catch(e) { setIgResult({ verified: false, message: e.message }); }
+    setIgVerifying(false);
+  }
   const { user, logout } = useAuthStore();
   const navigate = useNavigate();
   const [incidents, setIncidents] = useState([]);

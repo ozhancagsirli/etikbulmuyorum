@@ -52,4 +52,67 @@ router.get('/lookup', async (req, res, next) => {
   } catch (err) { next(err); }
 });
 
+// POST /api/instagram/verify - Bio kodu doğrulama
+router.post('/verify', async (req, res, next) => {
+  try {
+    const { username } = req.body;
+    if (!username) return res.status(400).json({ error: 'username gerekli.' });
+
+    const response = await fetch(
+      `https://instagram-public-bulk-scraper.p.rapidapi.com/v1/user_info_web?username=${encodeURIComponent(username)}`,
+      {
+        headers: {
+          'X-RapidAPI-Key': process.env.RAPIDAPI_KEY,
+          'X-RapidAPI-Host': process.env.RAPIDAPI_HOST,
+        }
+      }
+    );
+
+    const data = await response.json();
+    if (!data.data) return res.status(404).json({ error: 'Kullanıcı bulunamadı.' });
+
+    const u = data.data;
+    const bio = u.biography || '';
+    const expectedCode = 'EB:' + username.toLowerCase();
+    const verified = bio.toLowerCase().includes(expectedCode);
+
+    if (verified) {
+      // Cloudinary'e yükle
+      let avatarUrl = u.profile_pic_url_hd || u.profile_pic_url;
+      try {
+        const { v2: cloudinary } = await import('cloudinary');
+        cloudinary.config({
+          cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+          api_key: process.env.CLOUDINARY_API_KEY,
+          api_secret: process.env.CLOUDINARY_API_SECRET,
+        });
+        const upload = await cloudinary.uploader.upload(avatarUrl, {
+          folder: 'etikbulmuyorum/instagram',
+          public_id: 'ig_' + username,
+          overwrite: true,
+        });
+        avatarUrl = upload.secure_url;
+      } catch (e) { console.error('Cloudinary:', e.message); }
+
+      // Kullanıcıyı güncelle
+      if (req.user) {
+        const pool = (await import('../db/pool.js')).default;
+        await pool.query(
+          'UPDATE users SET instagram_username=$1, instagram_verified=true, instagram_avatar=$2, instagram_followers=$3 WHERE id=$4',
+          [username, avatarUrl, u.edge_followed_by?.count || 0, req.user.id]
+        );
+      }
+
+      res.json({ verified: true, message: 'Instagram hesabı doğrulandı!' });
+    } else {
+      res.json({ 
+        verified: false, 
+        bio: bio,
+        expectedCode,
+        message: `Bio'nuzda "${expectedCode}" kodu bulunamadı.`
+      });
+    }
+  } catch (err) { next(err); }
+});
+
 export default router;
