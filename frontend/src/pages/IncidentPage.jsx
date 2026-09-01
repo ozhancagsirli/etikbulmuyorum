@@ -7,7 +7,7 @@ import { tr } from 'date-fns/locale';
 import { MapPin, Calendar, Eye, ArrowLeft, Flag, X } from 'lucide-react';
 import toast from 'react-hot-toast';
 import { apiFetch } from '../lib/api';
-import VoteBar from '../components/VoteBar';
+import SentimentBar from '../components/SentimentBar';
 import { useAuthStore } from '../lib/authStore';
 
 export default function IncidentPage() {
@@ -170,19 +170,11 @@ export default function IncidentPage() {
         </div>
       </div>
 
+
+
       {/* Oylama */}
       <div style={{ background: 'white', borderRadius: 16, border: '1px solid #e5e7eb', padding: '20px' }}>
-        <VoteBar
-          incidentId={id}
-          initialVotes={{
-            correct: incident.vote_correct || 0,
-            wrong: incident.vote_wrong || 0,
-            neutral: incident.vote_neutral || 0,
-            insufficient: incident.vote_insufficient || 0,
-            trustScore: incident.trust_score || 0
-          }}
-          initialMyVote={incident.my_vote}
-        />
+        <SentimentBar incidentId={id} />
       </div>
 
       {/* Yorumlar */}
