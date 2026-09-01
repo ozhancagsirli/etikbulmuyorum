@@ -229,9 +229,7 @@ export default function IncidentPage() {
         <button onClick={() => setShowAppeal(s => !s)} style={{ display: 'inline-flex', alignItems: 'center', gap: 5, background: 'none', border: 'none', cursor: 'pointer', fontSize: 12, color: '#9ca3af' }}>
           ⚖️ Bu bildiriye itiraz et
         </button>
-        <button onClick={report} style={{ display: 'inline-flex', alignItems: 'center', gap: 5, background: 'none', border: 'none', cursor: 'pointer', fontSize: 12, color: '#d1d5db' }}>
-          <Flag size={13} /> Şikayet et
-        </button>
+
       </div>
 
       {showAppeal && !appealSent && (
