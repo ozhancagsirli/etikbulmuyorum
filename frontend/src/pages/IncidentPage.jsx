@@ -21,7 +21,7 @@ export default function IncidentPage() {
   const [submitting, setSubmitting] = useState(false);
   const [lightbox, setLightbox] = useState(null);
   const [showAppeal, setShowAppeal] = useState(false);
-  const [appeal, setAppeal] = useState({ name: '', email: '', message: '' });
+  const [appeal, setAppeal] = useState({ reason: '', message: '' });
   const [appealSent, setAppealSent] = useState(false);
 
   async function submitAppeal(e) {
@@ -30,6 +30,8 @@ export default function IncidentPage() {
       await apiFetch('/appeals', { method: 'POST', body: JSON.stringify({ 
         subject_name: incident.instagram_username || incident.subject,
         incident_id: id,
+        name: user?.name || 'Kullanıcı',
+        email: user?.email || '',
         ...appeal 
       })});
       setAppealSent(true);
@@ -245,8 +247,7 @@ export default function IncidentPage() {
               <option value="hakaret">Hakaret veya iftira içeriyor</option>
               <option value="diger">Diğer</option>
             </select>
-            <input value={appeal.name} onChange={e => setAppeal(a => ({...a, name: e.target.value}))} placeholder="Adınız Soyadınız" required style={{ padding: '10px 14px', borderRadius: 8, border: '1px solid #e5e7eb', fontSize: 13, fontFamily: 'inherit' }} />
-            <input type="email" value={appeal.email} onChange={e => setAppeal(a => ({...a, email: e.target.value}))} placeholder="Email adresiniz" required style={{ padding: '10px 14px', borderRadius: 8, border: '1px solid #e5e7eb', fontSize: 13, fontFamily: 'inherit' }} />
+
             <textarea value={appeal.message} onChange={e => setAppeal(a => ({...a, message: e.target.value}))} placeholder="İtiraz gerekçenizi açıklayın..." required rows={3} style={{ padding: '10px 14px', borderRadius: 8, border: '1px solid #e5e7eb', fontSize: 13, resize: 'vertical', fontFamily: 'inherit' }} />
             <div style={{ display: 'flex', gap: 8 }}>
               <button type="button" onClick={() => setShowAppeal(false)} style={{ flex: 1, padding: '10px', borderRadius: 8, border: '1px solid #e5e7eb', background: 'white', cursor: 'pointer', fontSize: 13 }}>İptal</button>
