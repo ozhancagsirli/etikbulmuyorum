@@ -1,3 +1,5 @@
+const CITIES = ['Adana','Adıyaman','Afyonkarahisar','Ağrı','Amasya','Ankara','Antalya','Artvin','Aydın','Balıkesir','Bilecik','Bingöl','Bitlis','Bolu','Burdur','Bursa','Çanakkale','Çankırı','Çorum','Denizli','Diyarbakır','Edirne','Elazığ','Erzincan','Erzurum','Eskişehir','Gaziantep','Giresun','Gümüşhane','Hakkari','Hatay','Isparta','İçel','İstanbul','İzmir','Kars','Kastamonu','Kayseri','Kırklareli','Kırşehir','Kocaeli','Konya','Kütahya','Malatya','Manisa','Kahramanmaraş','Mardin','Muğla','Muş','Nevşehir','Niğde','Ordu','Rize','Sakarya','Samsun','Siirt','Sinop','Sivas','Tekirdağ','Tokat','Trabzon','Tunceli','Şanlıurfa','Uşak','Van','Yozgat','Zonguldak','Aksaray','Bayburt','Karaman','Kırıkkale','Batman','Şırnak','Bartın','Ardahan','Iğdır','Yalova','Karabük','Kilis','Osmaniye','Düzce'];
+
 import { useState, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import toast from 'react-hot-toast';
@@ -17,7 +19,7 @@ export default function SubmitPage() {
   const [form, setForm] = useState({
     title: '',
     description: '',
-    categoryId: '',
+    categoryId: '19',
     location: '',
     incidentDate: '',
     isAnonymous: false,
@@ -25,6 +27,7 @@ export default function SubmitPage() {
     tags: [],
   });
   const [submitting, setSubmitting] = useState(false);
+  const [locationSuggestions, setLocationSuggestions] = useState([]);
 
   const inp = {
     width: '100%', padding: '11px 14px', borderRadius: 8,
@@ -208,9 +211,24 @@ export default function SubmitPage() {
             <p style={{ fontSize: 13, color: '#9ca3af', marginBottom: 24 }}>İsteğe bağlı ek bilgiler.</p>
 
             <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
-              <div>
+              <div style={{ position: 'relative' }}>
                 <label style={{ display: 'block', fontWeight: 600, fontSize: 13, marginBottom: 8 }}>📍 Konum</label>
-                <input value={form.location} onChange={set('location')} placeholder="İl, İlçe" style={inp} />
+                <input value={form.location} onChange={e => {
+                  setForm(f => ({ ...f, location: e.target.value }));
+                  setLocationSuggestions(CITIES.filter(c => c.toLowerCase().startsWith(e.target.value.toLowerCase()) && e.target.value.length > 0).slice(0, 5));
+                }} placeholder="Şehir ara..." style={inp} autoComplete="off" />
+                {locationSuggestions.length > 0 && (
+                  <div style={{ position: 'absolute', top: '100%', left: 0, right: 0, background: 'white', border: '1px solid #e5e7eb', borderRadius: 8, zIndex: 100, boxShadow: '0 4px 12px rgba(0,0,0,0.1)' }}>
+                    {locationSuggestions.map(city => (
+                      <div key={city} onClick={() => { setForm(f => ({ ...f, location: city })); setLocationSuggestions([]); }}
+                        style={{ padding: '10px 14px', cursor: 'pointer', fontSize: 13, borderBottom: '1px solid #f3f4f6' }}
+                        onMouseEnter={e => e.target.style.background = '#f9fafb'}
+                        onMouseLeave={e => e.target.style.background = 'white'}>
+                        📍 {city}
+                      </div>
+                    ))}
+                  </div>
+                )}
               </div>
               <div>
                 <label style={{ display: 'block', fontWeight: 600, fontSize: 13, marginBottom: 8 }}>📅 Tarih</label>
