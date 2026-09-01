@@ -30,9 +30,15 @@ export default function SubjectPage() {
   const followers = firstInc?.instagram_followers;
   const igUsername = firstInc?.instagram_username;
   const ts = personScore;
-  const tsColor = ts === null ? '#9ca3af' : ts >= 50 ? '#16a34a' : ts >= -10 ? '#d97706' : '#dc2626';
-  const tsEmoji = ts === null ? '—' : ts >= 50 ? '😊' : ts >= -10 ? '😐' : '😠';
-  const tsLabel = ts === null ? 'Değerlendirme yok' : ts >= 50 ? 'Güvenilir' : ts >= -10 ? 'Dikkatli Ol' : 'Güvenilmez';
+  const getLabel = (s) => {
+    if (s === null) return { label: 'Henüz değerlendirme yok', icon: '❔', color: '#9ca3af' };
+    if (s >= 850) return { label: 'Söz tutar', icon: '🤝', color: '#16a34a' };
+    if (s >= 650) return { label: 'Genelde güvenilir', icon: '👌', color: '#46A53E' };
+    if (s >= 450) return { label: 'Bilmiyorum', icon: '🤷', color: '#d97706' };
+    if (s >= 250) return { label: 'Dikkat et', icon: '⚠️', color: '#f97316' };
+    return { label: 'Kaçın', icon: '🚫', color: '#dc2626' };
+  };
+  const { label: tsLabel, icon: tsEmoji, color: tsColor } = getLabel(ts);
 
   return (
     <div style={{ maxWidth: 600, margin: '0 auto' }}>
