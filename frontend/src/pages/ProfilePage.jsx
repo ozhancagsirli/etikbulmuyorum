@@ -125,7 +125,7 @@ export default function ProfilePage() {
               </button>
             </div>
             {igResult && (
-              <div style={{ padding: '10px 14px', borderRadius: 8, background: igResult.verified ? '#f0fdf4' : '#fef2f2', border: \`1px solid \${igResult.verified ? '#bbf7d0' : '#fecaca'}\`, fontSize: 13, color: igResult.verified ? '#16a34a' : '#dc2626' }}>
+              <div style={{ padding: '10px 14px', borderRadius: 8, background: igResult.verified ? '#f0fdf4' : '#fef2f2', border: igResult.verified ? '1px solid #bbf7d0' : '1px solid #fecaca', fontSize: 13, color: igResult.verified ? '#16a34a' : '#dc2626' }}>
                 {igResult.message}
                 {!igResult.verified && igResult.expectedCode && (
                   <div style={{ marginTop: 4, color: '#6b7280' }}>Bio'nuzda şunu yazın: <strong>{igResult.expectedCode}</strong></div>
