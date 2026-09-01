@@ -82,9 +82,9 @@ export default function SubjectPage() {
             const images = inc.images || [];
             const imgUrl = images.length > 0 ? (typeof images[0] === 'string' ? images[0] : images[0]?.url) : null;
             return (
-              <Link key={inc.id} to={'/olay/' + inc.id} style={{ background: 'white', borderRadius: 12, border: '1px solid #e5e7eb', display: 'flex', color: 'inherit', alignItems: 'center', overflow: 'hidden' }}>
-                {imgUrl && <img src={imgUrl} alt="" style={{ width: 72, height: 72, objectFit: 'cover', flexShrink: 0 }} />}
-                <div style={{ padding: '12px 14px', flex: 1, minWidth: 0 }}>
+              <Link key={inc.id} to={'/olay/' + inc.id} style={{ background: 'white', borderRadius: 12, border: '1px solid #e5e7eb', display: 'block', color: 'inherit', overflow: 'hidden' }}>
+                {imgUrl && <img src={imgUrl} alt="" style={{ width: '100%', height: 160, objectFit: 'cover', display: 'block' }} />}
+                <div style={{ padding: '12px 14px' }}>
                   <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 4 }}>
                     <span style={{ fontSize: 14, fontWeight: 700, color: '#111827', flex: 1, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{inc.title}</span>
                     <span style={{ fontSize: 16, flexShrink: 0 }}>{emoji}</span>
