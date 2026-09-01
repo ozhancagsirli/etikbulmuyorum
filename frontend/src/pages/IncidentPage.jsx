@@ -20,6 +20,23 @@ export default function IncidentPage() {
   const [anon, setAnon] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [lightbox, setLightbox] = useState(null);
+  const [showAppeal, setShowAppeal] = useState(false);
+  const [appeal, setAppeal] = useState({ name: '', email: '', message: '' });
+  const [appealSent, setAppealSent] = useState(false);
+
+  async function submitAppeal(e) {
+    e.preventDefault();
+    try {
+      await apiFetch('/appeals', { method: 'POST', body: JSON.stringify({ 
+        subject_name: incident.instagram_username || incident.subject,
+        incident_id: id,
+        ...appeal 
+      })});
+      setAppealSent(true);
+      setShowAppeal(false);
+      toast.success('İtirazınız alındı.');
+    } catch(e) { toast.error(e.message); }
+  }
 
   useEffect(() => {
     Promise.all([apiFetch('/incidents/' + id), apiFetch('/comments?incidentId=' + id)])
@@ -207,12 +224,31 @@ export default function IncidentPage() {
         )}
       </div>
 
-      {/* Şikayet et - en altta */}
-      <div style={{ textAlign: 'center', paddingBottom: 8 }}>
+      {/* İtiraz ve Şikayet */}
+      <div style={{ display: 'flex', justifyContent: 'center', gap: 16, paddingBottom: 8 }}>
+        <button onClick={() => setShowAppeal(s => !s)} style={{ display: 'inline-flex', alignItems: 'center', gap: 5, background: 'none', border: 'none', cursor: 'pointer', fontSize: 12, color: '#9ca3af' }}>
+          ⚖️ Bu bildiriye itiraz et
+        </button>
         <button onClick={report} style={{ display: 'inline-flex', alignItems: 'center', gap: 5, background: 'none', border: 'none', cursor: 'pointer', fontSize: 12, color: '#d1d5db' }}>
-          <Flag size={13} /> Bu içeriği şikayet et
+          <Flag size={13} /> Şikayet et
         </button>
       </div>
+
+      {showAppeal && !appealSent && (
+        <div style={{ background: 'white', borderRadius: 12, border: '1px solid #e5e7eb', padding: '20px' }}>
+          <h3 style={{ fontWeight: 700, fontSize: 15, marginBottom: 4 }}>⚖️ Bildiriye İtiraz</h3>
+          <p style={{ fontSize: 13, color: '#6b7280', marginBottom: 14 }}>Bu bildirim hakkındaki görüşünüzü paylaşın. Moderatörlerimiz inceleyecek.</p>
+          <form onSubmit={submitAppeal} style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+            <input value={appeal.name} onChange={e => setAppeal(a => ({...a, name: e.target.value}))} placeholder="Adınız Soyadınız" required style={{ padding: '10px 14px', borderRadius: 8, border: '1px solid #e5e7eb', fontSize: 13, fontFamily: 'inherit' }} />
+            <input type="email" value={appeal.email} onChange={e => setAppeal(a => ({...a, email: e.target.value}))} placeholder="Email adresiniz" required style={{ padding: '10px 14px', borderRadius: 8, border: '1px solid #e5e7eb', fontSize: 13, fontFamily: 'inherit' }} />
+            <textarea value={appeal.message} onChange={e => setAppeal(a => ({...a, message: e.target.value}))} placeholder="İtiraz gerekçenizi açıklayın..." required rows={3} style={{ padding: '10px 14px', borderRadius: 8, border: '1px solid #e5e7eb', fontSize: 13, resize: 'vertical', fontFamily: 'inherit' }} />
+            <div style={{ display: 'flex', gap: 8 }}>
+              <button type="button" onClick={() => setShowAppeal(false)} style={{ flex: 1, padding: '10px', borderRadius: 8, border: '1px solid #e5e7eb', background: 'white', cursor: 'pointer', fontSize: 13 }}>İptal</button>
+              <button type="submit" style={{ flex: 2, padding: '10px', borderRadius: 8, background: '#46A53E', color: 'white', border: 'none', fontWeight: 700, fontSize: 13, cursor: 'pointer' }}>Gönder</button>
+            </div>
+          </form>
+        </div>
+      )}
 
       {/* Lightbox */}
       {lightbox && (
