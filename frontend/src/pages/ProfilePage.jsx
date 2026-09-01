@@ -99,6 +99,43 @@ export default function ProfilePage() {
       </div>
 
       {/* İstatistikler */}
+      {/* Instagram Doğrulama */}
+      <div style={{ background: 'white', borderRadius: 16, border: '1px solid #e5e7eb', padding: '20px' }}>
+        <div style={{ fontWeight: 700, fontSize: 14, marginBottom: 12, color: '#111827' }}>📸 Instagram Doğrulama</div>
+        {user.instagram_username && user.instagram_verified ? (
+          <div style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '10px 14px', background: '#f0fdf4', borderRadius: 10, border: '1px solid #bbf7d0' }}>
+            {user.instagram_avatar && <img src={user.instagram_avatar} alt="" style={{ width: 36, height: 36, borderRadius: '50%' }} />}
+            <div>
+              <div style={{ fontWeight: 700, fontSize: 14, color: '#16a34a' }}>✅ @{user.instagram_username} doğrulandı</div>
+              <div style={{ fontSize: 12, color: '#9ca3af' }}>Instagram hesabınız profilinize bağlı</div>
+            </div>
+          </div>
+        ) : (
+          <div>
+            <p style={{ fontSize: 13, color: '#6b7280', marginBottom: 12, lineHeight: 1.6 }}>
+              Instagram bio'nuzda <code style={{ background: '#f3f4f6', padding: '2px 6px', borderRadius: 4 }}>EB:{(user.name || '').toLowerCase().replace(/\s/g, '')}</code> yazın, sonra kullanıcı adınızı girerek doğrulayın.
+            </p>
+            <div style={{ display: 'flex', gap: 8, marginBottom: 10 }}>
+              <input value={igUsername} onChange={e => setIgUsername(e.target.value)}
+                placeholder="@instagram_kullanici_adi"
+                onKeyDown={e => e.key === 'Enter' && verifyInstagram()}
+                style={{ flex: 1, padding: '9px 14px', borderRadius: 8, border: '1px solid #e5e7eb', fontSize: 13, outline: 'none', fontFamily: 'inherit' }} />
+              <button onClick={verifyInstagram} disabled={igVerifying} style={{ padding: '9px 18px', borderRadius: 8, background: '#46A53E', color: 'white', border: 'none', fontWeight: 700, fontSize: 13, cursor: 'pointer' }}>
+                {igVerifying ? '...' : 'Doğrula'}
+              </button>
+            </div>
+            {igResult && (
+              <div style={{ padding: '10px 14px', borderRadius: 8, background: igResult.verified ? '#f0fdf4' : '#fef2f2', border: \`1px solid \${igResult.verified ? '#bbf7d0' : '#fecaca'}\`, fontSize: 13, color: igResult.verified ? '#16a34a' : '#dc2626' }}>
+                {igResult.message}
+                {!igResult.verified && igResult.expectedCode && (
+                  <div style={{ marginTop: 4, color: '#6b7280' }}>Bio'nuzda şunu yazın: <strong>{igResult.expectedCode}</strong></div>
+                )}
+              </div>
+            )}
+          </div>
+        )}
+      </div>
+
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 10 }}>
         {[
           { label: 'Toplam Olay', value: stats.total,      color: '#46A53E', icon: <BarChart2 size={18} /> },
