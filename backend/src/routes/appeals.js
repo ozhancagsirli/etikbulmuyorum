@@ -8,13 +8,12 @@ const router = Router();
 // POST /api/appeals
 router.post('/', optionalAuth, async (req, res, next) => {
   try {
-    const { subject_name, name, email, message } = req.body;
-    if (!subject_name || !name || !email || !message) return res.status(400).json({ error: 'Tüm alanlar gerekli.' });
-    if (message.length < 20) return res.status(400).json({ error: 'Açıklama en az 20 karakter olmalı.' });
+    const { subject_name, name, email, message, incident_id } = req.body;
+    if (!name || !email || !message) return res.status(400).json({ error: 'Tüm alanlar gerekli.' });
 
     await pool.query(
-      'INSERT INTO appeals (subject_name, user_id, name, email, message) VALUES ($1, $2, $3, $4, $5)',
-      [subject_name, req.user?.id || null, name, email, message]
+      'INSERT INTO appeals (subject_name, user_id, name, email, message, incident_id) VALUES ($1, $2, $3, $4, $5, $6)',
+      [subject_name || null, req.user?.id || null, name, email, message, incident_id || null]
     );
     res.json({ message: 'İtirazınız alındı, incelenecek.' });
   } catch (err) { next(err); }
