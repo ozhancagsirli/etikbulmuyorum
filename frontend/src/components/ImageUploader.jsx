@@ -12,11 +12,11 @@ export default function ImageUploader({ value = [], onChange }) {
       const uploaded = [];
       for (const file of files) {
         const form = new FormData();
-        form.append('file', file);
+        form.append('image', file);
         const res = await fetch(import.meta.env.VITE_API_URL + '/upload', {
           method: 'POST',
           body: form,
-          headers: { Authorization: 'Bearer ' + localStorage.getItem('token') }
+          headers: { Authorization: 'Bearer ' + localStorage.getItem('accessToken') }
         });
         const data = await res.json();
         if (data.url) uploaded.push(data.url);
