@@ -237,6 +237,14 @@ export default function IncidentPage() {
           <h3 style={{ fontWeight: 700, fontSize: 15, marginBottom: 4 }}>⚖️ Bildiriye İtiraz</h3>
           <p style={{ fontSize: 13, color: '#6b7280', marginBottom: 14 }}>Bu bildirim hakkındaki görüşünüzü paylaşın. Moderatörlerimiz inceleyecek.</p>
           <form onSubmit={submitAppeal} style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+            <select value={appeal.reason || ''} onChange={e => setAppeal(a => ({...a, reason: e.target.value}))} required style={{ padding: '10px 14px', borderRadius: 8, border: '1px solid #e5e7eb', fontSize: 13, fontFamily: 'inherit', background: 'white' }}>
+              <option value="">İtiraz sebebini seçin...</option>
+              <option value="yanlis_bilgi">Yanlış bilgi içeriyor</option>
+              <option value="ben_degilim">Bu kişi ben değilim</option>
+              <option value="spam">Spam veya sahte içerik</option>
+              <option value="hakaret">Hakaret veya iftira içeriyor</option>
+              <option value="diger">Diğer</option>
+            </select>
             <input value={appeal.name} onChange={e => setAppeal(a => ({...a, name: e.target.value}))} placeholder="Adınız Soyadınız" required style={{ padding: '10px 14px', borderRadius: 8, border: '1px solid #e5e7eb', fontSize: 13, fontFamily: 'inherit' }} />
             <input type="email" value={appeal.email} onChange={e => setAppeal(a => ({...a, email: e.target.value}))} placeholder="Email adresiniz" required style={{ padding: '10px 14px', borderRadius: 8, border: '1px solid #e5e7eb', fontSize: 13, fontFamily: 'inherit' }} />
             <textarea value={appeal.message} onChange={e => setAppeal(a => ({...a, message: e.target.value}))} placeholder="İtiraz gerekçenizi açıklayın..." required rows={3} style={{ padding: '10px 14px', borderRadius: 8, border: '1px solid #e5e7eb', fontSize: 13, resize: 'vertical', fontFamily: 'inherit' }} />
