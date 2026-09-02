@@ -14,6 +14,7 @@ import StatsPage        from './pages/StatsPage';
 import LeaderboardPage  from './pages/LeaderboardPage';
 import ResetPasswordPage from './pages/ResetPasswordPage';
 import EditIncidentPage from './pages/EditIncidentPage';
+import CategoryPage from './pages/CategoryPage';
 
 function WithNav({ children, fullWidth }) {
   return (
@@ -40,6 +41,7 @@ export default function App() {
           <Route path="/olay/:id"     element={<WithNav><IncidentPage /></WithNav>} />
           <Route path="/bildir"       element={<WithNav><SubmitPage /></WithNav>} />
           <Route path="/profil"       element={<WithNav><ProfilePage /></WithNav>} />
+          <Route path="/kategori/:slug"    element={<WithNav><CategoryPage /></WithNav>} />
           <Route path="/moderasyon"   element={<WithNav><ModerationPage /></WithNav>} />
           <Route path="/konu/:name"   element={<WithNav><SubjectPage /></WithNav>} />
           <Route path="/giris"        element={<WithNav><AuthPage /></WithNav>} />

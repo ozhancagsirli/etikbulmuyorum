@@ -49,6 +49,38 @@ app.use('/api/appeals', appealsRoutes);
 app.use('/api/instagram', instagramRoutes);
 app.use('/api/sentiment', sentimentRoutes);
 
+// Kategori sayfası endpoint
+app.get('/api/categories', async (req, res) => {
+  try {
+    const pool = (await import('./db/pool.js')).default;
+    const { rows } = await pool.query('SELECT * FROM categories ORDER BY id');
+    res.json(rows);
+  } catch (e) { res.status(500).json({ error: e.message }); }
+});
+
+app.get('/api/categories/:slug', async (req, res) => {
+  try {
+    const pool = (await import('./db/pool.js')).default;
+    const { rows: cats } = await pool.query('SELECT * FROM categories WHERE slug = $1', [req.params.slug]);
+    if (!cats.length) return res.status(404).json({ error: 'Kategori bulunamadı.' });
+    const cat = cats[0];
+    
+    const { rows: profiles } = await pool.query(`
+      SELECT 
+        s.name, s.instagram_username, s.instagram_avatar, s.instagram_verified, 
+        s.instagram_followers, s.count, s.score, s.claimed,
+        COALESCE(ps.score, 1000) as person_score,
+        COALESCE(ps.total_votes, 0) as total_votes
+      FROM subjects s
+      LEFT JOIN person_scores ps ON ps.instagram_username = s.instagram_username
+      WHERE s.category_id = $1
+      ORDER BY COALESCE(ps.score, 1000) DESC, s.count DESC
+    `, [cat.id]);
+    
+    res.json({ category: cat, profiles });
+  } catch (e) { res.status(500).json({ error: e.message }); }
+});
+
 // Person scores endpoint
 app.get('/api/person-scores/:username', async (req, res) => {
   try {
