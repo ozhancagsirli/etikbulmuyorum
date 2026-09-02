@@ -110,7 +110,7 @@ export default function SubjectPage() {
                 <div style={{ display: 'flex', gap: 8 }}>
                   <button onClick={async () => {
                     try {
-                      const r = await apiFetch('/instagram/verify', { method: 'POST', body: JSON.stringify({ username: igUsername || decodedName }) });
+                      const r = await apiFetch('/instagram/verify', { method: 'POST', body: JSON.stringify({ username: igUsername || decodedName }), requireAuth: true });
                       if (r.verified) { setClaimed(true); setClaiming(false); fetchMe(); toast && toast.success && toast.success('Profil doğrulandı!'); }
                       else alert(r.message);
                     } catch(e) { alert(e.message); }

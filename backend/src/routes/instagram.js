@@ -1,4 +1,5 @@
 import { Router } from 'express';
+import { authenticate } from '../middleware/auth.js';
 import { v2 as cloudinary } from 'cloudinary';
 
 cloudinary.config({
@@ -63,7 +64,7 @@ router.get('/lookup', async (req, res, next) => {
 });
 
 // POST /api/instagram/verify - Bio kodu doğrulama
-router.post('/verify', async (req, res, next) => {
+router.post('/verify', authenticate, async (req, res, next) => {
   try {
     const { username } = req.body;
     if (!username) return res.status(400).json({ error: 'username gerekli.' });
