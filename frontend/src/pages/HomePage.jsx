@@ -188,6 +188,32 @@ export default function HomePage() {
 
         {/* ORTA */}
         <div>
+          {/* Kategoriler */}
+          <div style={{ display: 'flex', gap: 8, overflowX: 'auto', marginBottom: 14, paddingBottom: 2, scrollbarWidth: 'none' }}>
+            {[
+              { slug: 'giyim-moda', label: '👗 Giyim' },
+              { slug: 'kozmetik-guzellik', label: '💄 Kozmetik' },
+              { slug: 'ev-dekorasyon', label: '🏠 Ev' },
+              { slug: 'elektronik-aksesuar', label: '📱 Elektronik' },
+              { slug: 'yemek-catering', label: '🍕 Yemek' },
+              { slug: 'spor-supplement', label: '💪 Spor' },
+              { slug: 'dyetisyen-saglik', label: '🥗 Sağlık' },
+              { slug: 'arac-bakim', label: '🚗 Araç' },
+              { slug: 'anne-bebek', label: '👶 Bebek' },
+              { slug: 'fotograf-organizasyon', label: '📸 Fotoğraf' },
+              { slug: 'taki-aksesuar', label: '💎 Takı' },
+              { slug: 'influencer', label: '🎙️ Influencer' },
+            ].map(cat => (
+              <Link key={cat.slug} to={'/kategori/' + cat.slug} style={{
+                whiteSpace: 'nowrap', padding: '7px 14px', borderRadius: 20,
+                background: 'white', border: '1px solid #e2e8f0',
+                fontSize: 12, fontWeight: 500, color: '#374151', flexShrink: 0,
+              }}>
+                {cat.label}
+              </Link>
+            ))}
+          </div>
+
           {/* Tab bar */}
           <div style={{ background: 'white', borderRadius: 12, border: '1px solid #f1f5f9', display: 'flex', marginBottom: 14, overflow: 'hidden' }}>
             {tabs.map(t => (
