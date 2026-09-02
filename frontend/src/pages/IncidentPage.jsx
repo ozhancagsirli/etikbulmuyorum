@@ -282,13 +282,7 @@ export default function IncidentPage() {
         )}
       </div>
 
-      {/* İtiraz ve Şikayet */}
-      <div style={{ display: 'flex', justifyContent: 'center', gap: 16, paddingBottom: 8 }}>
-        <button onClick={() => user ? setShowAppeal(s => !s) : navigate('/giris')} style={{ display: 'inline-flex', alignItems: 'center', gap: 5, background: 'none', border: 'none', cursor: 'pointer', fontSize: 12, color: '#9ca3af' }}>
-          ⚖️ Bu bildiriye itiraz et
-        </button>
 
-      </div>
 
 
       {/* Lightbox */}
