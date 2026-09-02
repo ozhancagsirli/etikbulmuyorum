@@ -170,19 +170,36 @@ export default function SubjectPage() {
                 const vTotal = (inc.vote_correct_new||0) + (inc.vote_wrong_new||0);
                 const { emoji, label, color } = getStyle(inc.verdict, vTotal);
                 return (
-                  <Link key={inc.id} to={'/olay/' + inc.id}
-                    style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '12px 16px', color: 'inherit', borderBottom: i < incidents.length-1 ? '1px solid #f8fafc' : 'none' }}>
+                  <div key={inc.id} style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '12px 16px', borderBottom: i < incidents.length-1 ? '1px solid #f8fafc' : 'none' }}>
                     <span style={{ fontSize: 18, flexShrink: 0 }}>{emoji}</span>
-                    <div style={{ flex: 1, minWidth: 0 }}>
+                    <Link to={'/olay/' + inc.id} style={{ flex: 1, minWidth: 0, color: 'inherit' }}>
                       <div style={{ fontSize: 13, fontWeight: 600, color: '#0f172a', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{inc.title}</div>
                       <div style={{ fontSize: 11, color: '#9ca3af', marginTop: 2 }}>
                         <span style={{ color, fontWeight: 500 }}>{label}</span>
-                        {vTotal > 0 && <span> · {vTotal} oy</span>}
                         <span> · {formatDistanceToNow(new Date(inc.created_at), { locale: tr, addSuffix: true })}</span>
                       </div>
+                    </Link>
+                    <div style={{ display: 'flex', gap: 5, flexShrink: 0 }}>
+                      <button onClick={async (e) => {
+                        e.stopPropagation();
+                        try {
+                          await apiFetch('/sentiment/' + inc.id, { method: 'POST', body: JSON.stringify({ vote: 'correct' }) });
+                          setIncidents(prev => prev.map(p => p.id === inc.id ? { ...p, vote_correct_new: (p.vote_correct_new||0)+1 } : p));
+                        } catch(err) {}
+                      }} style={{ display: 'flex', alignItems: 'center', gap: 3, background: 'none', border: '1px solid #e5e7eb', borderRadius: 20, padding: '3px 8px', cursor: 'pointer', fontSize: 12, color: '#6b7280' }}>
+                        👍 {inc.vote_correct_new || 0}
+                      </button>
+                      <button onClick={async (e) => {
+                        e.stopPropagation();
+                        try {
+                          await apiFetch('/sentiment/' + inc.id, { method: 'POST', body: JSON.stringify({ vote: 'wrong' }) });
+                          setIncidents(prev => prev.map(p => p.id === inc.id ? { ...p, vote_wrong_new: (p.vote_wrong_new||0)+1 } : p));
+                        } catch(err) {}
+                      }} style={{ display: 'flex', alignItems: 'center', gap: 3, background: 'none', border: '1px solid #e5e7eb', borderRadius: 20, padding: '3px 8px', cursor: 'pointer', fontSize: 12, color: '#6b7280' }}>
+                        👎 {inc.vote_wrong_new || 0}
+                      </button>
                     </div>
-                    <span style={{ fontSize: 14, color: '#d1d5db', flexShrink: 0 }}>›</span>
-                  </Link>
+                  </div>
                 );
               })
             )}
