@@ -91,7 +91,7 @@ export default function Navbar() {
           </div>
 
           {/* Mobile: Sağ */}
-          <div className="nav-mobile-btn" style={{ marginLeft: 'auto', alignItems: 'center', gap: 8, display: 'none' }}>
+          <div className="nav-mobile-btn" style={{ marginLeft: 'auto', alignItems: 'center', gap: 8 }}>
             <Link to="/bildir" style={{ width: 36, height: 36, borderRadius: 50, border: '1px solid #e2e8f0', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 16, flexShrink: 0 }}>✏️</Link>
             {user ? (
               <>
