@@ -181,7 +181,7 @@ export default function HomePage() {
 
   return (
     <div style={{ background: '#f8fafc', minHeight: '100vh' }}>
-      <style>{`@media(max-width:768px){.home-grid{grid-template-columns:1fr !important}.home-sidebar{display:none !important}}`}</style>
+      <style>{`@media(max-width:768px){.home-grid{grid-template-columns:1fr !important}.home-sidebar{position:static !important}}`}</style>
 
 
       {/* Ana içerik */}
