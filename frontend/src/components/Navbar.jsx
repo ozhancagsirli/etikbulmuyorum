@@ -44,7 +44,7 @@ export default function Navbar() {
 
 
       <nav style={{ background: 'white', borderBottom: '1px solid #f1f5f9', position: 'sticky', top: 0, zIndex: 100 }}>
-        <div style={{ maxWidth: 1000, margin: '0 auto', padding: '0 14px', height: 54, display: 'flex', alignItems: 'center', gap: 10 }}>
+        <div style={{ maxWidth: 1000, margin: '0 auto', padding: '0 14px', height: 54, display: 'flex', alignItems: 'center', gap: 8, overflow: 'hidden', width: '100%' }}>
 
           {/* Logo */}
           <Link to="/" style={{ flexShrink: 0 }}>
@@ -63,7 +63,7 @@ export default function Navbar() {
           </form>
 
           {/* Desktop: Sağ butonlar */}
-          <div style={{ display: isMobile ? "none" : "flex" }} style={{ marginLeft: 'auto', alignItems: 'center', gap: 8 }}>
+          <div style={{ display: isMobile ? "none" : "flex" }} style={{ marginLeft: 'auto', display: 'flex', alignItems: 'center', gap: 8, flexShrink: 0 }}>
             {!user ? (
               <>
                 <Link to="/bildir" style={{ fontSize: 13, color: '#374151', padding: '7px 14px', borderRadius: 50, border: '1px solid #e2e8f0', fontWeight: 500, whiteSpace: 'nowrap' }}>✏️ Görüş Bildir</Link>
@@ -89,7 +89,7 @@ export default function Navbar() {
           </div>
 
           {/* Mobile: Sağ */}
-          <div style={{ display: isMobile ? "flex" : "none", marginLeft: "auto", alignItems: "center", gap: 8 }} style={{ marginLeft: 'auto', alignItems: 'center', gap: 8 }}>
+          <div style={{ display: isMobile ? "flex" : "none", marginLeft: "auto", alignItems: "center", gap: 6, flexShrink: 0 }} style={{ marginLeft: 'auto', display: 'flex', alignItems: 'center', gap: 8, flexShrink: 0 }}>
             <Link to="/bildir" style={{ width: 36, height: 36, borderRadius: 50, border: '1px solid #e2e8f0', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 16, flexShrink: 0 }}>✏️</Link>
             {user ? (
               <>
