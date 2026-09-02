@@ -70,7 +70,7 @@ function CategorySection({ category, profiles, loading }) {
         </Link>
       </div>
 
-      <div className='cat-profiles' style={{ display: 'grid', gridTemplateColumns: 'repeat(5, 1fr)', gap: 8, overflow: 'hidden' }}>
+      <div style={{ display: 'grid', gridTemplateColumns: window.innerWidth < 640 ? 'repeat(3, 1fr)' : 'repeat(5, 1fr)', gap: 8, overflow: 'hidden' }}>
         {loading ? (
           Array.from({ length: 5 }).map((_, i) => (
             <div key={i} style={{ background: '#f8fafc', borderRadius: 12, border: '1px solid #f1f5f9', minHeight: 120, animation: 'pulse 1.5s infinite' }} />
@@ -153,3 +153,4 @@ export default function HomePage() {
   );
 }
 
+.
