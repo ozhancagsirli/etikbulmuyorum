@@ -65,7 +65,7 @@ app.get('/api/homepage', async (req, res) => {
         LEFT JOIN person_scores ps ON ps.instagram_username = s.instagram_username
         WHERE s.category_id = $1
         ORDER BY COALESCE(ps.score, 1000) DESC
-        LIMIT 5
+        ORDER BY COALESCE(ps.score, 1000) DESC
       `, [cat.id]);
       return { ...cat, profiles };
     }));
