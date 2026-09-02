@@ -5,8 +5,101 @@ import { tr } from 'date-fns/locale';
 import { Shield, CheckCircle, XCircle, BarChart2, Trophy, Users, FileText, ThumbsUp, Eye, Building2 } from 'lucide-react';
 import toast from 'react-hot-toast';
 import { apiFetch } from '../lib/api';
+import { useState as useState2 } from 'react';
 import AIAnalysis from '../components/AIAnalysis';
 import { useAuthStore } from '../lib/authStore';
+
+function AddProfileForm() {
+  const [igUsername, setIgUsername] = useState('');
+  const [categoryId, setCategoryId] = useState('');
+  const [igProfile, setIgProfile] = useState(null);
+  const [loading, setLoading] = useState(false);
+  const [success, setSuccess] = useState('');
+
+  const CATS = [
+    { id: 1, name: '👗 Giyim & Moda' },
+    { id: 2, name: '💄 Kozmetik & Güzellik' },
+    { id: 3, name: '🏠 Ev & Dekorasyon' },
+    { id: 4, name: '📱 Elektronik & Aksesuar' },
+    { id: 5, name: '🍕 Yemek & Catering' },
+    { id: 6, name: '💪 Spor & Supplement' },
+    { id: 7, name: '🥗 Dyetisyen & Sağlık' },
+    { id: 8, name: '🚗 Araç Bakım & Detailing' },
+    { id: 9, name: '👶 Anne & Bebek' },
+    { id: 10, name: '📸 Fotoğrafçı & Organizasyon' },
+    { id: 11, name: '💎 Takı & Aksesuar' },
+    { id: 12, name: '🎙️ İçerik Üretici & Influencer' },
+    { id: 13, name: '📌 Diğer' },
+  ];
+
+  async function lookup() {
+    const username = igUsername.replace('@','').trim();
+    if (!username) return;
+    setLoading(true);
+    try {
+      const data = await apiFetch('/instagram/lookup?username=' + encodeURIComponent(username));
+      setIgProfile(data);
+    } catch(e) { alert('Profil bulunamadı'); }
+    setLoading(false);
+  }
+
+  async function create() {
+    if (!igProfile || !categoryId) return alert('Profil ve kategori seçin.');
+    setLoading(true);
+    try {
+      await apiFetch('/subjects/create', {
+        method: 'POST',
+        body: JSON.stringify({
+          instagram_username: igProfile.username,
+          instagram_avatar: igProfile.profile_pic_url,
+          instagram_verified: igProfile.is_verified,
+          instagram_followers: igProfile.follower_count,
+          name: igProfile.full_name || igProfile.username,
+          category_id: categoryId,
+          claimed: false,
+        })
+      });
+      setSuccess('@' + igProfile.username + ' profili oluşturuldu!');
+      setIgProfile(null);
+      setIgUsername('');
+      setCategoryId('');
+    } catch(e) { alert(e.message); }
+    setLoading(false);
+  }
+
+  return (
+    <div style={{ background: 'white', borderRadius: 12, border: '1px solid #e5e7eb', padding: 20, marginBottom: 20 }}>
+      <div style={{ fontSize: 15, fontWeight: 700, marginBottom: 16 }}>➕ Satıcı Profili Ekle</div>
+      {success && <div style={{ background: '#f0fdf4', border: '1px solid #bbf7d0', borderRadius: 8, padding: '10px 14px', color: '#16a34a', fontSize: 13, marginBottom: 12, fontWeight: 600 }}>{success}</div>}
+      <div style={{ display: 'flex', gap: 8, marginBottom: 12 }}>
+        <input value={igUsername} onChange={e => setIgUsername(e.target.value)} placeholder="@instagram_kullanici_adi"
+          onKeyDown={e => e.key === 'Enter' && lookup()}
+          style={{ flex: 1, padding: '9px 12px', borderRadius: 8, border: '1px solid #e5e7eb', fontSize: 13, fontFamily: 'inherit' }} />
+        <button onClick={lookup} disabled={loading} style={{ padding: '9px 16px', borderRadius: 8, background: '#013C26', color: 'white', border: 'none', fontWeight: 700, fontSize: 13, cursor: 'pointer' }}>
+          {loading ? '...' : 'Ara'}
+        </button>
+      </div>
+      {igProfile && (
+        <div style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '12px', background: '#f0fdf4', borderRadius: 8, border: '1px solid #bbf7d0', marginBottom: 12 }}>
+          <img src={igProfile.profile_pic_url} alt="" style={{ width: 44, height: 44, borderRadius: '50%' }} />
+          <div>
+            <div style={{ fontWeight: 700 }}>@{igProfile.username}</div>
+            <div style={{ fontSize: 12, color: '#6b7280' }}>{igProfile.full_name} · {Number(igProfile.follower_count || 0).toLocaleString('tr')} takipçi</div>
+          </div>
+        </div>
+      )}
+      <select value={categoryId} onChange={e => setCategoryId(e.target.value)}
+        style={{ width: '100%', padding: '9px 12px', borderRadius: 8, border: '1px solid #e5e7eb', fontSize: 13, fontFamily: 'inherit', marginBottom: 12, background: 'white' }}>
+        <option value="">Kategori seçin...</option>
+        {CATS.map(c => <option key={c.id} value={c.id}>{c.name}</option>)}
+      </select>
+      <button onClick={create} disabled={loading || !igProfile || !categoryId}
+        style={{ width: '100%', padding: '10px', borderRadius: 8, background: '#013C26', color: 'white', border: 'none', fontWeight: 700, fontSize: 13, cursor: 'pointer' }}>
+        {loading ? 'Oluşturuluyor...' : 'Profili Oluştur'}
+      </button>
+    </div>
+  );
+}
 
 export default function ModerationPage() {
   const user = useAuthStore(s => s.user);
