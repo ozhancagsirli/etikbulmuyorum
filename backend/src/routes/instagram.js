@@ -65,6 +65,7 @@ router.get('/lookup', async (req, res, next) => {
 
 // POST /api/instagram/verify - Bio kodu doğrulama
 router.post('/verify', authenticate, async (req, res, next) => {
+    console.log('VERIFY USER:', req.user?.id, 'HEADERS:', req.headers.authorization?.slice(0,20));
   try {
     const { username } = req.body;
     if (!username) return res.status(400).json({ error: 'username gerekli.' });
