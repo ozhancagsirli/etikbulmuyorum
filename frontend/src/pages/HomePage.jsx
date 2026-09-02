@@ -129,6 +129,7 @@ export default function HomePage() {
   return (
     <div style={{ background: '#f8fafc', minHeight: '100vh', overflowX: 'hidden' }}>
       <style>{`
+        @keyframes shimmer { 0%{background-position:200% 0} 100%{background-position:-200% 0} }
         @media(max-width:768px){
           .home-grid{grid-template-columns:1fr !important}
           .home-sidebar{display:none !important}

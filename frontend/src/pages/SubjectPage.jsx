@@ -33,7 +33,7 @@ export default function SubjectPage() {
   const [loading, setLoading] = useState(true);
   const [claiming, setClaiming] = useState(false);
   const [claimed, setClaimed] = useState(false);
-  const [reviewsOpen, setReviewsOpen] = useState(false);
+  const [reviewsOpen, setReviewsOpen] = useState(true);
   const decodedName = decodeURIComponent(name);
 
   useEffect(() => {
