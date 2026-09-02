@@ -33,6 +33,16 @@ export default function Navbar() {
   return (
     <>
       <div id="google-btn" style={{ display: 'none' }} />
+      <style>{`
+        @media(max-width:640px){
+          .nav-search{max-width:140px !important;}
+          .nav-btn-text{display:none !important;}
+          .nav-extra{display:none !important;}
+        }
+        @media(max-width:480px){
+          .nav-search{display:none !important;}
+        }
+      `}</style>
       <nav style={{ background: 'white', borderBottom: '1px solid #f1f5f9', position: 'sticky', top: 0, zIndex: 100 }}>
         <div style={{ maxWidth: 1000, margin: '0 auto', padding: '0 16px', height: 54, display: 'flex', alignItems: 'center', gap: 12 }}>
 
@@ -43,7 +53,7 @@ export default function Navbar() {
 
           {/* Arama */}
           <form onSubmit={e => { e.preventDefault(); if (search.trim()) navigate('/?search=' + encodeURIComponent(search.trim())); }}
-            style={{ flex: 1, maxWidth: 320 }}>
+            className="nav-search" style={{ flex: 1, maxWidth: 320 }}>
             <div style={{ display: 'flex', background: '#f8fafc', borderRadius: 50, alignItems: 'center', padding: '0 14px', border: '1px solid #e2e8f0', height: 36 }}>
               <span style={{ color: '#94a3b8', fontSize: 13, marginRight: 8 }}>🔍</span>
               <input value={search} onChange={e => setSearch(e.target.value)}
@@ -59,9 +69,9 @@ export default function Navbar() {
               // Giriş yapılmamış
               <>
                 <Link to="/bildir" style={{ fontSize: 13, color: '#374151', padding: '7px 16px', borderRadius: 50, border: '1px solid #e2e8f0', fontWeight: 500, whiteSpace: 'nowrap' }}>
-                  ✏️ Görüş Bildir
+                  ✏️ <span className="nav-btn-text">Görüş Bildir</span>
                 </Link>
-                <Link to="/giris" style={{ fontSize: 13, color: '#374151', padding: '7px 16px', borderRadius: 50, border: '1px solid #e2e8f0', fontWeight: 500, whiteSpace: 'nowrap' }}>
+                <Link to="/giris" className="nav-extra" style={{ fontSize: 13, color: '#374151', padding: '7px 16px', borderRadius: 50, border: '1px solid #e2e8f0', fontWeight: 500, whiteSpace: 'nowrap' }}>
                   Giriş Yap
                 </Link>
                 <Link to="/giris?tab=register" style={{ fontSize: 13, color: 'white', background: '#013C26', padding: '7px 16px', borderRadius: 50, fontWeight: 700, whiteSpace: 'nowrap' }}>
@@ -72,10 +82,10 @@ export default function Navbar() {
               // Giriş yapılmış + Instagram doğrulandı
               <>
                 <Link to="/bildir" style={{ fontSize: 13, color: '#374151', padding: '7px 16px', borderRadius: 50, border: '1px solid #e2e8f0', fontWeight: 500, whiteSpace: 'nowrap' }}>
-                  ✏️ Görüş Bildir
+                  ✏️ <span className="nav-btn-text">Görüş Bildir</span>
                 </Link>
                 <Link to="/dashboard" style={{ fontSize: 13, color: 'white', background: '#013C26', padding: '7px 16px', borderRadius: 50, fontWeight: 700, whiteSpace: 'nowrap' }}>
-                  🌟 Sayfam
+                  🌟 <span className="nav-btn-text">Sayfam</span>
                 </Link>
                 <NotificationBell />
                 <div style={{ position: 'relative' }}>
@@ -89,10 +99,10 @@ export default function Navbar() {
               // Giriş yapılmış, Instagram yok
               <>
                 <Link to="/bildir" style={{ fontSize: 13, color: '#374151', padding: '7px 16px', borderRadius: 50, border: '1px solid #e2e8f0', fontWeight: 500, whiteSpace: 'nowrap' }}>
-                  ✏️ Görüş Bildir
+                  ✏️ <span className="nav-btn-text">Görüş Bildir</span>
                 </Link>
                 <Link to="/profil-olustur" style={{ fontSize: 13, color: '#92400e', background: '#fffbeb', padding: '7px 16px', borderRadius: 50, border: '1px solid #fde68a', fontWeight: 700, whiteSpace: 'nowrap' }}>
-                  🌟 Profilini Oluştur
+                  🌟 <span className="nav-btn-text">Profilini Oluştur</span>
                 </Link>
                 <NotificationBell />
                 <div style={{ position: 'relative' }}>
