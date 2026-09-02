@@ -111,20 +111,16 @@ export default function HomePage() {
   const [search, setSearch] = useState('');
 
   useEffect(() => {
-    // Tüm kategorileri paralel çek
+    // Tek endpoint ile tüm kategorileri çek
     setCatLoading(true);
-    Promise.all(
-      CATEGORIES.map(cat =>
-        apiFetch('/categories/' + cat.slug)
-          .then(d => ({ slug: cat.slug, profiles: (d.profiles || []).slice(0, 5) }))
-          .catch(() => ({ slug: cat.slug, profiles: [] }))
-      )
-    ).then(results => {
-      const data = {};
-      results.forEach(r => { data[r.slug] = r.profiles; });
-      setCategoryData(data);
-      setCatLoading(false);
-    });
+    apiFetch('/homepage')
+      .then(data => {
+        const catMap = {};
+        data.forEach(cat => { catMap[cat.slug] = cat.profiles; });
+        setCategoryData(catMap);
+        setCatLoading(false);
+      })
+      .catch(() => setCatLoading(false));
 
     apiFetch('/incidents?sort=most_voted&limit=8').then(d => setTrending(d.data || [])).catch(() => {});
     apiFetch('/incidents?sort=newest&limit=20').then(d => {

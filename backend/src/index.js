@@ -49,6 +49,31 @@ app.use('/api/appeals', appealsRoutes);
 app.use('/api/instagram', instagramRoutes);
 app.use('/api/sentiment', sentimentRoutes);
 
+// Tüm kategorileri profilleriyle birlikte getir
+app.get('/api/homepage', async (req, res) => {
+  try {
+    const pool = (await import('./db/pool.js')).default;
+    const { rows: cats } = await pool.query('SELECT * FROM categories WHERE id != 13 ORDER BY id');
+    
+    const result = await Promise.all(cats.map(async cat => {
+      const { rows: profiles } = await pool.query(`
+        SELECT 
+          s.name, s.instagram_username, s.instagram_avatar, s.instagram_verified,
+          s.instagram_followers, s.count, s.claimed,
+          COALESCE(ps.score, 1000) as person_score
+        FROM subjects s
+        LEFT JOIN person_scores ps ON ps.instagram_username = s.instagram_username
+        WHERE s.category_id = $1
+        ORDER BY COALESCE(ps.score, 1000) DESC
+        LIMIT 5
+      `, [cat.id]);
+      return { ...cat, profiles };
+    }));
+    
+    res.json(result.filter(cat => cat.profiles.length > 0));
+  } catch (e) { res.status(500).json({ error: e.message }); }
+});
+
 // Kategori sayfası endpoint
 app.get('/api/categories', async (req, res) => {
   try {
