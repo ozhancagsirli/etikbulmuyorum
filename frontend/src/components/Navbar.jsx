@@ -89,7 +89,7 @@ export default function Navbar() {
           </div>
 
           {/* Mobile: Sağ */}
-          <div style={{ display: isMobile ? "flex" : "none", marginLeft: "auto", alignItems: "center", gap: 6, flexShrink: 0 }} style={{ display: 'flex', alignItems: 'center', gap: 8, flexShrink: 0 }}>
+          <div style={{ display: isMobile ? "flex" : "none", marginLeft: "auto", alignItems: "center", gap: 6, flexShrink: 0 }}>
             <Link to="/bildir" style={{ width: 36, height: 36, borderRadius: 50, border: '1px solid #e2e8f0', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 16, flexShrink: 0 }}>✏️</Link>
             {user ? (
               <>
