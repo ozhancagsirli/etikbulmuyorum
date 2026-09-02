@@ -168,7 +168,8 @@ export default function HomePage() {
   }, [tab]);
 
   useEffect(() => {
-    apiFetch('/incidents?sort=most_voted&limit=8').then(d => setTrending(d.data || [])).catch(() => {});
+    const weekAgo = new Date(Date.now() - 7*24*60*60*1000).toISOString();
+    apiFetch('/incidents?sort=most_voted&limit=20').then(d => setTrending(d.data || [])).catch(() => {});
     apiFetch('/incidents?sort=newest&limit=20').then(d => {
       const seen = new Set();
       const profiles = (d.data || []).filter(i => {
@@ -273,7 +274,7 @@ export default function HomePage() {
         <div style={{ background: 'white', borderRadius: 16, padding: '14px', marginBottom: 16, border: '1px solid #f1f5f9', boxShadow: '0 1px 3px rgba(0,0,0,0.04)' }}>
           <div style={{ fontSize: 13, fontWeight: 700, color: '#0f172a', marginBottom: 12 }}>Bu hafta gündemde</div>
           <div style={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
-            {trending.slice(0, 6).map((inc, i) => (
+            {trending.slice(0, 20).map((inc, i) => (
               <Link key={inc.id} to={'/olay/' + inc.id} style={{ padding: '7px 8px', borderRadius: 8, display: 'block', color: 'inherit' }}
                 onMouseEnter={e => e.currentTarget.style.background = '#f8fafc'}
                 onMouseLeave={e => e.currentTarget.style.background = 'transparent'}>
