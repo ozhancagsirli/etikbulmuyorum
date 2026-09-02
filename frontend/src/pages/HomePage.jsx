@@ -27,8 +27,6 @@ const CATEGORIES = [
 ];
 
 function ProfileCard({ profile, rank }) {
-  const score = profile.person_score || 1000;
-  const { emoji, color } = getScoreStyle(score);
   const avatar = profile.instagram_avatar;
 
   return (
@@ -37,10 +35,7 @@ function ProfileCard({ profile, rank }) {
       <div style={{ background: 'white', borderRadius: 12, border: '1px solid #f1f5f9', padding: '14px 10px', textAlign: 'center', cursor: 'pointer' }}
         onMouseEnter={e => e.currentTarget.style.borderColor = '#e2e8f0'}
         onMouseLeave={e => e.currentTarget.style.borderColor = '#f1f5f9'}>
-        {/* Sıra badge */}
-        <div style={{ fontSize: 11, fontWeight: 700, color: rank <= 3 ? '#013C26' : '#d1d5db', marginBottom: 6 }}>
-          {rank <= 3 ? ['🥇','🥈','🥉'][rank-1] : `#${rank}`}
-        </div>
+
         {/* Avatar */}
         <div style={{ width: 48, height: 48, borderRadius: '50%', background: '#f1f5f9', margin: '0 auto 8px', overflow: 'hidden', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 20 }}>
           {avatar
@@ -54,10 +49,7 @@ function ProfileCard({ profile, rank }) {
         <div style={{ fontSize: 10, color: '#94a3b8', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', marginBottom: 8 }}>
           @{profile.instagram_username}
         </div>
-        {/* Skor */}
-        <div style={{ fontSize: 13, fontWeight: 800, color, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 3 }}>
-          {score} {emoji}
-        </div>
+
       </div>
     </Link>
   );
