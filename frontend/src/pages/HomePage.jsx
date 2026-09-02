@@ -132,7 +132,7 @@ export default function HomePage() {
   const [personScores, setPersonScores] = useState({});
   const [loading, setLoading] = useState(true);
   const [tab, setTab] = useState('top');
-  const [search, setSearch] = useState('');
+
 
   // Sabit: en çok değerlendirilen 3 post + trending + profiller
   useEffect(() => {
@@ -183,38 +183,11 @@ export default function HomePage() {
 
   return (
     <div style={{ background: '#f8fafc', minHeight: '100vh' }}>
-      {/* Navbar */}
-      <div style={{ background: 'white', borderBottom: '1px solid #f1f5f9', position: 'sticky', top: 0, zIndex: 100 }}>
-        <div style={{ maxWidth: 1000, margin: '0 auto', padding: '10px 16px', display: 'flex', alignItems: 'center', gap: 14 }}>
-          <Link to="/">
-            <img src="/logo.png" alt="etikbulmuyorum" style={{ height: 30, width: 'auto' }} />
-          </Link>
-          <form onSubmit={e => { e.preventDefault(); if (search.trim()) navigate('/?search=' + encodeURIComponent(search)); }} style={{ flex: 1, maxWidth: 380 }}>
-            <div style={{ display: 'flex', background: '#f8fafc', borderRadius: 50, alignItems: 'center', padding: '0 14px', border: '1px solid #e2e8f0' }}>
-              <span style={{ color: '#94a3b8', fontSize: 13, marginRight: 8 }}>🔍</span>
-              <input value={search} onChange={e => setSearch(e.target.value)}
-                placeholder="@kullanıcı adı ara..."
-                style={{ flex: 1, padding: '8px 0', fontSize: 13, background: 'none', border: 'none', outline: 'none', fontFamily: 'inherit', color: '#0f172a' }} />
-            </div>
-          </form>
-          <div style={{ marginLeft: 'auto', display: 'flex', alignItems: 'center', gap: 8 }}>
-            <Link to="/bildir" style={{ background: '#013C26', color: 'white', padding: '8px 18px', borderRadius: 50, fontSize: 13, fontWeight: 700 }}>+ Bildir</Link>
-            {user ? (
-              <div onClick={() => navigate('/profil')} style={{ width: 34, height: 34, borderRadius: '50%', background: '#46A53E', color: 'white', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 700, fontSize: 13, cursor: 'pointer', overflow: 'hidden', flexShrink: 0 }}>
-                {user.avatarUrl ? <img src={user.avatarUrl} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover' }} /> : user.name?.[0]?.toUpperCase()}
-              </div>
-            ) : (
-              <div style={{ display: 'flex', gap: 6 }}>
-                <Link to="/giris" style={{ padding: '7px 14px', borderRadius: 50, border: '1px solid #e2e8f0', fontSize: 12, color: '#374151', fontWeight: 600 }}>Giriş</Link>
-                <Link to="/giris?tab=register" style={{ padding: '7px 14px', borderRadius: 50, background: '#46A53E', color: 'white', fontSize: 12, fontWeight: 700 }}>Kayıt</Link>
-              </div>
-            )}
-          </div>
-        </div>
-      </div>
+      <style>{`@media(max-width:768px){.home-grid{grid-template-columns:1fr !important}.home-sidebar{display:none !important}}`}</style>
+
 
       {/* Ana içerik */}
-      <div style={{ maxWidth: 1000, margin: '0 auto', padding: '16px', display: 'grid', gridTemplateColumns: '1fr 280px', gap: 16, alignItems: 'start' }}>
+      <div className="home-grid" style={{ maxWidth: 1000, margin: '0 auto', padding: '16px', display: 'grid', gridTemplateColumns: '1fr 280px', gap: 16, alignItems: 'start' }}>
 
         {/* ORTA */}
         <div>
@@ -246,7 +219,7 @@ export default function HomePage() {
         </div>
 
         {/* SAĞ — sabit */}
-        <div style={{ position: 'sticky', top: 70 }}>
+        <div className="home-sidebar" style={{ position: 'sticky', top: 70 }}>
 
           {/* En çok değerlendirilen 3 post */}
           <div style={{ background: 'white', borderRadius: 12, border: '1px solid #f1f5f9', padding: '14px', marginBottom: 12 }}>

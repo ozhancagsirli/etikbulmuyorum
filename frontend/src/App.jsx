@@ -15,13 +15,15 @@ import LeaderboardPage  from './pages/LeaderboardPage';
 import ResetPasswordPage from './pages/ResetPasswordPage';
 import EditIncidentPage from './pages/EditIncidentPage';
 
-function WithNav({ children }) {
+function WithNav({ children, fullWidth }) {
   return (
     <>
       <Navbar />
-      <div style={{ maxWidth: 1100, margin: '0 auto', padding: '16px 12px' }}>
-        {children}
-      </div>
+      {fullWidth ? children : (
+        <div style={{ maxWidth: 1000, margin: '0 auto', padding: '20px 16px' }}>
+          {children}
+        </div>
+      )}
     </>
   );
 }
@@ -34,7 +36,7 @@ export default function App() {
     <BrowserRouter>
       <Toaster position="top-center" toastOptions={{ style: { fontSize: 14 } }} />
       <Routes>
-          <Route path="/"             element={<><div style={{display:"none"}}></div><HomePage /></>} />
+          <Route path="/"             element={<WithNav fullWidth><HomePage /></WithNav>} />
           <Route path="/olay/:id"     element={<WithNav><IncidentPage /></WithNav>} />
           <Route path="/bildir"       element={<WithNav><SubmitPage /></WithNav>} />
           <Route path="/profil"       element={<WithNav><ProfilePage /></WithNav>} />
