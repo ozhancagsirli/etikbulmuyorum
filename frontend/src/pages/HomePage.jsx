@@ -126,7 +126,6 @@ export default function HomePage() {
   const user = useAuthStore(s => s.user);
   const { logout } = useAuthStore();
   const [incidents, setIncidents] = useState([]);
-  const [topIncidents, setTopIncidents] = useState([]);
   const [trending, setTrending] = useState([]);
   const [activeProfiles, setActiveProfiles] = useState([]);
   const [personScores, setPersonScores] = useState({});
@@ -138,7 +137,6 @@ export default function HomePage() {
   useEffect(() => {
     apiFetch('/incidents?sort=most_voted&limit=20').then(d => {
       setTrending(d.data || []);
-      setTopIncidents((d.data || []).slice(0, 3));
     }).catch(() => {});
 
     apiFetch('/incidents?sort=newest&limit=20').then(d => {
@@ -221,27 +219,7 @@ export default function HomePage() {
         {/* SAĞ — sabit */}
         <div className="home-sidebar" style={{ position: 'sticky', top: 70 }}>
 
-          {/* En çok değerlendirilen 3 post */}
-          <div style={{ background: 'white', borderRadius: 12, border: '1px solid #f1f5f9', padding: '14px', marginBottom: 12 }}>
-            <div style={{ fontSize: 13, fontWeight: 700, color: '#0f172a', marginBottom: 12 }}>En Çok Değerlendirilen</div>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
-              {topIncidents.map((inc, i) => {
-                const score = personScores[inc.instagram_username] ?? null;
-                const { emoji } = getScoreStyle(score);
-                const total = (inc.vote_correct_new||0) + (inc.vote_wrong_new||0);
-                return (
-                  <Link key={inc.id} to={'/olay/' + inc.id} style={{ display: 'flex', gap: 10, alignItems: 'center', color: 'inherit' }}>
-                    <span style={{ fontSize: 12, fontWeight: 700, color: '#d1d5db', width: 18, flexShrink: 0 }}>#{i+1}</span>
-                    <div style={{ flex: 1, minWidth: 0 }}>
-                      <div style={{ fontSize: 12, fontWeight: 600, color: '#0f172a', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{inc.title}</div>
-                      <div style={{ fontSize: 10, color: '#94a3b8' }}>@{inc.instagram_username} · {total} oy</div>
-                    </div>
-                    <span style={{ fontSize: 14, flexShrink: 0 }}>{emoji}</span>
-                  </Link>
-                );
-              })}
-            </div>
-          </div>
+
 
           {/* Bu hafta gündemde */}
           <div style={{ background: 'white', borderRadius: 12, border: '1px solid #f1f5f9', padding: '14px', marginBottom: 12 }}>
@@ -267,7 +245,8 @@ export default function HomePage() {
 
           {/* En çok değerlendirilen profiller */}
           <div style={{ background: 'white', borderRadius: 12, border: '1px solid #f1f5f9', padding: '14px', marginBottom: 12 }}>
-            <div style={{ fontSize: 13, fontWeight: 700, color: '#0f172a', marginBottom: 12 }}>En Çok Değerlendirilen</div>
+            <div style={{ fontSize: 13, fontWeight: 700, color: '#0f172a', marginBottom: 4 }}>Hakkında konuşulanlar</div>
+            <div style={{ fontSize: 11, color: '#94a3b8', marginBottom: 12 }}>Son bildirimlerdeki kişiler</div>
             <div style={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
               {activeProfiles.map((inc, i) => {
                 const score = personScores[inc.instagram_username] ?? null;
