@@ -3,6 +3,7 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { Toaster } from 'react-hot-toast';
 import { useAuthStore } from './lib/authStore';
 import Navbar           from './components/Navbar';
+import MarqueeBanner    from './components/MarqueeBanner';
 import HomePage         from './pages/HomePage';
 import IncidentPage     from './pages/IncidentPage';
 import SubmitPage       from './pages/SubmitPage';
@@ -22,6 +23,7 @@ function WithNav({ children, fullWidth }) {
   return (
     <>
       <Navbar />
+      <MarqueeBanner />
       {fullWidth ? children : (
         <div style={{ maxWidth: 1000, margin: '0 auto', padding: '20px 16px' }}>
           {children}
