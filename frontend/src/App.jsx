@@ -4,6 +4,7 @@ import { Toaster } from 'react-hot-toast';
 import { useAuthStore } from './lib/authStore';
 import Navbar           from './components/Navbar';
 import MarqueeBanner    from './components/MarqueeBanner';
+import Footer           from './components/Footer';
 import HomePage         from './pages/HomePage';
 import IncidentPage     from './pages/IncidentPage';
 import SubmitPage       from './pages/SubmitPage';
@@ -29,6 +30,7 @@ function WithNav({ children, fullWidth }) {
           {children}
         </div>
       )}
+      <Footer />
     </>
   );
 }
