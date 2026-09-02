@@ -193,7 +193,7 @@ app.post('/api/subjects/create', async (req, res) => {
         const decoded = jwt.default.verify(token, process.env.JWT_SECRET);
         const { rows: existing } = await pool.query(
           'SELECT id FROM subjects WHERE claimed_user_id = $1',
-          [decoded.userId]
+          [decoded.sub]
         );
         if (existing.length > 0) {
           return res.status(400).json({ error: 'Zaten bir profiliniz var. Tek profil oluşturabilirsiniz.' });
@@ -269,7 +269,7 @@ app.post('/api/portfolio', async (req, res) => {
     const { image_url, title, description, price } = req.body;
     const { rows } = await pool.query(
       'INSERT INTO portfolio_items (user_id, instagram_username, image_url, title, description, price, sort_order) VALUES ($1,$2,$3,$4,$5,$6,(SELECT COALESCE(MAX(sort_order),0)+1 FROM portfolio_items WHERE instagram_username=$2)) RETURNING *',
-      [decoded.userId, igUsername, image_url, title||null, description||null, price||null]
+      [decoded.sub, igUsername, image_url, title||null, description||null, price||null]
     );
     res.json(rows[0]);
   } catch(e) { res.status(500).json({ error: e.message }); }
@@ -281,7 +281,7 @@ app.delete('/api/portfolio/:id', async (req, res) => {
     const jwt = await import('jsonwebtoken');
     const token = req.headers.authorization?.replace('Bearer ', '');
     const decoded = jwt.default.verify(token, process.env.JWT_SECRET);
-    await pool.query('DELETE FROM portfolio_items WHERE id=$1 AND user_id=$2', [req.params.id, decoded.userId]);
+    await pool.query('DELETE FROM portfolio_items WHERE id=$1 AND user_id=$2', [req.params.id, decoded.sub]);
     res.json({ success: true });
   } catch(e) { res.status(500).json({ error: e.message }); }
 });
