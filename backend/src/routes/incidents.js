@@ -118,11 +118,26 @@ router.post('/', authenticate, spamFilter, async (req, res, next) => {
         [subject.trim()]
       );
     }
-    if (person_name) {
-      await pool.query(
-        'INSERT INTO persons (name, profession, count) VALUES ($1, $2, 1) ON CONFLICT (name) DO UPDATE SET count = persons.count + 1, profession = COALESCE($2, persons.profession)',
-        [person_name.trim(), null]
-      );
+    // Subjects tablosunu güncelle — profil otomatik oluşsun
+    if (instagram_username) {
+      await pool.query(`
+        INSERT INTO subjects (name, instagram_username, instagram_avatar, instagram_verified, instagram_followers, category_id, count, score)
+        VALUES ($1, $2, $3, $4, $5, $6, 1, 1000)
+        ON CONFLICT (name) DO UPDATE SET
+          instagram_username = COALESCE(EXCLUDED.instagram_username, subjects.instagram_username),
+          instagram_avatar = COALESCE(EXCLUDED.instagram_avatar, subjects.instagram_avatar),
+          instagram_verified = COALESCE(EXCLUDED.instagram_verified, subjects.instagram_verified),
+          instagram_followers = COALESCE(EXCLUDED.instagram_followers, subjects.instagram_followers),
+          category_id = COALESCE(EXCLUDED.category_id, subjects.category_id),
+          count = subjects.count + 1
+      `, [
+        instagram_username,
+        instagram_username,
+        instagram_avatar || null,
+        instagram_verified || false,
+        instagram_followers || 0,
+        categoryId || null
+      ]);
     }
     res.status(201).json({ ...rows[0], message: 'Olayınız inceleme sonrası yayınlanacak!' });
   } catch (err) { next(err); }
