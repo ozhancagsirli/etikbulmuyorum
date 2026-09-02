@@ -84,6 +84,7 @@ router.post('/verify', async (req, res, next) => {
     const u = data.data;
     const bio = u.biography || '';
     const expectedCode = 'EB:' + username.toLowerCase();
+    console.log('BIO:', JSON.stringify(bio), 'CODE:', expectedCode, 'MATCH:', bio.toLowerCase().includes(expectedCode));
     const verified = bio.toLowerCase().includes(expectedCode);
 
     if (verified) {
