@@ -52,7 +52,7 @@ export default function CategoryPage() {
           <div style={{ fontSize: 36, marginBottom: 12 }}>🔍</div>
           <div style={{ fontSize: 14, color: '#64748b', marginBottom: 16 }}>Bu kategoride henüz profil yok.</div>
           <Link to="/bildir" style={{ background: '#013C26', color: 'white', padding: '10px 24px', borderRadius: 20, fontSize: 13, fontWeight: 600 }}>
-            İlk bildirimi ekle
+            İlk görüşü ekle
           </Link>
         </div>
       ) : (

@@ -86,7 +86,7 @@ export default function Navbar() {
                         <span style={{ fontSize: 14 }}>🌟</span> Profil Oluştur
                       </Link>
                       <Link to="/bildir" style={{ display: 'flex', alignItems: 'center', gap: 8, padding: '10px 16px', color: '#374151', fontSize: 13, borderBottom: '1px solid #f3f4f6' }}>
-                        <Plus size={14} color="#9ca3af" /> Olay Bildir
+                        <Plus size={14} color="#9ca3af" /> Görüş Bildir
                       </Link>
                       {(user.role === 'moderator' || user.role === 'admin') && (
                         <Link to="/moderasyon" style={{ display: 'flex', alignItems: 'center', gap: 8, padding: '10px 16px', color: '#374151', fontSize: 13, borderBottom: '1px solid #f3f4f6' }}>

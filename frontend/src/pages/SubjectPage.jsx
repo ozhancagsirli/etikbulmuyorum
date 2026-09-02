@@ -143,7 +143,7 @@ export default function SubjectPage() {
         <div style={{ background: 'white', borderRadius: 12, padding: 40, textAlign: 'center', border: '1px solid #e5e7eb' }}>
           <div style={{ fontSize: 36, marginBottom: 12 }}>🔍</div>
           <p style={{ color: '#9ca3af', marginBottom: 12 }}>Henüz bildirim yok.</p>
-          <Link to="/bildir" style={{ color: '#46A53E', fontWeight: 600, fontSize: 14 }}>İlk bildirimi ekle →</Link>
+          <Link to="/bildir" style={{ color: '#46A53E', fontWeight: 600, fontSize: 14 }}>İlk görüşü ekle →</Link>
         </div>
       ) : (
         <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>

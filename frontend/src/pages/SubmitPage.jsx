@@ -92,7 +92,7 @@ export default function SubmitPage() {
     }
     if (step === 2) {
       if (form.description.length < 30) return toast.error('Açıklama en az 30 karakter olmalı.');
-      if (!form.images || form.images.length === 0) return toast.error('Lütfen en az 1 kanıt fotoğrafı yükleyin.');
+      
     }
     setStep(s => s + 1);
   }
@@ -210,7 +210,7 @@ export default function SubmitPage() {
 
             <div>
               <label style={{ display: 'block', fontWeight: 600, fontSize: 13, marginBottom: 8 }}>Başlık <span style={{ color: '#46A53E' }}>*</span></label>
-              <input value={form.title} onChange={set('title')} placeholder="Ne yaşandı? Kısaca özetle..." style={inp} />
+              <input value={form.title} onChange={set('title')} placeholder="Görüşünüzü kısaca özetleyin..." style={inp} />
             </div>
           </div>
         )}
@@ -218,8 +218,8 @@ export default function SubmitPage() {
         {/* ADIM 2 — Detaylar + kanıt */}
         {step === 2 && (
           <div>
-            <h2 style={{ fontSize: 18, fontWeight: 800, marginBottom: 4, color: '#111827' }}>Ne yaşandı?</h2>
-            <p style={{ fontSize: 13, color: '#9ca3af', marginBottom: 24 }}>Detaylı anlat. Kanıt eklemen zorunlu.</p>
+            <h2 style={{ fontSize: 18, fontWeight: 800, marginBottom: 4, color: '#111827' }}>Görüşünüzü paylaşın</h2>
+            <p style={{ fontSize: 13, color: '#9ca3af', marginBottom: 24 }}>Detaylı açıklayın.</p>
 
             {igProfile && (
               <div style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '10px 14px', background: '#f0fdf4', borderRadius: 10, border: '1px solid #bbf7d0', marginBottom: 16 }}>
@@ -241,8 +241,7 @@ export default function SubmitPage() {
 
               <div>
                 <label style={{ display: 'block', fontWeight: 600, fontSize: 13, marginBottom: 8 }}>
-                  📎 Kanıt Fotoğrafı <span style={{ color: '#46A53E' }}>*</span>
-                  <span style={{ fontSize: 11, color: '#9ca3af', fontWeight: 400, marginLeft: 6 }}>Dekont, mesaj, sözleşme vb.</span>
+                  📎 Kanıt Fotoğrafı <span style={{ fontSize: 11, color: '#9ca3af', fontWeight: 400, marginLeft: 6 }}>İsteğe bağlı</span>
                 </label>
                 <ImageUploader value={form.images || []} onChange={imgs => setForm(f => ({ ...f, images: Array.isArray(imgs) ? imgs : [] }))} />
               </div>
@@ -323,7 +322,7 @@ export default function SubmitPage() {
             </button>
           ) : (
             <button onClick={submit} disabled={submitting} style={{ flex: 2, padding: '12px', borderRadius: 8, background: '#46A53E', color: 'white', border: 'none', fontWeight: 700, fontSize: 14, cursor: 'pointer' }}>
-              {submitting ? 'Gönderiliyor...' : '🚀 Bildir'}
+              {submitting ? 'Gönderiliyor...' : '🚀 Görüş Bildir'}
             </button>
           )}
         </div>
