@@ -114,6 +114,18 @@ router.post('/verify', async (req, res, next) => {
           'UPDATE users SET instagram_username=$1, instagram_verified=true, instagram_avatar=$2, instagram_followers=$3 WHERE id=$4',
           [username, avatarUrl, u.edge_followed_by?.count || 0, req.user.id]
         );
+        // subjects tablosunda claimed yap
+        await pool.query(`
+          UPDATE subjects SET claimed=true, claimed_user_id=$1 
+          WHERE instagram_username=$2
+        `, [req.user.id, username]);
+        // subjects yoksa ekle
+        await pool.query(`
+          INSERT INTO subjects (name, instagram_username, instagram_avatar, instagram_verified, instagram_followers, claimed, claimed_user_id, score)
+          VALUES ($1, $2, $3, true, $4, true, $5, 1000)
+          ON CONFLICT (instagram_username) DO UPDATE SET 
+            claimed=true, claimed_user_id=$5, instagram_avatar=$3, instagram_verified=true
+        `, [u.full_name || username, username, avatarUrl, u.edge_followed_by?.count || 0, req.user.id]);
       }
 
       res.json({ verified: true, message: 'Instagram hesabı doğrulandı!' });

@@ -106,6 +106,19 @@ app.get('/api/categories/:slug', async (req, res) => {
   } catch (e) { res.status(500).json({ error: e.message }); }
 });
 
+// Subject endpoint
+app.get('/api/subjects/:name', async (req, res) => {
+  try {
+    const pool = (await import('./db/pool.js')).default;
+    const { rows } = await pool.query(
+      'SELECT * FROM subjects WHERE instagram_username=$1 OR name=$1 LIMIT 1',
+      [decodeURIComponent(req.params.name)]
+    );
+    if (!rows.length) return res.json({ claimed: false });
+    res.json(rows[0]);
+  } catch (e) { res.status(500).json({ error: e.message }); }
+});
+
 // Person scores endpoint
 app.get('/api/person-scores/:username', async (req, res) => {
   try {

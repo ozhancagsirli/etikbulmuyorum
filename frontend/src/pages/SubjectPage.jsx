@@ -27,10 +27,12 @@ export default function SubjectPage() {
   useEffect(() => {
     Promise.all([
       apiFetch('/incidents?subject=' + encodeURIComponent(decodedName) + '&limit=20'),
+      apiFetch('/subjects/' + encodeURIComponent(decodedName)).catch(() => null),
       fetch(import.meta.env.VITE_API_URL + '/person-scores/' + encodeURIComponent(decodedName)).then(r => r.json()).catch(() => null)
-    ]).then(([data, score]) => {
+    ]).then(([data, score, subject]) => {
       setIncidents(data.data || []);
       if (score) setPersonScore(score.score);
+      if (subject?.claimed) setClaimed(true);
       setLoading(false);
     }).catch(() => setLoading(false));
   }, [name]);
@@ -69,6 +71,7 @@ export default function SubjectPage() {
             <div style={{ display: 'flex', alignItems: 'center', gap: 6, flexWrap: 'wrap' }}>
               <span style={{ fontSize: 17, fontWeight: 800, color: '#111827' }}>{fullName}</span>
               {isVerified && <span>✅</span>}
+              {claimed && <span style={{ fontSize: 11, background: '#eff6ff', color: '#2563eb', padding: '2px 8px', borderRadius: 20, border: '1px solid #bfdbfe', fontWeight: 600 }}>🏷️ Sahiplenildi</span>}
             </div>
             {igUsername && (
               <div style={{ fontSize: 12, color: '#9ca3af', marginTop: 2 }}>
