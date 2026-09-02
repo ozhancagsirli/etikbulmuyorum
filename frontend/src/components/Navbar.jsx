@@ -11,6 +11,13 @@ export default function Navbar() {
   const { user, loginWithGoogle, logout } = useAuthStore();
   const navigate = useNavigate();
   const [menuOpen, setMenuOpen] = useState(false);
+  const [isMobile, setIsMobile] = useState(window.innerWidth < 641);
+  
+  useEffect(() => {
+    const handler = () => setIsMobile(window.innerWidth < 641);
+    window.addEventListener('resize', handler);
+    return () => window.removeEventListener('resize', handler);
+  }, []);
   const [mobileOpen, setMobileOpen] = useState(false);
   const [search, setSearch] = useState('');
 
@@ -34,16 +41,7 @@ export default function Navbar() {
   return (
     <>
       <div id="google-btn" style={{ display: 'none' }} />
-      <style>{`
-        @media(max-width: 640px) {
-          .nav-desktop { display: none !important; }
-          .nav-mobile-btn { display: flex !important; }
-        }
-        @media(min-width: 641px) {
-          .nav-mobile-btn { display: none !important; }
-          .nav-desktop { display: flex !important; }
-        }
-      `}</style>
+
 
       <nav style={{ background: 'white', borderBottom: '1px solid #f1f5f9', position: 'sticky', top: 0, zIndex: 100 }}>
         <div style={{ maxWidth: 1000, margin: '0 auto', padding: '0 14px', height: 54, display: 'flex', alignItems: 'center', gap: 10 }}>
@@ -54,7 +52,7 @@ export default function Navbar() {
           </Link>
 
           {/* Desktop: Arama */}
-          <form className="nav-desktop" onSubmit={e => { e.preventDefault(); if (search.trim()) navigate('/?search=' + encodeURIComponent(search.trim())); }}
+          <form style={{ display: isMobile ? "none" : "flex" }} onSubmit={e => { e.preventDefault(); if (search.trim()) navigate('/?search=' + encodeURIComponent(search.trim())); }}
             style={{ flex: 1, maxWidth: 300 }}>
             <div style={{ display: 'flex', background: '#f8fafc', borderRadius: 50, alignItems: 'center', padding: '0 14px', border: '1px solid #e2e8f0', height: 36 }}>
               <span style={{ color: '#94a3b8', fontSize: 13, marginRight: 8 }}>🔍</span>
@@ -65,7 +63,7 @@ export default function Navbar() {
           </form>
 
           {/* Desktop: Sağ butonlar */}
-          <div className="nav-desktop" style={{ marginLeft: 'auto', alignItems: 'center', gap: 8 }}>
+          <div style={{ display: isMobile ? "none" : "flex" }} style={{ marginLeft: 'auto', alignItems: 'center', gap: 8 }}>
             {!user ? (
               <>
                 <Link to="/bildir" style={{ fontSize: 13, color: '#374151', padding: '7px 14px', borderRadius: 50, border: '1px solid #e2e8f0', fontWeight: 500, whiteSpace: 'nowrap' }}>✏️ Görüş Bildir</Link>
@@ -91,7 +89,7 @@ export default function Navbar() {
           </div>
 
           {/* Mobile: Sağ */}
-          <div className="nav-mobile-btn" style={{ marginLeft: 'auto', alignItems: 'center', gap: 8 }}>
+          <div style={{ display: isMobile ? "flex" : "none", marginLeft: "auto", alignItems: "center", gap: 8 }} style={{ marginLeft: 'auto', alignItems: 'center', gap: 8 }}>
             <Link to="/bildir" style={{ width: 36, height: 36, borderRadius: 50, border: '1px solid #e2e8f0', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 16, flexShrink: 0 }}>✏️</Link>
             {user ? (
               <>
