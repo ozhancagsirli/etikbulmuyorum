@@ -92,7 +92,7 @@ export default function SubjectPage() {
         </div>
 
         {/* Profili sahiplen */}
-        {!claimed && (
+        {!claimed && user?.instagram_username !== igUsername && (
           <div style={{ marginTop: 14, paddingTop: 14, borderTop: '1px solid #f1f5f9' }}>
             {!user ? (
               <Link to="/giris" style={{ fontSize: 12, color: '#46A53E', fontWeight: 600 }}>
