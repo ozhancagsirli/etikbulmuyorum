@@ -227,7 +227,7 @@ app.post('/api/incidents/:id/owner-response', async (req, res) => {
     if (!token) return res.status(401).json({ error: 'Giriş yapın.' });
     const decoded = jwt.default.verify(token, process.env.JWT_SECRET);
     
-    const { rows: userRows } = await pool.query('SELECT instagram_username FROM users WHERE id=$1', [decoded.userId]);
+    const { rows: userRows } = await pool.query('SELECT instagram_username FROM users WHERE id=$1', [decoded.sub]);
     const igUsername = userRows[0]?.instagram_username;
     if (!igUsername) return res.status(403).json({ error: 'Instagram doğrulaması gerekli.' });
 
@@ -258,7 +258,7 @@ app.post('/api/portfolio', async (req, res) => {
     const token = req.headers.authorization?.replace('Bearer ', '');
     if (!token) return res.status(401).json({ error: 'Giriş yapın.' });
     const decoded = jwt.default.verify(token, process.env.JWT_SECRET);
-    const { rows: userRows } = await pool.query('SELECT instagram_username FROM users WHERE id=$1', [decoded.userId]);
+    const { rows: userRows } = await pool.query('SELECT instagram_username FROM users WHERE id=$1', [decoded.sub]);
     const igUsername = userRows[0]?.instagram_username;
     if (!igUsername) return res.status(403).json({ error: 'Instagram doğrulaması gerekli.' });
     
