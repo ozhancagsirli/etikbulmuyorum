@@ -105,7 +105,7 @@ router.post('/logout', authenticate, async (req, res, next) => {
 
 router.get('/me', authenticate, async (req, res, next) => {
   try {
-    const { rows } = await pool.query('SELECT id, email, name, avatar_url, role, created_at FROM users WHERE id = $1', [req.user.id]);
+    const { rows } = await pool.query('SELECT id, email, name, avatar_url, role, created_at, instagram_username, instagram_verified, instagram_avatar, instagram_followers FROM users WHERE id = $1', [req.user.id]);
     res.json(rows[0]);
   } catch (err) { next(err); }
 });
