@@ -66,7 +66,6 @@ export default function SentimentBar({ incidentId }) {
           transition: 'all 0.15s',
         }}>
           <span style={{ fontSize: 24 }}>👍</span>
-          <span style={{ fontSize: 13 }}>Doğru</span>
           <span style={{ fontSize: 16, fontWeight: 800 }}>{votes.correct}</span>
         </button>
 
@@ -80,7 +79,6 @@ export default function SentimentBar({ incidentId }) {
           transition: 'all 0.15s',
         }}>
           <span style={{ fontSize: 24 }}>👎</span>
-          <span style={{ fontSize: 13 }}>Yanlış</span>
           <span style={{ fontSize: 16, fontWeight: 800 }}>{votes.wrong}</span>
         </button>
       </div>
