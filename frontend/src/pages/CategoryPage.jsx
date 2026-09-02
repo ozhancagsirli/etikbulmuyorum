@@ -28,6 +28,10 @@ export default function CategoryPage() {
   const { category, profiles } = data;
 
   return (
+    <>
+    <style>{`
+      @media(max-width:600px){ .cat-grid{grid-template-columns:repeat(2,1fr) !important;} }
+    `}</style>
     <div style={{ maxWidth: 680, margin: '0 auto' }}>
       {/* Başlık */}
       <div style={{ background: 'white', borderRadius: 16, border: '1px solid #f1f5f9', padding: '20px 24px', marginBottom: 16 }}>
@@ -52,7 +56,7 @@ export default function CategoryPage() {
           </Link>
         </div>
       ) : (
-        <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+        <div className="cat-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(3,1fr)', gap: 12 }}>
           {profiles.map((profile, i) => {
             const score = profile.person_score || 1000;
             const { emoji, color, bg, border } = getScoreStyle(score);
@@ -102,5 +106,6 @@ export default function CategoryPage() {
         </div>
       )}
     </div>
+    </>
   );
 }

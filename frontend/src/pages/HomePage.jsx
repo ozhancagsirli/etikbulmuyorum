@@ -63,7 +63,7 @@ function CategorySection({ category, profiles, loading }) {
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 12 }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
           <span style={{ fontSize: 20 }}>{category.icon}</span>
-          <span style={{ fontSize: 15, fontWeight: 700, color: '#0f172a' }}>{category.name}</span>
+          <span className="cat-header-text" style={{ fontSize: 15, fontWeight: 700, color: '#0f172a' }}>{category.name}</span>
         </div>
         <Link to={'/kategori/' + category.slug} style={{ fontSize: 12, color: '#46A53E', fontWeight: 600 }}>
           Tümünü gör →
