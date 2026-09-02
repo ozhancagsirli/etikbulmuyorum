@@ -239,6 +239,53 @@ app.post('/api/incidents/:id/owner-response', async (req, res) => {
   } catch(e) { res.status(500).json({ error: e.message }); }
 });
 
+// Portfolio endpoints
+app.get('/api/portfolio/:username', async (req, res) => {
+  try {
+    const pool = (await import('./db/pool.js')).default;
+    const { rows } = await pool.query(
+      'SELECT * FROM portfolio_items WHERE instagram_username=$1 AND is_active=true ORDER BY sort_order ASC, created_at DESC LIMIT 6',
+      [req.params.username]
+    );
+    res.json(rows);
+  } catch(e) { res.status(500).json({ error: e.message }); }
+});
+
+app.post('/api/portfolio', async (req, res) => {
+  try {
+    const pool = (await import('./db/pool.js')).default;
+    const jwt = await import('jsonwebtoken');
+    const token = req.headers.authorization?.replace('Bearer ', '');
+    if (!token) return res.status(401).json({ error: 'Giriş yapın.' });
+    const decoded = jwt.default.verify(token, process.env.JWT_SECRET);
+    const { rows: userRows } = await pool.query('SELECT instagram_username FROM users WHERE id=$1', [decoded.userId]);
+    const igUsername = userRows[0]?.instagram_username;
+    if (!igUsername) return res.status(403).json({ error: 'Instagram doğrulaması gerekli.' });
+    
+    // Max 6 kontrol
+    const { rows: count } = await pool.query('SELECT COUNT(*) FROM portfolio_items WHERE instagram_username=$1', [igUsername]);
+    if (parseInt(count[0].count) >= 6) return res.status(400).json({ error: 'Maksimum 6 portfolyo öğesi ekleyebilirsiniz.' });
+
+    const { image_url, title, description, price } = req.body;
+    const { rows } = await pool.query(
+      'INSERT INTO portfolio_items (user_id, instagram_username, image_url, title, description, price, sort_order) VALUES ($1,$2,$3,$4,$5,$6,(SELECT COALESCE(MAX(sort_order),0)+1 FROM portfolio_items WHERE instagram_username=$2)) RETURNING *',
+      [decoded.userId, igUsername, image_url, title||null, description||null, price||null]
+    );
+    res.json(rows[0]);
+  } catch(e) { res.status(500).json({ error: e.message }); }
+});
+
+app.delete('/api/portfolio/:id', async (req, res) => {
+  try {
+    const pool = (await import('./db/pool.js')).default;
+    const jwt = await import('jsonwebtoken');
+    const token = req.headers.authorization?.replace('Bearer ', '');
+    const decoded = jwt.default.verify(token, process.env.JWT_SECRET);
+    await pool.query('DELETE FROM portfolio_items WHERE id=$1 AND user_id=$2', [req.params.id, decoded.userId]);
+    res.json({ success: true });
+  } catch(e) { res.status(500).json({ error: e.message }); }
+});
+
 // Subject endpoint
 app.get('/api/subjects/:name', async (req, res) => {
   try {

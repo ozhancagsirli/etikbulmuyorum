@@ -19,6 +19,8 @@ export default function DashboardPage() {
   const [incidents, setIncidents] = useState([]);
   const [personScore, setPersonScore] = useState(null);
   const [appeals, setAppeals] = useState([]);
+  const [portfolio, setPortfolio] = useState([]);
+  const [uploading, setUploading] = useState(false);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -35,6 +37,9 @@ export default function DashboardPage() {
       if (score) setPersonScore(score.score);
       setAppeals(Array.isArray(app) ? app : []);
       setLoading(false);
+      // Portfolio çek
+      fetch(import.meta.env.VITE_API_URL + '/portfolio/' + encodeURIComponent(igUsername))
+        .then(r => r.json()).then(d => setPortfolio(Array.isArray(d) ? d : [])).catch(() => {});
     }).catch(() => setLoading(false));
   }, [user]);
 
@@ -44,6 +49,32 @@ export default function DashboardPage() {
       <Link to="/giris" style={{ background: '#013C26', color: 'white', padding: '10px 24px', borderRadius: 20, fontSize: 13, fontWeight: 600 }}>Giriş Yap</Link>
     </div>
   );
+
+  async function uploadPortfolio(e) {
+    const file = e.target.files[0];
+    if (!file) return;
+    if (portfolio.length >= 6) return alert('Maksimum 6 portfolyo öğesi ekleyebilirsiniz.');
+    setUploading(true);
+    try {
+      const form = new FormData();
+      form.append('image', file);
+      const res = await fetch(import.meta.env.VITE_API_URL + '/upload', {
+        method: 'POST', body: form,
+        headers: { Authorization: 'Bearer ' + localStorage.getItem('accessToken') }
+      });
+      const data = await res.json();
+      if (data.url) {
+        const item = await apiFetch('/portfolio', { method: 'POST', body: JSON.stringify({ image_url: data.url }) });
+        setPortfolio(p => [...p, item]);
+      }
+    } catch(e) { alert(e.message); }
+    setUploading(false);
+  }
+
+  async function deletePortfolio(id) {
+    await apiFetch('/portfolio/' + id, { method: 'DELETE' });
+    setPortfolio(p => p.filter(i => i.id !== id));
+  }
 
   if (!user.instagram_username) return (
     <div style={{ maxWidth: 480, margin: '40px auto', background: 'white', borderRadius: 16, border: '1px solid #e5e7eb', padding: 32, textAlign: 'center' }}>
@@ -104,7 +135,37 @@ export default function DashboardPage() {
         ))}
       </div>
 
-      {/* Son bildirimler */}
+      {/* Portfolyo */}
+      <div style={{ background: 'white', borderRadius: 16, border: '1px solid #f1f5f9', padding: '16px', marginBottom: 14 }}>
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 14 }}>
+          <div>
+            <div style={{ fontSize: 14, fontWeight: 700, color: '#0f172a' }}>Portfolyo</div>
+            <div style={{ fontSize: 11, color: '#94a3b8', marginTop: 2 }}>{portfolio.length}/6 fotoğraf</div>
+          </div>
+          {portfolio.length < 6 && (
+            <label style={{ background: '#013C26', color: 'white', fontSize: 12, fontWeight: 700, padding: '7px 14px', borderRadius: 20, cursor: 'pointer' }}>
+              {uploading ? 'Yükleniyor...' : '+ Ekle'}
+              <input type="file" accept="image/*" onChange={uploadPortfolio} style={{ display: 'none' }} />
+            </label>
+          )}
+        </div>
+        {portfolio.length === 0 ? (
+          <div style={{ textAlign: 'center', padding: '24px', color: '#94a3b8', fontSize: 13 }}>
+            Henüz portfolyo fotoğrafı yok. Ürün veya hizmet fotoğraflarınızı ekleyin.
+          </div>
+        ) : (
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 6 }}>
+            {portfolio.map(item => (
+              <div key={item.id} style={{ aspectRatio: '1', position: 'relative', borderRadius: 8, overflow: 'hidden', background: '#f1f5f9' }}>
+                <img src={item.image_url} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                <button onClick={() => deletePortfolio(item.id)} style={{ position: 'absolute', top: 4, right: 4, width: 22, height: 22, borderRadius: '50%', background: 'rgba(0,0,0,0.6)', color: 'white', border: 'none', cursor: 'pointer', fontSize: 12, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>×</button>
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
+
+      {/* Son bildirimler */}}
       {loading ? (
         <div style={{ textAlign: 'center', padding: 40, color: '#94a3b8' }}>Yükleniyor...</div>
       ) : incidents.length > 0 && (

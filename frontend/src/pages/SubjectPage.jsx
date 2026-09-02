@@ -23,6 +23,8 @@ export default function SubjectPage() {
   const [personScore, setPersonScore] = useState(null);
   const [loading, setLoading] = useState(true);
   const [claiming, setClaiming] = useState(false);
+  const [portfolio, setPortfolio] = useState([]);
+  const [selectedItem, setSelectedItem] = useState(null);
   const [claimed, setClaimed] = useState(false);
   const decodedName = decodeURIComponent(name);
 
@@ -38,6 +40,12 @@ export default function SubjectPage() {
       setLoading(false);
     }).catch(() => setLoading(false));
   }, [name]);
+
+  useEffect(() => {
+    if (!decodedName) return;
+    fetch(import.meta.env.VITE_API_URL + '/portfolio/' + encodeURIComponent(decodedName))
+      .then(r => r.json()).then(d => setPortfolio(Array.isArray(d) ? d : [])).catch(() => {});
+  }, [decodedName]);
 
   const firstInc = incidents[0];
   const avatar = firstInc?.instagram_avatar || firstInc?.subject_avatar;
@@ -136,7 +144,44 @@ export default function SubjectPage() {
         )}
       </div>
 
-      {/* Bildirimler */}
+      {/* Portfolyo */}
+      {portfolio.length > 0 && (
+        <div style={{ marginBottom: 12 }}>
+          <div style={{ fontSize: 13, fontWeight: 700, color: '#0f172a', marginBottom: 10, padding: '0 2px' }}>Portfolyo</div>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 2 }}>
+            {portfolio.map((item, i) => (
+              <div key={item.id} onClick={() => setSelectedItem(item)} style={{ aspectRatio: '1', overflow: 'hidden', cursor: 'pointer', background: '#f1f5f9', position: 'relative' }}>
+                <img src={item.image_url} alt={item.title || ''} style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }} />
+                {item.price && (
+                  <div style={{ position: 'absolute', bottom: 6, right: 6, background: 'rgba(0,0,0,0.7)', color: 'white', fontSize: 10, fontWeight: 700, padding: '2px 6px', borderRadius: 10 }}>
+                    ₺{Number(item.price).toLocaleString('tr')}
+                  </div>
+                )}
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* Portfolyo detay modal */}
+      {selectedItem && (
+        <div onClick={() => setSelectedItem(null)} style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.85)', zIndex: 1000, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 20 }}>
+          <div onClick={e => e.stopPropagation()} style={{ background: 'white', borderRadius: 16, overflow: 'hidden', maxWidth: 480, width: '100%' }}>
+            <img src={selectedItem.image_url} alt="" style={{ width: '100%', aspectRatio: '1', objectFit: 'cover', display: 'block' }} />
+            {(selectedItem.title || selectedItem.description || selectedItem.price) && (
+              <div style={{ padding: '16px' }}>
+                {selectedItem.title && <div style={{ fontSize: 15, fontWeight: 700, marginBottom: 6 }}>{selectedItem.title}</div>}
+                {selectedItem.description && <div style={{ fontSize: 13, color: '#6b7280', lineHeight: 1.6, marginBottom: 10 }}>{selectedItem.description}</div>}
+                {selectedItem.price && (
+                  <div style={{ fontSize: 16, fontWeight: 800, color: '#013C26' }}>₺{Number(selectedItem.price).toLocaleString('tr')}</div>
+                )}
+              </div>
+            )}
+          </div>
+        </div>
+      )}
+
+      {/* Bildirimler */}}
       {loading ? (
         <div style={{ textAlign: 'center', padding: 40, color: '#9ca3af' }}>Yükleniyor...</div>
       ) : incidents.length === 0 ? (
