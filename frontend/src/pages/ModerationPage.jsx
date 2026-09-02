@@ -178,6 +178,9 @@ export default function ModerationPage() {
         <Shield size={22} color="#46A53E" />
         <div>
           <h1 style={{ fontSize: 20, fontWeight: 800, margin: 0 }}>Moderasyon Paneli</h1>
+        </div>
+        <AddProfileForm />
+        <div>
           <p style={{ color: '#9ca3af', fontSize: 13, margin: 0 }}>Admin görünümü</p>
         </div>
       </div>
