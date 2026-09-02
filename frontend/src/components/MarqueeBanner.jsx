@@ -29,7 +29,7 @@ export default function MarqueeBanner() {
         .marquee-track {
           display: flex;
           width: max-content;
-          animation: marquee 32s linear infinite;
+          animation: marquee 55s linear infinite;
         }
         .marquee-track:hover {
           animation-play-state: paused;
