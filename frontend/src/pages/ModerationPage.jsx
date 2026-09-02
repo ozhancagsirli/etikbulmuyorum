@@ -174,16 +174,15 @@ export default function ModerationPage() {
 
   return (
     <div style={{ maxWidth: 900, margin: '0 auto' }}>
-      <div style={{ background: 'white', borderRadius: 16, border: '1px solid #e5e7eb', padding: '20px 24px', marginBottom: 16, display: 'flex', alignItems: 'center', gap: 10 }}>
-        <Shield size={22} color="#46A53E" />
-        <div>
-          <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: 20, marginBottom: 20, flexWrap: 'wrap' }}>
-          <h1 style={{ fontSize: 20, fontWeight: 800, margin: 0 }}>Moderasyon Paneli</h1>
-          <AddProfileForm />
+      <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: 20, marginBottom: 16, flexWrap: 'wrap' }}>
+        <div style={{ background: 'white', borderRadius: 16, border: '1px solid #e5e7eb', padding: '16px 20px', display: 'flex', alignItems: 'center', gap: 10, flex: 1 }}>
+          <Shield size={22} color="#46A53E" />
+          <div>
+            <h1 style={{ fontSize: 20, fontWeight: 800, margin: 0 }}>Moderasyon Paneli</h1>
+            <p style={{ color: '#9ca3af', fontSize: 13, margin: 0 }}>Admin görünümü</p>
+          </div>
         </div>
-
-          <p style={{ color: '#9ca3af', fontSize: 13, margin: 0 }}>Admin görünümü</p>
-        </div>
+        <AddProfileForm />
       </div>
 
       {/* Sekmeler */}
