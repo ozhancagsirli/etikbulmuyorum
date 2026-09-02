@@ -34,7 +34,7 @@ export default function App() {
     <BrowserRouter>
       <Toaster position="top-center" toastOptions={{ style: { fontSize: 14 } }} />
       <Routes>
-          <Route path="/"             element={<HomePage />} />
+          <Route path="/"             element={<><div style={{display:"none"}}></div><HomePage /></>} />
           <Route path="/olay/:id"     element={<WithNav><IncidentPage /></WithNav>} />
           <Route path="/bildir"       element={<WithNav><SubmitPage /></WithNav>} />
           <Route path="/profil"       element={<WithNav><ProfilePage /></WithNav>} />
