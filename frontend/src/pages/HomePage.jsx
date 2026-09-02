@@ -139,7 +139,7 @@ export default function HomePage() {
         }
       `}</style>
 
-      <div className="home-grid" style={{ maxWidth: 1000, margin: '0 auto', padding: '20px 16px', display: 'grid', gridTemplateColumns: '1fr 280px', gap: 20, alignItems: 'start' }}>
+      <div style={{ maxWidth: 1000, margin: '0 auto', padding: '20px 16px' }}>
 
         {/* ORTA — Kategori vitrini */}
         <div>
@@ -148,66 +148,7 @@ export default function HomePage() {
           ))}
         </div>
 
-        {/* SAĞ — Sabit */}
-        <div className="home-sidebar" style={{ position: 'sticky', top: 70 }}>
-
-          {/* Bu hafta gündemde */}
-          <div style={{ background: 'white', borderRadius: 12, border: '1px solid #f1f5f9', padding: '14px', marginBottom: 12 }}>
-            <div style={{ fontSize: 13, fontWeight: 700, color: '#0f172a', marginBottom: 12 }}>Bu hafta gündemde</div>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
-              {trending.slice(0, 8).map((inc, i) => {
-                const total = (inc.vote_correct_new||0) + (inc.vote_wrong_new||0);
-                return (
-                  <Link key={inc.id} to={'/olay/' + inc.id} style={{ padding: '7px 8px', borderRadius: 8, display: 'flex', alignItems: 'center', gap: 8, color: 'inherit' }}
-                    onMouseEnter={e => e.currentTarget.style.background = '#f8fafc'}
-                    onMouseLeave={e => e.currentTarget.style.background = 'transparent'}>
-                    <span style={{ fontSize: 11, color: '#d1d5db', fontWeight: 600, width: 18, flexShrink: 0 }}>#{i+1}</span>
-                    <div style={{ flex: 1, minWidth: 0 }}>
-                      <div style={{ fontSize: 12, fontWeight: 500, color: '#1e293b', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{inc.title}</div>
-                      {inc.instagram_username && <div style={{ fontSize: 10, color: '#94a3b8' }}>@{inc.instagram_username}</div>}
-                    </div>
-                    {total > 0 && <span style={{ fontSize: 10, color: '#94a3b8', flexShrink: 0 }}>{total}</span>}
-                  </Link>
-                );
-              })}
-            </div>
-          </div>
-
-          {/* Son aktif profiller */}
-          <div style={{ background: 'white', borderRadius: 12, border: '1px solid #f1f5f9', padding: '14px', marginBottom: 12 }}>
-            <div style={{ fontSize: 13, fontWeight: 700, color: '#0f172a', marginBottom: 4 }}>Hakkında konuşulanlar</div>
-            <div style={{ fontSize: 11, color: '#94a3b8', marginBottom: 12 }}>Son bildirimlerdeki kişiler</div>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
-              {recentProfiles.map((inc, i) => {
-                const avatar = inc.instagram_avatar || inc.subject_avatar;
-                return (
-                  <Link key={i} to={'/konu/' + encodeURIComponent(inc.instagram_username)} style={{ display: 'flex', alignItems: 'center', gap: 9, padding: '6px 8px', borderRadius: 10, color: 'inherit' }}
-                    onMouseEnter={e => e.currentTarget.style.background = '#f8fafc'}
-                    onMouseLeave={e => e.currentTarget.style.background = 'transparent'}>
-                    <div style={{ width: 34, height: 34, borderRadius: '50%', background: '#e2e8f0', flexShrink: 0, overflow: 'hidden', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 14 }}>
-                      {avatar ? <img src={avatar} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover' }} /> : '👤'}
-                    </div>
-                    <div style={{ flex: 1, minWidth: 0 }}>
-                      <div style={{ fontSize: 12, fontWeight: 600, color: '#0f172a', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
-                        {inc.person_name || inc.instagram_username}
-                      </div>
-                      <div style={{ fontSize: 10, color: '#94a3b8' }}>@{inc.instagram_username}</div>
-                    </div>
-                  </Link>
-                );
-              })}
-            </div>
-
-            {/* Sen de listeye gir */}
-            <div style={{ marginTop: 14, background: '#013C26', borderRadius: 10, padding: '12px', textAlign: 'center' }}>
-              <div style={{ fontSize: 12, fontWeight: 700, color: 'white', marginBottom: 4 }}>🤝 Sen de listeye gir</div>
-              <div style={{ fontSize: 11, color: 'rgba(255,255,255,0.5)', marginBottom: 10, lineHeight: 1.5 }}>5+ olumlu değerlendirme al, kategorinde öne çık</div>
-              <Link to="/bildir" style={{ display: 'block', background: '#46A53E', color: 'white', fontSize: 12, fontWeight: 700, padding: '7px', borderRadius: 8 }}>Nasıl çalışır?</Link>
-            </div>
-          </div>
-
-        </div>
-      </div>
+              </div>
     </div>
   );
 }
