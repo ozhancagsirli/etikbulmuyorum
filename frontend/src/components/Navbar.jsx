@@ -46,16 +46,17 @@ export default function Navbar() {
 
           {/* Logo */}
           <Link to="/" style={{ flexShrink: 0, display: 'flex', alignItems: 'center' }}>
-            <img src="/logo.png" alt="etikbulmuyorum" style={{ height: 24 }} />
+            <img src="/logo.png" alt="etikbulmuyorum" style={{ height: mobile ? 18 : 24 }} />
           </Link>
 
           {/* Arama */}
           <form onSubmit={e => { e.preventDefault(); if (search.trim()) navigate('/?search=' + encodeURIComponent(search.trim())); }}
-            style={{ flex: 1, maxWidth: mobile ? 140 : 300 }}>
-            <div style={{ display: 'flex', background: '#f8fafc', borderRadius: 50, alignItems: 'center', padding: '0 12px', border: '1px solid #e2e8f0', height: 36 }}>
-              <span style={{ color: '#94a3b8', fontSize: 13, marginRight: mobile ? 0 : 8 }}>🔍</span>
+            style={{ flex: mobile ? '0 0 36px' : '1', maxWidth: mobile ? 36 : 300 }}>
+            <div onClick={mobile ? () => navigate('/') : undefined}
+              style={{ display: 'flex', background: '#f8fafc', borderRadius: 50, alignItems: 'center', padding: '0 12px', border: '1px solid #e2e8f0', height: 36, cursor: mobile ? 'pointer' : 'text', justifyContent: mobile ? 'center' : 'flex-start' }}>
+              <span style={{ color: '#94a3b8', fontSize: 14 }}>🔍</span>
               {!mobile && <input value={search} onChange={e => setSearch(e.target.value)} placeholder="@kullanıcı adı ara..."
-                style={{ flex: 1, fontSize: 13, background: 'none', border: 'none', outline: 'none', fontFamily: 'inherit', color: '#0f172a' }} />}
+                style={{ flex: 1, fontSize: 13, background: 'none', border: 'none', outline: 'none', fontFamily: 'inherit', color: '#0f172a', marginLeft: 8 }} />}
             </div>
           </form>
 
