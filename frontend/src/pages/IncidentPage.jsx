@@ -7,6 +7,36 @@ import { tr } from 'date-fns/locale';
 import { MapPin, Calendar, Eye, ArrowLeft, Flag, X } from 'lucide-react';
 import toast from 'react-hot-toast';
 import { apiFetch } from '../lib/api';
+
+function OwnerResponse({ incidentId }) {
+  const [text, setText] = useState('');
+  const [saved, setSaved] = useState(false);
+  const [saving, setSaving] = useState(false);
+
+  async function save() {
+    if (!text.trim()) return;
+    setSaving(true);
+    try {
+      await apiFetch('/incidents/' + incidentId + '/owner-response', { method: 'POST', body: JSON.stringify({ response: text }) });
+      setSaved(true);
+    } catch(e) { alert(e.message); }
+    setSaving(false);
+  }
+
+  if (saved) return (
+    <div style={{ background: '#f0fdf4', borderRadius: 12, border: '1px solid #bbf7d0', padding: '14px', marginBottom: 12, fontSize: 13, color: '#16a34a', fontWeight: 600 }}>✅ Yanıtınız kaydedildi.</div>
+  );
+
+  return (
+    <div style={{ background: 'white', borderRadius: 16, border: '1px solid #e5e7eb', padding: '20px', marginBottom: 12 }}>
+      <div style={{ fontSize: 13, fontWeight: 700, color: '#0f172a', marginBottom: 12 }}>💬 Bu görüşe yanıt verin</div>
+      <textarea value={text} onChange={e => setText(e.target.value)} rows={3} placeholder="Görüşünüzü açıklayın..." style={{ width: '100%', padding: '10px 14px', borderRadius: 8, border: '1px solid #e5e7eb', fontSize: 13, resize: 'vertical', fontFamily: 'inherit', outline: 'none', boxSizing: 'border-box' }} />
+      <button onClick={save} disabled={saving || !text.trim()} style={{ marginTop: 8, padding: '8px 20px', borderRadius: 8, background: '#013C26', color: 'white', border: 'none', fontWeight: 700, fontSize: 13, cursor: 'pointer' }}>
+        {saving ? '...' : 'Yanıtı Kaydet'}
+      </button>
+    </div>
+  );
+}
 import SentimentBar from '../components/SentimentBar';
 import { useAuthStore } from '../lib/authStore';
 
@@ -22,25 +52,7 @@ export default function IncidentPage() {
   const [submitting, setSubmitting] = useState(false);
   const [lightbox, setLightbox] = useState(null);
   const [personScore, setPersonScore] = useState(null);
-  const [showAppeal, setShowAppeal] = useState(false);
-  const [appeal, setAppeal] = useState({ reason: '', message: '' });
-  const [appealSent, setAppealSent] = useState(false);
 
-  async function submitAppeal(e) {
-    e.preventDefault();
-    try {
-      await apiFetch('/appeals', { method: 'POST', body: JSON.stringify({ 
-        subject_name: incident.instagram_username || incident.subject,
-        incident_id: id,
-        name: user?.name || 'Kullanıcı',
-        email: user?.email || '',
-        ...appeal 
-      })});
-      setAppealSent(true);
-      setShowAppeal(false);
-      toast.success('İtirazınız alındı.');
-    } catch(e) { toast.error(e.message); }
-  }
 
   useEffect(() => {
     Promise.all([
@@ -191,6 +203,24 @@ export default function IncidentPage() {
       <div style={{ background: 'white', borderRadius: 16, border: '1px solid #e5e7eb', padding: '20px' }}>
         <SentimentBar incidentId={id} />
       </div>
+
+      {/* Kişinin açıklaması */}
+      {incident.instagram_username && user?.instagram_username === incident.instagram_username && (
+        <OwnerResponse incidentId={id} />
+      )}
+      {incident.owner_response && (
+        <div style={{ background: 'white', borderRadius: 16, border: '1px solid #e5e7eb', padding: '20px' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 12 }}>
+            <div style={{ width: 32, height: 32, borderRadius: '50%', background: '#013C26', color: 'white', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 14 }}>👤</div>
+            <div>
+              <div style={{ fontSize: 13, fontWeight: 700, color: '#0f172a' }}>@{incident.instagram_username}</div>
+              <div style={{ fontSize: 11, color: '#94a3b8' }}>Profil sahibinin yanıtı</div>
+            </div>
+            <span style={{ marginLeft: 'auto', fontSize: 11, background: '#f0fdf4', color: '#16a34a', padding: '2px 8px', borderRadius: 20, border: '1px solid #bbf7d0' }}>✅ Doğrulanmış</span>
+          </div>
+          <p style={{ fontSize: 14, color: '#374151', lineHeight: 1.7, margin: 0 }}>{incident.owner_response}</p>
+        </div>
+      )}
 
       {/* Yorumlar */}
       <div style={{ background: 'white', borderRadius: 16, border: '1px solid #e5e7eb', padding: '20px' }}>

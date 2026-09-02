@@ -217,6 +217,28 @@ app.post('/api/subjects/create', async (req, res) => {
   } catch (e) { res.status(500).json({ error: e.message }); }
 });
 
+// Owner response endpoint
+app.post('/api/incidents/:id/owner-response', async (req, res) => {
+  try {
+    const pool = (await import('./db/pool.js')).default;
+    const { response } = req.body;
+    const jwt = await import('jsonwebtoken');
+    const token = req.headers.authorization?.replace('Bearer ', '');
+    if (!token) return res.status(401).json({ error: 'Giriş yapın.' });
+    const decoded = jwt.default.verify(token, process.env.JWT_SECRET);
+    
+    const { rows: userRows } = await pool.query('SELECT instagram_username FROM users WHERE id=$1', [decoded.userId]);
+    const igUsername = userRows[0]?.instagram_username;
+    if (!igUsername) return res.status(403).json({ error: 'Instagram doğrulaması gerekli.' });
+
+    const { rows: incRows } = await pool.query('SELECT instagram_username FROM incidents WHERE id=$1', [req.params.id]);
+    if (incRows[0]?.instagram_username !== igUsername) return res.status(403).json({ error: 'Bu görüşe yanıt verme yetkiniz yok.' });
+
+    await pool.query('UPDATE incidents SET owner_response=$1 WHERE id=$2', [response, req.params.id]);
+    res.json({ success: true });
+  } catch(e) { res.status(500).json({ error: e.message }); }
+});
+
 // Subject endpoint
 app.get('/api/subjects/:name', async (req, res) => {
   try {
