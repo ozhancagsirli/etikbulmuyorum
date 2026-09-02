@@ -14,6 +14,7 @@ export default function Navbar() {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [search, setSearch] = useState('');
   const [mobile, setMobile] = useState(false);
+  const [searchOpen, setSearchOpen] = useState(false);
 
   useEffect(() => {
     const check = () => setMobile(window.innerWidth < 680);
@@ -50,12 +51,13 @@ export default function Navbar() {
           </Link>
 
           {/* Arama */}
-          <form onSubmit={e => { e.preventDefault(); if (search.trim()) navigate('/?search=' + encodeURIComponent(search.trim())); }}
-            style={{ flex: mobile ? '0 0 36px' : '1', maxWidth: mobile ? 36 : 300 }}>
-            <div onClick={mobile ? () => navigate('/') : undefined}
-              style={{ display: 'flex', background: '#f8fafc', borderRadius: 50, alignItems: 'center', padding: '0 12px', border: '1px solid #e2e8f0', height: 36, cursor: mobile ? 'pointer' : 'text', justifyContent: mobile ? 'center' : 'flex-start' }}>
-              <span style={{ color: '#94a3b8', fontSize: 14 }}>🔍</span>
-              {!mobile && <input value={search} onChange={e => setSearch(e.target.value)} placeholder="@kullanıcı adı ara..."
+          <form onSubmit={e => { e.preventDefault(); if (search.trim()) { navigate('/?search=' + encodeURIComponent(search.trim())); setSearchOpen(false); } }}
+            style={{ flex: (mobile && !searchOpen) ? '0 0 36px' : '1', maxWidth: (mobile && !searchOpen) ? 36 : 300, transition: 'all 0.2s' }}>
+            <div style={{ display: 'flex', background: '#f8fafc', borderRadius: 50, alignItems: 'center', padding: '0 12px', border: '1px solid #e2e8f0', height: 36 }}>
+              <span onClick={() => { if (mobile) setSearchOpen(s => !s); }} style={{ color: '#94a3b8', fontSize: 14, cursor: 'pointer', flexShrink: 0 }}>🔍</span>
+              {(!mobile || searchOpen) && <input value={search} onChange={e => setSearch(e.target.value)}
+                placeholder="@kullanıcı adı ara..." autoFocus={searchOpen}
+                onBlur={() => { if (mobile && !search) setSearchOpen(false); }}
                 style={{ flex: 1, fontSize: 13, background: 'none', border: 'none', outline: 'none', fontFamily: 'inherit', color: '#0f172a', marginLeft: 8 }} />}
             </div>
           </form>
