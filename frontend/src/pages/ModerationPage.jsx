@@ -68,8 +68,8 @@ function AddProfileForm() {
   }
 
   return (
-    <div style={{ background: 'white', borderRadius: 12, border: '1px solid #e5e7eb', padding: 20, marginBottom: 20 }}>
-      <div style={{ fontSize: 15, fontWeight: 700, marginBottom: 16 }}>➕ Satıcı Profili Ekle</div>
+    <div style={{ background: 'white', borderRadius: 12, border: '1px solid #e5e7eb', padding: 16, minWidth: 280, maxWidth: 340 }}>
+      <div style={{ fontSize: 13, fontWeight: 700, marginBottom: 12, color: '#0f172a' }}>➕ Satıcı Profili Ekle</div>
       {success && <div style={{ background: '#f0fdf4', border: '1px solid #bbf7d0', borderRadius: 8, padding: '10px 14px', color: '#16a34a', fontSize: 13, marginBottom: 12, fontWeight: 600 }}>{success}</div>}
       <div style={{ display: 'flex', gap: 8, marginBottom: 12 }}>
         <input value={igUsername} onChange={e => setIgUsername(e.target.value)} placeholder="@instagram_kullanici_adi"
@@ -177,10 +177,11 @@ export default function ModerationPage() {
       <div style={{ background: 'white', borderRadius: 16, border: '1px solid #e5e7eb', padding: '20px 24px', marginBottom: 16, display: 'flex', alignItems: 'center', gap: 10 }}>
         <Shield size={22} color="#46A53E" />
         <div>
+          <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: 20, marginBottom: 20, flexWrap: 'wrap' }}>
           <h1 style={{ fontSize: 20, fontWeight: 800, margin: 0 }}>Moderasyon Paneli</h1>
+          <AddProfileForm />
         </div>
-        <AddProfileForm />
-        <div>
+
           <p style={{ color: '#9ca3af', fontSize: 13, margin: 0 }}>Admin görünümü</p>
         </div>
       </div>
