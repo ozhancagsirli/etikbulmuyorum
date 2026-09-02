@@ -278,7 +278,7 @@ export default function HomePage() {
                 onMouseEnter={e => e.currentTarget.style.background = '#f8fafc'}
                 onMouseLeave={e => e.currentTarget.style.background = 'transparent'}>
                 <div style={{ fontSize: 10, color: '#94a3b8', marginBottom: 2 }}>
-                  {i < 3 ? '🔥' : `#${i+1}`} {inc.category_name}
+                  {i < 3 ? '🔥' : `#${i+1}`} {inc.instagram_username ? '@' + inc.instagram_username : ''}
                 </div>
                 <div style={{ fontSize: 12, fontWeight: 500, color: '#1e293b', lineHeight: 1.35 }}>{inc.title}</div>
               </Link>
