@@ -167,7 +167,7 @@ export default function SubjectPage() {
               </div>
             ) : (
               incidents.map((inc, i) => {
-                const vTotal = (inc.vote_ethical||0) + (inc.vote_unethical||0);
+                const vTotal = (inc.vote_correct_new||0) + (inc.vote_wrong_new||0);
                 const { emoji, label, color } = getStyle(inc.verdict, vTotal);
                 return (
                   <div key={inc.id} style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '12px 16px', borderBottom: i < incidents.length-1 ? '1px solid #f8fafc' : 'none' }}>
@@ -184,20 +184,20 @@ export default function SubjectPage() {
                         e.stopPropagation();
                         try {
                           await apiFetch('/sentiment/' + inc.id, { method: 'POST', body: JSON.stringify({ vote: 'correct' }) });
-                          setIncidents(prev => prev.map(p => p.id === inc.id ? { ...p, vote_ethical: (p.vote_ethical||0)+1 } : p));
+                          setIncidents(prev => prev.map(p => p.id === inc.id ? { ...p, vote_correct_new: (p.vote_correct_new||0)+1 } : p));
                         } catch(err) {}
                       }} style={{ background: 'none', border: 'none', cursor: 'pointer', fontSize: 13, padding: '2px 4px', display: 'flex', alignItems: 'center', gap: 2, color: '#6b7280' }}>
-                        👍 <span style={{ fontSize: 11 }}>{inc.vote_ethical || 0}</span>
+                        👍 <span style={{ fontSize: 11 }}>{inc.vote_correct_new || 0}</span>
                       </button>
                       <span style={{ color: '#e5e7eb', fontSize: 12 }}>·</span>
                       <button onClick={async (e) => {
                         e.stopPropagation();
                         try {
                           await apiFetch('/sentiment/' + inc.id, { method: 'POST', body: JSON.stringify({ vote: 'wrong' }) });
-                          setIncidents(prev => prev.map(p => p.id === inc.id ? { ...p, vote_unethical: (p.vote_unethical||0)+1 } : p));
+                          setIncidents(prev => prev.map(p => p.id === inc.id ? { ...p, vote_wrong_new: (p.vote_wrong_new||0)+1 } : p));
                         } catch(err) {}
                       }} style={{ background: 'none', border: 'none', cursor: 'pointer', fontSize: 13, padding: '2px 4px', display: 'flex', alignItems: 'center', gap: 2, color: '#6b7280' }}>
-                        👎 <span style={{ fontSize: 11 }}>{inc.vote_unethical || 0}</span>
+                        👎 <span style={{ fontSize: 11 }}>{inc.vote_wrong_new || 0}</span>
                       </button>
                     </div>
                   </div>
