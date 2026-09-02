@@ -49,17 +49,15 @@ export default function Navbar() {
             <img src="/logo.png" alt="etikbulmuyorum" style={{ height: 24 }} />
           </Link>
 
-          {/* Arama — sadece desktop */}
-          {!mobile && (
-            <form onSubmit={e => { e.preventDefault(); if (search.trim()) navigate('/?search=' + encodeURIComponent(search.trim())); }}
-              style={{ flex: 1, maxWidth: 300 }}>
-              <div style={{ display: 'flex', background: '#f8fafc', borderRadius: 50, alignItems: 'center', padding: '0 14px', border: '1px solid #e2e8f0', height: 36 }}>
-                <span style={{ color: '#94a3b8', fontSize: 13, marginRight: 8 }}>🔍</span>
-                <input value={search} onChange={e => setSearch(e.target.value)} placeholder="@kullanıcı adı ara..."
-                  style={{ flex: 1, fontSize: 13, background: 'none', border: 'none', outline: 'none', fontFamily: 'inherit', color: '#0f172a' }} />
-              </div>
-            </form>
-          )}
+          {/* Arama */}
+          <form onSubmit={e => { e.preventDefault(); if (search.trim()) navigate('/?search=' + encodeURIComponent(search.trim())); }}
+            style={{ flex: 1, maxWidth: mobile ? 140 : 300 }}>
+            <div style={{ display: 'flex', background: '#f8fafc', borderRadius: 50, alignItems: 'center', padding: '0 12px', border: '1px solid #e2e8f0', height: 36 }}>
+              <span style={{ color: '#94a3b8', fontSize: 13, marginRight: mobile ? 0 : 8 }}>🔍</span>
+              {!mobile && <input value={search} onChange={e => setSearch(e.target.value)} placeholder="@kullanıcı adı ara..."
+                style={{ flex: 1, fontSize: 13, background: 'none', border: 'none', outline: 'none', fontFamily: 'inherit', color: '#0f172a' }} />}
+            </div>
+          </form>
 
           {/* Sağ — desktop */}
           {!mobile && (
