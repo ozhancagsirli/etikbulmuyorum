@@ -52,7 +52,7 @@ export default function Navbar() {
           </Link>
 
           {/* Desktop: Arama */}
-          <form style={{ display: isMobile ? "none" : "flex" }} onSubmit={e => { e.preventDefault(); if (search.trim()) navigate('/?search=' + encodeURIComponent(search.trim())); }}
+          <form style={{ display: isMobile ? "none" : "flex", alignItems: "center", gap: 8, marginLeft: "auto", flexShrink: 0 }} onSubmit={e => { e.preventDefault(); if (search.trim()) navigate('/?search=' + encodeURIComponent(search.trim())); }}
             style={{ flex: 1, maxWidth: 300 }}>
             <div style={{ display: 'flex', background: '#f8fafc', borderRadius: 50, alignItems: 'center', padding: '0 14px', border: '1px solid #e2e8f0', height: 36 }}>
               <span style={{ color: '#94a3b8', fontSize: 13, marginRight: 8 }}>🔍</span>
@@ -63,7 +63,7 @@ export default function Navbar() {
           </form>
 
           {/* Desktop: Sağ butonlar */}
-          <div style={{ display: isMobile ? "none" : "flex" }} style={{ marginLeft: 'auto', display: 'flex', alignItems: 'center', gap: 8, flexShrink: 0 }}>
+          <div style={{ display: isMobile ? "none" : "flex", alignItems: "center", gap: 8, marginLeft: "auto", flexShrink: 0 }} style={{ display: 'flex', alignItems: 'center', gap: 8, flexShrink: 0 }}>
             {!user ? (
               <>
                 <Link to="/bildir" style={{ fontSize: 13, color: '#374151', padding: '7px 14px', borderRadius: 50, border: '1px solid #e2e8f0', fontWeight: 500, whiteSpace: 'nowrap' }}>✏️ Görüş Bildir</Link>
@@ -89,7 +89,7 @@ export default function Navbar() {
           </div>
 
           {/* Mobile: Sağ */}
-          <div style={{ display: isMobile ? "flex" : "none", marginLeft: "auto", alignItems: "center", gap: 6, flexShrink: 0 }} style={{ marginLeft: 'auto', display: 'flex', alignItems: 'center', gap: 8, flexShrink: 0 }}>
+          <div style={{ display: isMobile ? "flex" : "none", marginLeft: "auto", alignItems: "center", gap: 6, flexShrink: 0 }} style={{ display: 'flex', alignItems: 'center', gap: 8, flexShrink: 0 }}>
             <Link to="/bildir" style={{ width: 36, height: 36, borderRadius: 50, border: '1px solid #e2e8f0', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 16, flexShrink: 0 }}>✏️</Link>
             {user ? (
               <>
