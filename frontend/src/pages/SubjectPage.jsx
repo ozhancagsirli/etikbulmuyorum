@@ -179,27 +179,6 @@ export default function SubjectPage() {
                         <span> · {formatDistanceToNow(new Date(inc.created_at), { locale: tr, addSuffix: true })}</span>
                       </div>
                     </Link>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: 4, flexShrink: 0, background: '#f8fafc', borderRadius: 20, border: '1px solid #e5e7eb', padding: '3px 6px' }}>
-                      <button onClick={async (e) => {
-                        e.stopPropagation();
-                        try {
-                          await apiFetch('/sentiment/' + inc.id, { method: 'POST', body: JSON.stringify({ vote: 'correct' }) });
-                          setIncidents(prev => prev.map(p => p.id === inc.id ? { ...p, vote_correct_new: (p.vote_correct_new||0)+1 } : p));
-                        } catch(err) {}
-                      }} style={{ background: 'none', border: 'none', cursor: 'pointer', fontSize: 13, padding: '2px 4px', display: 'flex', alignItems: 'center', gap: 2, color: '#6b7280' }}>
-                        👍 <span style={{ fontSize: 11 }}>{inc.vote_correct_new || 0}</span>
-                      </button>
-                      <span style={{ color: '#e5e7eb', fontSize: 12 }}>·</span>
-                      <button onClick={async (e) => {
-                        e.stopPropagation();
-                        try {
-                          await apiFetch('/sentiment/' + inc.id, { method: 'POST', body: JSON.stringify({ vote: 'wrong' }) });
-                          setIncidents(prev => prev.map(p => p.id === inc.id ? { ...p, vote_wrong_new: (p.vote_wrong_new||0)+1 } : p));
-                        } catch(err) {}
-                      }} style={{ background: 'none', border: 'none', cursor: 'pointer', fontSize: 13, padding: '2px 4px', display: 'flex', alignItems: 'center', gap: 2, color: '#6b7280' }}>
-                        👎 <span style={{ fontSize: 11 }}>{inc.vote_wrong_new || 0}</span>
-                      </button>
-                    </div>
                   </div>
                 );
               })
