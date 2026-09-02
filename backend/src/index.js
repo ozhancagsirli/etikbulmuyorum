@@ -288,8 +288,15 @@ app.delete('/api/portfolio/:id', async (req, res) => {
 
 // Toplu Instagram bilgisi çek
 app.post('/api/admin/fetch-instagram-bulk', async (req, res) => {
-  const secret = req.headers['x-admin-secret'];
-  if (secret !== process.env.JWT_SECRET) return res.status(401).json({ error: 'Yetkisiz' });
+  try {
+    const jwt = await import('jsonwebtoken');
+    const token = req.headers.authorization?.replace('Bearer ', '');
+    if (!token) return res.status(401).json({ error: 'Yetkisiz' });
+    const decoded = jwt.default.verify(token, process.env.JWT_SECRET);
+    const pool2 = (await import('./db/pool.js')).default;
+    const { rows: userRows } = await pool2.query('SELECT role FROM users WHERE id=$1', [decoded.sub]);
+    if (!userRows[0] || !['admin','moderator'].includes(userRows[0].role)) return res.status(401).json({ error: 'Yetkisiz' });
+  } catch(e) { return res.status(401).json({ error: 'Yetkisiz' }); }
   
   try {
     const pool = (await import('./db/pool.js')).default;

@@ -182,7 +182,7 @@ export default function ModerationPage() {
       const token = localStorage.getItem('accessToken');
       const r = await fetch(import.meta.env.VITE_API_URL + '/admin/fetch-instagram-bulk', {
         method: 'POST',
-        headers: { 'x-admin-secret': token }
+        headers: { 'Authorization': 'Bearer ' + token }
       });
       const d = await r.json();
       setFetchResult(d.message || 'Başlatıldı');
