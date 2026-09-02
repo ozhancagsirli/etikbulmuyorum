@@ -23,7 +23,7 @@ export default function DashboardPage() {
 
   useEffect(() => {
     if (!user) return;
-    const igUsername = user.instagram_username;
+    const igUsername = user.instagram_username || user.name?.toLowerCase().replace(/\s/g,'');
     if (!igUsername) return setLoading(false);
 
     Promise.all([
@@ -45,10 +45,10 @@ export default function DashboardPage() {
     </div>
   );
 
-  if (!user.instagram_username || !user.instagram_verified) return (
+  if (!user.instagram_username) return (
     <div style={{ maxWidth: 480, margin: '40px auto', background: 'white', borderRadius: 16, border: '1px solid #e5e7eb', padding: 32, textAlign: 'center' }}>
       <div style={{ fontSize: 40, marginBottom: 16 }}>📸</div>
-      <h2 style={{ marginBottom: 8, fontSize: 18 }}>Instagram hesabınızı doğrulayın</h2>
+      <h2 style={{ marginBottom: 8, fontSize: 18 }}>Instagram hesabınızı bağlayın</h2>
       <p style={{ color: '#6b7280', fontSize: 14, marginBottom: 20 }}>Dashboard'u kullanmak için Instagram hesabınızı profilinizden doğrulayın.</p>
       <Link to="/profil" style={{ background: '#46A53E', color: 'white', padding: '10px 24px', borderRadius: 20, fontSize: 13, fontWeight: 700 }}>Profili Doğrula</Link>
     </div>

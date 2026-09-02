@@ -4,6 +4,7 @@ import { formatDistanceToNow } from 'date-fns';
 import { tr } from 'date-fns/locale';
 import { apiFetch } from '../lib/api';
 import { useAuthStore } from '../lib/authStore';
+import toast from 'react-hot-toast';
 
 function getScoreStyle(s) {
   if (s === null) return { emoji: '❔', color: '#9ca3af' };
@@ -17,6 +18,7 @@ function getScoreStyle(s) {
 export default function SubjectPage() {
   const { name } = useParams();
   const user = useAuthStore(s => s.user);
+  const fetchMe = useAuthStore(s => s.fetchMe);
   const [incidents, setIncidents] = useState([]);
   const [personScore, setPersonScore] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -109,7 +111,7 @@ export default function SubjectPage() {
                   <button onClick={async () => {
                     try {
                       const r = await apiFetch('/instagram/verify', { method: 'POST', body: JSON.stringify({ username: igUsername || decodedName }) });
-                      if (r.verified) { setClaimed(true); setClaiming(false); }
+                      if (r.verified) { setClaimed(true); setClaiming(false); fetchMe(); toast && toast.success && toast.success('Profil doğrulandı!'); }
                       else alert(r.message);
                     } catch(e) { alert(e.message); }
                   }} style={{ flex: 2, padding: '8px', borderRadius: 8, background: '#46A53E', color: 'white', border: 'none', fontWeight: 700, fontSize: 13, cursor: 'pointer' }}>
