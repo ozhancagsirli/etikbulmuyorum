@@ -294,7 +294,7 @@ app.post('/api/admin/fetch-instagram-bulk', async (req, res) => {
   try {
     const pool = (await import('./db/pool.js')).default;
     const { rows } = await pool.query(
-      'SELECT id, instagram_username FROM subjects WHERE instagram_username IS NOT NULL AND (instagram_avatar IS NULL OR instagram_avatar = '') ORDER BY id'
+      `SELECT id, instagram_username FROM subjects WHERE instagram_username IS NOT NULL AND (instagram_avatar IS NULL OR instagram_avatar = '') ORDER BY id`
     );
     
     console.log(`Toplu çekim başladı: ${rows.length} profil`);
