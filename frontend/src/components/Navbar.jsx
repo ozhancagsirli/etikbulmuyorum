@@ -72,6 +72,10 @@ export default function Navbar() {
                   {menuOpen && (
                     <div style={{ position: 'fixed', right: 16, top: 64, background: 'white', borderRadius: 12, border: '1px solid #e5e7eb', boxShadow: '0 8px 24px rgba(0,0,0,0.12)', width: 220, overflow: 'hidden', zIndex: 1000 }}
                       onClick={() => setMenuOpen(false)}>
+                      <Link to="/dashboard" style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '12px 16px', color: '#374151', fontSize: 13, borderBottom: '1px solid #f3f4f6' }}>
+                        <span>📊</span>
+                        <div><div style={{ fontWeight: 600 }}>Dashboard</div><div style={{ fontSize: 11, color: '#9ca3af' }}>Satıcı paneli</div></div>
+                      </Link>
                       <Link to="/profil" style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '12px 16px', color: '#374151', fontSize: 13, borderBottom: '1px solid #f3f4f6' }}>
                         {user.avatarUrl ? <img src={user.avatarUrl} alt="" style={{ width: 28, height: 28, borderRadius: '50%' }} /> : <User size={18} color="#9ca3af" />}
                         <div><div style={{ fontWeight: 600 }}>{user.name?.split(' ')[0]}</div><div style={{ fontSize: 11, color: '#9ca3af' }}>Profil</div></div>
