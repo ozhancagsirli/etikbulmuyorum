@@ -183,6 +183,23 @@ app.post('/api/subjects/create', async (req, res) => {
     const pool = (await import('./db/pool.js')).default;
     const { instagram_username, instagram_avatar, instagram_verified, instagram_followers, name, category_id, claimed } = req.body;
     if (!instagram_username) return res.status(400).json({ error: 'instagram_username gerekli.' });
+    
+    // Kullanıcı zaten profil oluşturmuş mu?
+    const authHeader = req.headers.authorization;
+    if (authHeader) {
+      try {
+        const jwt = await import('jsonwebtoken');
+        const token = authHeader.replace('Bearer ', '');
+        const decoded = jwt.default.verify(token, process.env.JWT_SECRET);
+        const { rows: existing } = await pool.query(
+          'SELECT id FROM subjects WHERE claimed_user_id = $1',
+          [decoded.userId]
+        );
+        if (existing.length > 0) {
+          return res.status(400).json({ error: 'Zaten bir profiliniz var. Tek profil oluşturabilirsiniz.' });
+        }
+      } catch(e) {}
+    }
 
     const { rows } = await pool.query(`
       INSERT INTO subjects (name, instagram_username, instagram_avatar, instagram_verified, instagram_followers, category_id, claimed, score, count)

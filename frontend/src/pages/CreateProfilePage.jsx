@@ -39,6 +39,21 @@ export default function CreateProfilePage() {
   const [verified, setVerified] = useState(false);
   const [submitting, setSubmitting] = useState(false);
 
+  // Zaten profil sahibiyse yönlendir
+  if (user?.instagram_username && user?.instagram_verified) {
+    return (
+      <div style={{ maxWidth: 480, margin: '40px auto', background: 'white', borderRadius: 16, border: '1px solid #e5e7eb', padding: 32, textAlign: 'center' }}>
+        <div style={{ fontSize: 40, marginBottom: 16 }}>✅</div>
+        <h2 style={{ marginBottom: 8, fontSize: 18 }}>Zaten bir profiliniz var</h2>
+        <p style={{ color: '#6b7280', fontSize: 14, marginBottom: 20 }}>@{user.instagram_username} profili size ait.</p>
+        <div style={{ display: 'flex', gap: 8, justifyContent: 'center' }}>
+          <Link to={'/konu/' + user.instagram_username} style={{ background: '#013C26', color: 'white', padding: '10px 20px', borderRadius: 20, fontSize: 13, fontWeight: 700 }}>Profilimi Gör</Link>
+          <Link to="/dashboard" style={{ background: 'white', color: '#374151', padding: '10px 20px', borderRadius: 20, fontSize: 13, fontWeight: 600, border: '1px solid #e5e7eb' }}>Sayfam</Link>
+        </div>
+      </div>
+    );
+  }
+
   if (!user) return (
     <div style={{ maxWidth: 480, margin: '40px auto', background: 'white', borderRadius: 16, border: '1px solid #e5e7eb', padding: 32, textAlign: 'center' }}>
       <div style={{ fontSize: 40, marginBottom: 16 }}>🔒</div>
