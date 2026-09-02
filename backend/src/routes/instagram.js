@@ -83,9 +83,11 @@ router.post('/verify', async (req, res, next) => {
 
     const u = data.data;
     const bio = u.biography || '';
-    const expectedCode = 'EB:' + username.toLowerCase();
-    console.log('BIO:', JSON.stringify(bio), 'CODE:', expectedCode, 'MATCH:', bio.toLowerCase().includes(expectedCode));
-    const verified = bio.toLowerCase().includes(expectedCode);
+    // Gizli karakterleri temizle
+    const cleanBio = bio.replace(/[\u200B-\u200D\uFEFF\u00A0]/g, '').toLowerCase().trim();
+    const expectedCode = 'eb:' + username.toLowerCase().trim();
+    console.log('CLEANBIO:', JSON.stringify(cleanBio), 'CODE:', expectedCode, 'MATCH:', cleanBio.includes(expectedCode));
+    const verified = cleanBio.includes(expectedCode);
 
     if (verified) {
       // Cloudinary'e yükle
