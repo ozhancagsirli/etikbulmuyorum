@@ -30,15 +30,15 @@ export default function SubjectPage() {
   const followers = firstInc?.instagram_followers;
   const igUsername = firstInc?.instagram_username;
   const ts = personScore;
-  const getLabel = (s) => {
-    if (s === null) return { label: 'Henüz değerlendirme yok', icon: '❔', color: '#9ca3af' };
-    if (s >= 850) return { label: 'Söz tutar', icon: '🤝', color: '#16a34a' };
-    if (s >= 650) return { label: 'Genelde güvenilir', icon: '👌', color: '#46A53E' };
-    if (s >= 450) return { label: 'Bilmiyorum', icon: '🤷', color: '#d97706' };
-    if (s >= 250) return { label: 'Dikkat et', icon: '⚠️', color: '#f97316' };
-    return { label: 'Kaçın', icon: '🚫', color: '#dc2626' };
+  const getScoreStyle = (s) => {
+    if (s === null) return { emoji: '❔', color: '#9ca3af' };
+    if (s >= 850) return { emoji: '😊', color: '#16a34a' };
+    if (s >= 650) return { emoji: '🙂', color: '#46A53E' };
+    if (s >= 450) return { emoji: '😐', color: '#d97706' };
+    if (s >= 250) return { emoji: '😟', color: '#f97316' };
+    return { emoji: '😠', color: '#dc2626' };
   };
-  const { label: tsLabel, icon: tsEmoji, color: tsColor } = getLabel(ts);
+  const { emoji: tsEmoji, color: tsColor } = getScoreStyle(ts);
 
   return (
     <div style={{ maxWidth: 600, margin: '0 auto' }}>
@@ -68,7 +68,7 @@ export default function SubjectPage() {
             <span style={{ fontSize: 12, color: '#6b7280' }}>{incidents.length} bildirim</span>
             {ts !== null && (
               <span style={{ fontSize: 12, fontWeight: 700, color: tsColor }}>
-                {tsEmoji} {tsLabel}
+                {ts} {tsEmoji}
               </span>
             )}
           </div>
