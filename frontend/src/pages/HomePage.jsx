@@ -130,7 +130,7 @@ export default function HomePage() {
   const [activeProfiles, setActiveProfiles] = useState([]);
   const [personScores, setPersonScores] = useState({});
   const [loading, setLoading] = useState(true);
-  const [tab, setTab] = useState('top');
+  const [tab, setTab] = useState('new');
 
 
   // Sabit: en çok değerlendirilen 3 post + trending + profiller
@@ -174,9 +174,8 @@ export default function HomePage() {
   }, [tab]);
 
   const tabs = [
-    { key: 'top', label: 'En Çok Değerlendirilen' },
     { key: 'new', label: 'Yeni' },
-    { key: 'discover', label: 'Keşfet' },
+    { key: 'top', label: 'Trend' },
   ];
 
   return (
