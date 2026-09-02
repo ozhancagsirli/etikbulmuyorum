@@ -288,12 +288,12 @@ export default function HomePage() {
 
         {/* Değerli Profiller */}
         <div style={{ background: 'white', borderRadius: 16, padding: '14px', border: '1px solid #f1f5f9', boxShadow: '0 1px 3px rgba(0,0,0,0.04)' }}>
-          <div style={{ fontSize: 13, fontWeight: 700, color: '#0f172a', marginBottom: 4 }}>Değerli Profiller</div>
-          <div style={{ fontSize: 11, color: '#94a3b8', marginBottom: 12 }}>En çok değerlendirilen kişiler</div>
+          <div style={{ fontSize: 13, fontWeight: 700, color: '#0f172a', marginBottom: 4 }}>En Çok Değerlendirilen</div>
+          <div style={{ fontSize: 11, color: '#94a3b8', marginBottom: 12 }}>Hakkında en fazla bildirim yapılan kişiler</div>
           <div style={{ display: 'flex', flexDirection: 'column', gap: 4, marginBottom: 14 }}>
             {activeProfiles.map((inc, i) => {
               const score = personScores[inc.instagram_username] ?? null;
-              const { emoji } = getScoreStyle(score);
+              const { emoji, color } = getScoreStyle(score);
               const avatar = inc.instagram_avatar || inc.subject_avatar;
               return (
                 <Link key={i} to={'/konu/' + encodeURIComponent(inc.instagram_username)} style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '7px 8px', borderRadius: 10, color: 'inherit' }}
@@ -308,7 +308,12 @@ export default function HomePage() {
                     </div>
                     <div style={{ fontSize: 10, color: '#94a3b8' }}>@{inc.instagram_username}</div>
                   </div>
-                  {score !== null && <span style={{ fontSize: 14, flexShrink: 0 }}>{emoji}</span>}
+                  {score !== null && (
+                    <div style={{ display: 'flex', alignItems: 'center', gap: 4, flexShrink: 0 }}>
+                      <span style={{ fontSize: 11, fontWeight: 700, color: color }}>{score}</span>
+                      <span style={{ fontSize: 14 }}>{emoji}</span>
+                    </div>
+                  )}
                 </Link>
               );
             })}
