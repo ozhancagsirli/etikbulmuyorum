@@ -85,7 +85,7 @@ function CategorySection({ category, profiles, loading }) {
           ))
         ) : (
           <>
-            {profiles.map((p, i) => <ProfileCard key={p.instagram_username || i} profile={p} rank={i + 1} />)}
+            {profiles.map((p, i) => <ProfileCard key={p.instagram_username || i} profile={p} />)}
             {profiles.length < 5 && Array.from({ length: 5 - profiles.length }).map((_, i) => (
               <Link key={'empty-' + i} to={'/bildir'} style={{ display: 'block', color: 'inherit' }}>
                 <div style={{ background: '#fafafa', borderRadius: 12, border: '1px dashed #e2e8f0', padding: '14px 10px', textAlign: 'center', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 6, minHeight: 120 }}>
