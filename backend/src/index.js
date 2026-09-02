@@ -177,6 +177,29 @@ app.get('/api/admin/check-instagram', async (req, res) => {
   res.json({ message: 'Kontrol başlatıldı' });
 });
 
+// Profil oluştur
+app.post('/api/subjects/create', async (req, res) => {
+  try {
+    const pool = (await import('./db/pool.js')).default;
+    const { instagram_username, instagram_avatar, instagram_verified, instagram_followers, name, category_id, claimed } = req.body;
+    if (!instagram_username) return res.status(400).json({ error: 'instagram_username gerekli.' });
+
+    const { rows } = await pool.query(`
+      INSERT INTO subjects (name, instagram_username, instagram_avatar, instagram_verified, instagram_followers, category_id, claimed, score, count)
+      VALUES ($1, $2, $3, $4, $5, $6, $7, 1000, 0)
+      ON CONFLICT (instagram_username) DO UPDATE SET
+        category_id = COALESCE($6, subjects.category_id),
+        instagram_avatar = COALESCE($3, subjects.instagram_avatar),
+        instagram_verified = COALESCE($4, subjects.instagram_verified),
+        instagram_followers = COALESCE($5, subjects.instagram_followers),
+        claimed = CASE WHEN $7 THEN true ELSE subjects.claimed END
+      RETURNING *
+    `, [name || instagram_username, instagram_username, instagram_avatar, instagram_verified, instagram_followers, category_id, claimed || false]);
+
+    res.json(rows[0]);
+  } catch (e) { res.status(500).json({ error: e.message }); }
+});
+
 // Subject endpoint
 app.get('/api/subjects/:name', async (req, res) => {
   try {

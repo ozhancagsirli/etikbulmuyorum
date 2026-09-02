@@ -82,6 +82,9 @@ export default function Navbar() {
                         {user.avatarUrl ? <img src={user.avatarUrl} alt="" style={{ width: 28, height: 28, borderRadius: '50%' }} /> : <User size={18} color="#9ca3af" />}
                         <div><div style={{ fontWeight: 600 }}>{user.name?.split(' ')[0]}</div><div style={{ fontSize: 11, color: '#9ca3af' }}>Profil</div></div>
                       </Link>
+                      <Link to="/profil-olustur" style={{ display: 'flex', alignItems: 'center', gap: 8, padding: '10px 16px', color: '#374151', fontSize: 13, borderBottom: '1px solid #f3f4f6' }}>
+                        <span style={{ fontSize: 14 }}>🌟</span> Profil Oluştur
+                      </Link>
                       <Link to="/bildir" style={{ display: 'flex', alignItems: 'center', gap: 8, padding: '10px 16px', color: '#374151', fontSize: 13, borderBottom: '1px solid #f3f4f6' }}>
                         <Plus size={14} color="#9ca3af" /> Olay Bildir
                       </Link>
