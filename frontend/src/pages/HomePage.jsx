@@ -2,317 +2,266 @@ import { useState, useEffect } from 'react';
 import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import { formatDistanceToNow } from 'date-fns';
 import { tr } from 'date-fns/locale';
-import { Search } from 'lucide-react';
 import { apiFetch } from '../lib/api';
-import Navbar from '../components/Navbar';
+
+function getScoreStyle(score) {
+  if (score === null || score === undefined) return { color: '#9ca3af', emoji: '❔', bg: 'rgba(0,0,0,0.5)' };
+  if (score >= 850) return { color: '#16a34a', emoji: '😊', bg: 'rgba(22,163,74,0.85)' };
+  if (score >= 650) return { color: '#46A53E', emoji: '🙂', bg: 'rgba(70,165,62,0.85)' };
+  if (score >= 450) return { color: '#d97706', emoji: '😐', bg: 'rgba(217,119,6,0.85)' };
+  if (score >= 250) return { color: '#f97316', emoji: '😟', bg: 'rgba(249,115,22,0.85)' };
+  return { color: '#dc2626', emoji: '😠', bg: 'rgba(220,38,38,0.85)' };
+}
+
+function PostCard({ incident, personScores }) {
+  const images = incident.images || [];
+  const imgUrl = images.length > 0 ? (typeof images[0] === 'string' ? images[0] : images[0]?.url) : null;
+  const correctPct = incident.vote_correct_new || 0;
+  const wrongPct = incident.vote_wrong_new || 0;
+  const total = correctPct + wrongPct;
+  const cPct = total ? Math.round(correctPct / total * 100) : 0;
+  const wPct = total ? 100 - cPct : 0;
+  const score = personScores?.[incident.instagram_username] ?? null;
+  const { color, emoji, bg } = getScoreStyle(score);
+
+  // Gradient colors based on score
+  const gradients = [
+    'linear-gradient(135deg, #1a1a2e, #16213e, #0f3460)',
+    'linear-gradient(135deg, #064e3b, #065f46, #047857)',
+    'linear-gradient(135deg, #3b0764, #4c1d95, #5b21b6)',
+    'linear-gradient(135deg, #1c1917, #292524, #44403c)',
+    'linear-gradient(135deg, #0c1a0c, #14532d, #166534)',
+  ];
+  const grad = gradients[Math.abs(incident.id?.charCodeAt(0) || 0) % gradients.length];
+
+  return (
+    <Link to={'/olay/' + incident.id} style={{ display: 'block', color: 'inherit', borderBottom: '0.5px solid #e5e7eb' }}>
+      {/* Header */}
+      <div style={{ padding: '12px 16px 8px', display: 'flex', alignItems: 'center', gap: 10 }}>
+        <div style={{ width: 36, height: 36, borderRadius: '50%', background: '#e5e7eb', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 14, flexShrink: 0, overflow: 'hidden' }}>
+          {incident.author_avatar && !incident.is_anonymous
+            ? <img src={incident.author_avatar} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+            : '👤'}
+        </div>
+        <div style={{ flex: 1 }}>
+          <span style={{ fontSize: 13, fontWeight: 600, color: '#111827' }}>
+            {incident.is_anonymous ? 'Anonim' : incident.author_name || 'Kullanıcı'}
+          </span>
+          <span style={{ fontSize: 11, color: '#9ca3af', marginLeft: 6 }}>
+            · {formatDistanceToNow(new Date(incident.created_at), { locale: tr, addSuffix: true })}
+          </span>
+        </div>
+        {incident.instagram_username && (
+          <div style={{ fontSize: 10, color: '#6b7280', background: '#f3f4f6', border: '0.5px solid #e5e7eb', padding: '3px 8px', borderRadius: 20, whiteSpace: 'nowrap' }}>
+            @{incident.instagram_username} hakkında
+          </div>
+        )}
+      </div>
+
+      {/* Görsel */}
+      <div style={{ width: '100%', height: 220, background: grad, display: 'flex', alignItems: 'center', justifyContent: 'center', position: 'relative', overflow: 'hidden' }}>
+        {imgUrl && (
+          <img src={imgUrl} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover', position: 'absolute', inset: 0, opacity: 0.7 }} />
+        )}
+        {!imgUrl && (
+          <div style={{ color: 'rgba(255,255,255,0.06)', fontSize: 56, fontWeight: 800, letterSpacing: -2, userSelect: 'none' }}>
+            {incident.title?.split(' ').slice(0, 2).join(' ').toUpperCase()}
+          </div>
+        )}
+        {/* Kişi bilgisi alt sol */}
+        {incident.instagram_username && (
+          <div style={{ position: 'absolute', bottom: 10, left: 12, display: 'flex', alignItems: 'center', gap: 6 }}>
+            <div style={{ width: 26, height: 26, borderRadius: '50%', background: 'rgba(255,255,255,0.15)', overflow: 'hidden', display: 'flex', alignItems: 'center', justifyContent: 'center', backdropFilter: 'blur(4px)' }}>
+              {incident.instagram_avatar || incident.subject_avatar
+                ? <img src={incident.instagram_avatar || incident.subject_avatar} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                : <span style={{ fontSize: 12 }}>👤</span>
+              }
+            </div>
+            <span style={{ fontSize: 11, color: 'rgba(255,255,255,0.85)', fontWeight: 500 }}>@{incident.instagram_username}</span>
+          </div>
+        )}
+        {/* Skor alt sağ */}
+        {score !== null && (
+          <div style={{ position: 'absolute', bottom: 10, right: 12, display: 'flex', alignItems: 'center', gap: 4, background: bg, padding: '3px 10px', borderRadius: 20, backdropFilter: 'blur(4px)' }}>
+            <span style={{ fontSize: 11, fontWeight: 700, color: 'white' }}>{score}</span>
+            <span style={{ fontSize: 13 }}>{emoji}</span>
+          </div>
+        )}
+      </div>
+
+      {/* İçerik */}
+      <div style={{ padding: '10px 16px 12px' }}>
+        <div style={{ fontSize: 14, fontWeight: 600, color: '#111827', marginBottom: 4 }}>{incident.title}</div>
+        <div style={{ fontSize: 13, color: '#6b7280', lineHeight: 1.5, marginBottom: 10, display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>
+          {incident.description}
+        </div>
+
+        {/* Oy barı */}
+        {total > 0 && (
+          <div style={{ display: 'flex', borderRadius: 3, overflow: 'hidden', height: 3, marginBottom: 8 }}>
+            <div style={{ width: cPct + '%', background: '#16a34a', transition: 'width 0.3s' }} />
+            <div style={{ width: wPct + '%', background: '#dc2626', transition: 'width 0.3s' }} />
+          </div>
+        )}
+
+        {/* Actions */}
+        <div style={{ display: 'flex', alignItems: 'center', gap: 16, fontSize: 12, color: '#9ca3af' }}>
+          <span style={{ display: 'flex', alignItems: 'center', gap: 4 }}>💬 {incident.comment_count || 0}</span>
+          <span style={{ display: 'flex', alignItems: 'center', gap: 4 }}>👁 {incident.view_count || 0}</span>
+          {total > 0 && (
+            <>
+              <span style={{ color: '#16a34a', fontWeight: 600 }}>👍 {cPct}%</span>
+              <span style={{ color: '#dc2626', fontWeight: 600, marginLeft: 'auto' }}>%{wPct} 👎</span>
+            </>
+          )}
+        </div>
+      </div>
+    </Link>
+  );
+}
 
 export default function HomePage() {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const [incidents, setIncidents] = useState([]);
-  const [recentIncidents, setRecentIncidents] = useState([]);
-  const [stats, setStats] = useState(null);
+  const [trending, setTrending] = useState([]);
+  const [activeProfiles, setActiveProfiles] = useState([]);
+  const [personScores, setPersonScores] = useState({});
   const [loading, setLoading] = useState(true);
-  const [heroSearch, setHeroSearch] = useState('');
-  const [topVoted, setTopVoted] = useState([]);
-  const search = searchParams.get('search') || '';
+  const [tab, setTab] = useState('discover');
+  const [search, setSearch] = useState('');
+  const searchQ = searchParams.get('search') || '';
 
   useEffect(() => {
-    apiFetch('/stats').then(setStats).catch(() => {});
-    apiFetch('/incidents?sort=most_voted&limit=10').then(d => {
-      const all = d.data || [];
+    setLoading(true);
+    const sortMap = { discover: 'newest', trending: 'most_voted', debated: 'newest', new: 'newest' };
+    apiFetch('/incidents?sort=' + (sortMap[tab] || 'newest') + '&limit=20')
+      .then(async d => {
+        const data = d.data || [];
+        // Shuffle for discover
+        const list = tab === 'discover' ? data.sort(() => Math.random() - 0.5) : data;
+        setIncidents(list);
+
+        // Kişi skorlarını çek
+        const usernames = [...new Set(list.map(i => i.instagram_username).filter(Boolean))];
+        const scores = {};
+        await Promise.all(usernames.map(async u => {
+          try {
+            const r = await fetch(import.meta.env.VITE_API_URL + '/person-scores/' + u);
+            const d = await r.json();
+            scores[u] = d.score;
+          } catch {}
+        }));
+        setPersonScores(scores);
+        setLoading(false);
+      })
+      .catch(() => setLoading(false));
+  }, [tab]);
+
+  useEffect(() => {
+    // Trending titles
+    apiFetch('/incidents?sort=most_voted&limit=7').then(d => setTrending(d.data || [])).catch(() => {});
+    // Active profiles
+    apiFetch('/incidents?sort=newest&limit=20').then(d => {
       const seen = new Set();
-      const unique = all.filter(inc => {
-        const key = inc.subject || inc.id;
-        if (seen.has(key)) return false;
-        seen.add(key);
+      const profiles = (d.data || []).filter(i => {
+        if (!i.instagram_username || seen.has(i.instagram_username)) return false;
+        seen.add(i.instagram_username);
         return true;
-      }).slice(0, 3);
-      setTopVoted(unique);
+      }).slice(0, 6);
+      setActiveProfiles(profiles);
     }).catch(() => {});
-    apiFetch('/incidents?sort=newest&limit=3').then(d => setRecentIncidents(d.data || [])).catch(() => {});
   }, []);
 
-  useEffect(() => {
-    if (!search) {
-      setLoading(true);
-      apiFetch('/incidents?sort=newest&limit=50')
-        .then(d => {
-          const all = d.data || [];
-          // Subject'e göre grupla - her subject için sadece bir kart
-          const seen = new Set();
-          const grouped = all.filter(inc => {
-            const key = inc.subject || inc.id;
-            if (seen.has(key)) return false;
-            seen.add(key);
-            return true;
-          });
-          setIncidents(grouped);
-          setLoading(false);
-        })
-        .catch(() => setLoading(false));
-      return;
-    }
-    setLoading(true);
-    apiFetch('/incidents?search=' + encodeURIComponent(search) + '&limit=15')
-      .then(d => { setIncidents(d.data || []); setLoading(false); })
-      .catch(() => setLoading(false));
-  }, [search]);
-
-  function handleHeroSearch(e) {
-    e.preventDefault();
-    if (heroSearch.trim()) navigate('/?search=' + encodeURIComponent(heroSearch.trim()));
-  }
-
-  if (search) {
-    return (
-      <div style={{ maxWidth: 740, margin: '0 auto' }}>
-        <div style={{ background: 'white', borderRadius: 12, border: '1px solid #e5e7eb', padding: '14px 18px', marginBottom: 14, display: 'flex', alignItems: 'center', gap: 10 }}>
-          <Search size={15} color="#9ca3af" />
-          <span style={{ fontSize: 14, color: '#374151' }}>"<strong>{search}</strong>" için sonuçlar</span>
-          <a href="/" style={{ marginLeft: 'auto', fontSize: 12, color: '#013C26' }}>× temizle</a>
-        </div>
-        {loading ? (
-          <div style={{ textAlign: 'center', padding: 48, color: '#9ca3af' }}>Aranıyor...</div>
-        ) : incidents.length === 0 ? (
-          <div style={{ background: 'white', borderRadius: 12, padding: 48, textAlign: 'center', border: '1px solid #e5e7eb' }}>
-            <div style={{ fontSize: 40, marginBottom: 12 }}>🔍</div>
-            <div style={{ fontWeight: 600, marginBottom: 8 }}>"{search}" için sonuç bulunamadı</div>
-            <Link to="/bildir" style={{ color: '#46A53E', fontWeight: 600 }}>İlk bildirimi sen ekle →</Link>
-          </div>
-        ) : (
-          <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
-            {incidents.map(inc => <IncidentCard key={inc.id} incident={inc} />)}
-          </div>
-        )}
-      </div>
-    );
-  }
+  const tabs = [
+    { key: 'discover', label: 'Keşfet' },
+    { key: 'trending', label: 'Trend' },
+    { key: 'debated', label: 'Tartışmalı' },
+    { key: 'new', label: 'Yeni' },
+  ];
 
   return (
-    <div>
+    <div style={{ display: 'grid', gridTemplateColumns: '220px 1fr 220px', minHeight: 'calc(100vh - 108px)', maxWidth: 960, margin: '0 auto' }}>
 
-      {/* BÖLÜM 1 — Hero = Navbar + Arama tam ekran */}
-      <div style={{ height: '100vh', display: 'flex', flexDirection: 'column', background: 'white', position: 'relative', overflow: 'hidden' }}>
-        <Navbar />
-        <div style={{ flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'flex-start', alignItems: 'center', padding: '60px 16px 40px', textAlign: 'center' }}>
-        {/* Arka plan doku */}
+      {/* SOL — Gündemde */}
+      <div style={{ borderRight: '0.5px solid #e5e7eb', padding: '16px 14px' }}>
+        <div style={{ fontSize: 14, fontWeight: 700, color: '#111827', marginBottom: 12 }}>Bu hafta gündemde</div>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+          {trending.map((inc, i) => (
+            <Link key={inc.id} to={'/olay/' + inc.id} style={{
+              padding: '8px 10px', borderRadius: 8, display: 'block', color: 'inherit',
+              background: i === 0 ? '#f3f4f6' : 'transparent',
+            }}>
+              <div style={{ fontSize: 10, color: '#9ca3af', marginBottom: 2 }}>{inc.category_name} {i < 3 ? '🔥' : ''}</div>
+              <div style={{ fontSize: 12, fontWeight: 500, color: '#111827', lineHeight: 1.3 }}>{inc.title}</div>
+            </Link>
+          ))}
+        </div>
+      </div>
 
-        <div style={{ position: 'relative', zIndex: 1, maxWidth: 600, width: '100%' }}>
+      {/* ORTA — Feed */}
+      <div style={{ borderRight: '0.5px solid #e5e7eb' }}>
+        {/* Tabs */}
+        <div style={{ display: 'flex', borderBottom: '0.5px solid #e5e7eb', position: 'sticky', top: 0, background: 'white', zIndex: 10 }}>
+          {tabs.map(t => (
+            <button key={t.key} onClick={() => setTab(t.key)} style={{
+              flex: 1, textAlign: 'center', padding: '13px 8px',
+              fontSize: 13, fontWeight: tab === t.key ? 700 : 400,
+              color: tab === t.key ? '#111827' : '#9ca3af',
+              borderBottom: tab === t.key ? '2px solid #013C26' : '2px solid transparent',
+              background: 'none', border: 'none', borderBottom: tab === t.key ? '2px solid #013C26' : 'none',
+              cursor: 'pointer', fontFamily: 'inherit',
+            }}>{t.label}</button>
+          ))}
+        </div>
 
-
-          <div style={{ fontSize: 11, fontWeight: 700, letterSpacing: 2, textTransform: 'uppercase', color: '#9ca3af', marginBottom: 8 }}>Güven platformu</div>
-          <h1 style={{ fontSize: 'clamp(22px, 5vw, 38px)', fontWeight: 900, color: '#111827', lineHeight: 1.2, marginBottom: 14, letterSpacing: -1 }}>
-            Birisiyle çalışmadan önce<br />araştır
-          </h1>
-          <p style={{ fontSize: 16, color: '#6b7280', marginBottom: 36, lineHeight: 1.7 }}>
-            Usta, müteahhit, avukat... Başkalarının yaşadıklarını oku, kendi deneyimini paylaş.
-          </p>
-
-          <form onSubmit={handleHeroSearch} style={{ display: 'flex', background: 'white', border: '1.5px solid #e5e7eb', borderRadius: 12, overflow: 'hidden', width: '100%', maxWidth: '100%', boxShadow: '0 4px 24px rgba(0,0,0,0.06)' }}>
-            <Search size={18} color="#9ca3af" style={{ alignSelf: 'center', marginLeft: 18, flexShrink: 0 }} />
-            <input value={heroSearch} onChange={e => setHeroSearch(e.target.value)}
-              placeholder="Kişi adı ile ara... örn: Ahmet Yılmaz"
-              style={{ flex: 1, padding: '16px 16px', fontSize: 15, border: 'none', outline: 'none', fontFamily: 'inherit', color: '#111827', background: 'transparent' }}
-            />
-            <button type="submit" style={{ padding: '0 28px', background: '#111827', color: 'white', border: 'none', fontSize: 14, fontWeight: 700, cursor: 'pointer', fontFamily: 'inherit', borderRadius: '0 10px 10px 0' }}>
-              Ara
-            </button>
+        {/* Arama */}
+        <div style={{ padding: '10px 16px', borderBottom: '0.5px solid #e5e7eb' }}>
+          <form onSubmit={e => { e.preventDefault(); if (search.trim()) navigate('/?search=' + encodeURIComponent(search)); }}>
+            <div style={{ display: 'flex', background: '#f3f4f6', borderRadius: 20, alignItems: 'center', padding: '0 14px' }}>
+              <span style={{ color: '#9ca3af', fontSize: 14, marginRight: 8 }}>🔍</span>
+              <input value={search} onChange={e => setSearch(e.target.value)}
+                placeholder="@kullanıcı adı veya konu ara..."
+                style={{ flex: 1, padding: '9px 0', fontSize: 13, background: 'none', border: 'none', outline: 'none', fontFamily: 'inherit', color: '#111827' }}
+              />
+            </div>
           </form>
-
-          <div style={{ display: 'flex', gap: 8, justifyContent: 'center', marginBottom: 24, flexWrap: 'wrap' }}>
-            {['Ahmet Y.', 'Mehmet Usta', 'Ali Kaya', 'Ayşe Av.'].map(name => (
-              <button key={name} onClick={() => navigate('/?search=' + encodeURIComponent(name))}
-                style={{ fontSize: 12, color: '#9ca3af', background: '#f9fafb', border: '1px solid #e5e7eb', padding: '5px 12px', borderRadius: 20, cursor: 'pointer', fontFamily: 'inherit' }}>
-                {name}
-              </button>
-            ))}
-          </div>
-
-          {/* En çok oylanan kişiler - arama altında */}
-          {topVoted.length > 0 && (
-            <div style={{ width: '100%' }}>
-              <div style={{ fontSize: 11, fontWeight: 700, letterSpacing: 1.5, textTransform: 'uppercase', color: '#9ca3af', marginBottom: 10, marginTop: 24, textAlign: 'center' }}>En çok değerlendirilen</div>
-            <div style={{ display: 'flex', gap: 12, justifyContent: 'center', flexWrap: 'wrap' }}>
-              {topVoted.map(inc => {
-                const ts = inc.trust_score || 0;
-                return (
-                  <Link key={inc.id} to={'/konu/' + encodeURIComponent(inc.subject || inc.title)} style={{
-                    display: 'flex', alignItems: 'center', gap: 10,
-                    background: 'white', border: '1px solid #e5e7eb',
-                    borderRadius: 12, padding: '12px 16px',
-                    boxShadow: '0 1px 4px rgba(0,0,0,0.06)',
-                    color: 'inherit', minWidth: 180,
-                  }}>
-                    <div style={{ width: 44, height: 44, borderRadius: '50%', background: '#f3f4f6', flexShrink: 0, overflow: 'hidden', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                      {inc.subject_avatar
-                        ? <img src={inc.subject_avatar} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
-                        : <span style={{ fontSize: 20 }}>{inc.category_icon || '👤'}</span>
-                      }
-                    </div>
-                    <div style={{ flex: 1, minWidth: 0 }}>
-                      <div style={{ fontSize: 14, fontWeight: 700, color: '#111827', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{inc.subject || inc.title}</div>
-                      <div style={{ fontSize: 11, color: '#9ca3af' }}>{inc.category_name}</div>
-                      <div style={{ fontSize: 12, fontWeight: 700, color: ts >= 50 ? '#16a34a' : ts >= -10 ? '#d97706' : '#dc2626', marginTop: 2 }}>
-                        {ts > 0 ? '+' : ''}{ts} {ts >= 50 ? 'Güvenilir' : ts >= -10 ? 'Dikkatli' : 'Güvenilmez'}
-                      </div>
-                    </div>
-                  </Link>
-                );
-              })}
-            </div>
-            </div>
-          )}
         </div>
 
-        </div>
-        {/* Aşağı ok */}
-        <div style={{ paddingBottom: 32, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 8, color: '#d1d5db' }}>
-          <span style={{ fontSize: 11, letterSpacing: 1, color: '#9ca3af' }}>Son bildirimler</span>
-          <div style={{ width: 16, height: 16, borderRight: '2px solid #d1d5db', borderBottom: '2px solid #d1d5db', transform: 'rotate(45deg)', animation: 'bounce 1.5s infinite' }} />
-        </div>
-      </div>
-
-      {/* BÖLÜM 2 — Son bildirimler */}
-      <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column', justifyContent: 'center', padding: '60px 24px', background: '#f8fafc' }}>
-        <div style={{ maxWidth: 800, margin: '0 auto', width: '100%' }}>
-          <div style={{ fontSize: 11, fontWeight: 700, letterSpacing: 2, textTransform: 'uppercase', color: '#9ca3af', marginBottom: 8 }}>Son eklenenler</div>
-          <h2 style={{ fontSize: 28, fontWeight: 900, color: '#111827', marginBottom: 28, letterSpacing: -0.5 }}>Yeni bildirimler</h2>
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 14 }}>
-            {recentIncidents.length > 0 ? recentIncidents.map(inc => {
-              const total = (inc.vote_correct || 0) + (inc.vote_wrong || 0) + (inc.vote_neutral || 0) + (inc.vote_insufficient || 0);
-              const ts = inc.trust_score || 0;
-              return (
-                <Link key={inc.id} to={'/olay/' + inc.id} style={{ background: 'white', borderRadius: 12, border: '1px solid #e5e7eb', padding: '18px', display: 'block', color: 'inherit', boxShadow: '0 1px 4px rgba(0,0,0,0.04)', transition: 'box-shadow 0.15s' }}
-                  onMouseEnter={e => e.currentTarget.style.boxShadow='0 4px 16px rgba(0,0,0,0.08)'}
-                  onMouseLeave={e => e.currentTarget.style.boxShadow='0 1px 4px rgba(0,0,0,0.04)'}
-                >
-                  {inc.subject && <div style={{ fontSize: 16, fontWeight: 800, color: '#111827', marginBottom: 4 }}>{inc.subject}</div>}
-                  <div style={{ fontSize: 12, color: '#9ca3af', marginBottom: 12 }}>{inc.category_name} {inc.location ? '· ' + inc.location : ''}</div>
-                  <div style={{ fontSize: 13, color: '#6b7280', lineHeight: 1.6, marginBottom: 14, display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>{inc.title}</div>
-                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-                    {total > 0 ? (
-                      <span style={{ fontSize: 12, fontWeight: 700, padding: '3px 10px', borderRadius: 20, background: ts >= 50 ? '#f0fdf4' : ts >= -10 ? '#fffbeb' : '#f0fdf4', color: ts >= 50 ? '#16a34a' : ts >= -10 ? '#d97706' : '#dc2626' }}>
-                        {ts > 0 ? '+' : ''}{ts} {ts >= 50 ? 'Güvenilir' : ts >= -10 ? 'Dikkatli' : 'Güvenilmez'}
-                      </span>
-                    ) : (
-                      <span style={{ fontSize: 12, color: '#d1d5db' }}>Değerlendirme yok</span>
-                    )}
-                    <span style={{ fontSize: 11, color: '#d1d5db' }}>{formatDistanceToNow(new Date(inc.created_at), { locale: tr, addSuffix: true })}</span>
-                  </div>
-                </Link>
-              );
-            }) : [1,2,3].map(i => (
-              <div key={i} style={{ background: 'white', borderRadius: 12, border: '1px solid #e5e7eb', padding: '18px', height: 160, opacity: 0.4 }} />
-            ))}
-          </div>
-          <div style={{ textAlign: 'center', marginTop: 24 }}>
-            <Link to="/bildir" style={{ fontSize: 14, color: '#6b7280', borderBottom: '1px solid #e5e7eb', paddingBottom: 2 }}>Tüm bildirimleri gör →</Link>
-          </div>
-        </div>
-      </div>
-
-      {/* BÖLÜM 3 — İstatistikler */}
-      <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column', justifyContent: 'center', padding: '60px 24px', background: 'white' }}>
-        <div style={{ maxWidth: 800, margin: '0 auto', width: '100%', textAlign: 'center' }}>
-          <div style={{ fontSize: 11, fontWeight: 700, letterSpacing: 2, textTransform: 'uppercase', color: '#9ca3af', marginBottom: 8 }}>Platform istatistikleri</div>
-          <h2 style={{ fontSize: 28, fontWeight: 900, color: '#111827', marginBottom: 48, letterSpacing: -0.5 }}>Rakamlarla etikbulmuyorum</h2>
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 16 }}>
-            {[
-              { label: 'Bildirim', value: stats ? Number(stats.totals.total_incidents).toLocaleString('tr') : '—' },
-              { label: 'Bu hafta', value: stats ? Number(stats.totals.incidents_this_week).toLocaleString('tr') : '—' },
-              { label: 'Değerlendirme', value: stats ? Number(stats.totals.total_votes).toLocaleString('tr') : '—' },
-              { label: 'Kullanıcı', value: stats ? Number(stats.totals.total_users).toLocaleString('tr') : '—' },
-            ].map(s => (
-              <div key={s.label} style={{ background: '#f8fafc', borderRadius: 16, padding: '32px 16px', border: '1px solid #e5e7eb' }}>
-                <div style={{ fontSize: 36, fontWeight: 900, color: '#111827', lineHeight: 1, marginBottom: 10 }}>{s.value}</div>
-                <div style={{ fontSize: 13, color: '#9ca3af', fontWeight: 500 }}>{s.label}</div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </div>
-
-      {/* BÖLÜM 4 — CTA */}
-      <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', padding: '60px 24px', background: '#111827', textAlign: 'center' }}>
-        <div style={{ maxWidth: 560, width: '100%' }}>
-          <div style={{ fontSize: 11, fontWeight: 700, letterSpacing: 2, textTransform: 'uppercase', color: '#4b5563', marginBottom: 16 }}>Deneyimini paylaş</div>
-          <h2 style={{ fontSize: 36, fontWeight: 900, color: 'white', marginBottom: 16, letterSpacing: -1, lineHeight: 1.2 }}>Başkası zarar görmesin</h2>
-          <p style={{ fontSize: 16, color: '#6b7280', marginBottom: 40, lineHeight: 1.7 }}>
-            Yaşadığın olumsuz ya da olumlu deneyimi anlat.<br />Topluluk bilsin, başkaları karar versin.
-          </p>
-          <Link to="/bildir" style={{ display: 'inline-block', background: 'white', color: '#111827', padding: '14px 36px', borderRadius: 8, fontWeight: 800, fontSize: 15, letterSpacing: -0.3 }}>
-            Olay Bildir
-          </Link>
-          <div style={{ marginTop: 60, display: 'flex', justifyContent: 'center', gap: 32, flexWrap: 'wrap' }}>
-            {[['⚖️', 'Güven Skoru'], ['🔍', 'Kişi Arama'], ['💬', 'Değerlendirme'], ['🔔', 'Bildirimler']].map(([icon, label]) => (
-              <div key={label} style={{ textAlign: 'center' }}>
-                <div style={{ fontSize: 28, marginBottom: 6 }}>{icon}</div>
-                <div style={{ fontSize: 12, color: '#4b5563', fontWeight: 500 }}>{label}</div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </div>
-
-      <style>{`
-        @keyframes bounce {
-          0%, 100% { transform: rotate(45deg) translateY(0); }
-          50% { transform: rotate(45deg) translateY(5px); }
-        }
-      `}</style>
-    </div>
-  );
-}
-
-function IncidentCard({ incident: inc }) {
-  const total = (inc.vote_correct || 0) + (inc.vote_wrong || 0) + (inc.vote_neutral || 0) + (inc.vote_insufficient || 0);
-  const ts = inc.trust_score || 0;
-  const images = inc.images || [];
-
-  return (
-    <div style={{ background: 'white', borderRadius: 12, border: '1px solid #e5e7eb', overflow: 'hidden', boxShadow: '0 1px 4px rgba(0,0,0,0.04)' }}>
-      {images.length > 0 && (
-        <Link to={'/olay/' + inc.id}>
-          <img src={images[0]} alt="" style={{ width: '100%', height: 160, objectFit: 'cover', display: 'block' }} />
-        </Link>
-      )}
-      <div style={{ padding: '14px 16px' }}>
-        <div style={{ display: 'flex', gap: 6, marginBottom: 8, flexWrap: 'wrap', alignItems: 'center' }}>
-          {inc.location && <span style={{ fontSize: 11, color: '#9ca3af' }}>📍 {inc.location}</span>}
-          <span style={{ fontSize: 11, color: '#d1d5db', marginLeft: 'auto' }}>{formatDistanceToNow(new Date(inc.created_at), { locale: tr, addSuffix: true })}</span>
-        </div>
-        {inc.subject && (
-          <Link to={'/konu/' + encodeURIComponent(inc.subject)} style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 10, padding: '10px 12px', background: '#f9fafb', borderRadius: 10, border: '1px solid #e5e7eb' }}>
-            <div style={{ width: 40, height: 40, borderRadius: '50%', background: '#e5e7eb', flexShrink: 0, overflow: 'hidden', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-              {inc.subject_avatar
-                ? <img src={inc.subject_avatar} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
-                : <span style={{ fontSize: 18 }}>{inc.category_icon || '👤'}</span>
-              }
-            </div>
-            <div style={{ flex: 1, minWidth: 0 }}>
-              <div style={{ fontSize: 15, fontWeight: 800, color: '#111827', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{inc.subject}</div>
-              <div style={{ fontSize: 11, color: '#9ca3af' }}>{inc.category_name}</div>
-            </div>
-            {(inc.vote_correct || inc.vote_wrong) ? (
-              <div style={{ fontSize: 14, fontWeight: 800, color: ts >= 50 ? '#16a34a' : ts >= -10 ? '#d97706' : '#dc2626', flexShrink: 0 }}>
-                {ts > 0 ? '+' : ''}{ts}
-              </div>
-            ) : null}
-          </Link>
+        {/* Posts */}
+        {loading ? (
+          <div style={{ textAlign: 'center', padding: 60, color: '#9ca3af' }}>Yükleniyor...</div>
+        ) : incidents.length === 0 ? (
+          <div style={{ textAlign: 'center', padding: 60, color: '#9ca3af' }}>Henüz içerik yok.</div>
+        ) : (
+          incidents.map(inc => <PostCard key={inc.id} incident={inc} personScores={personScores} />)
         )}
-        <Link to={'/olay/' + inc.id}>
-          <h2 style={{ fontSize: 14, fontWeight: 600, marginBottom: 6, color: '#374151', lineHeight: 1.4 }}>{inc.title}</h2>
-        </Link>
-        <p style={{ fontSize: 13, color: '#6b7280', marginBottom: 10, lineHeight: 1.6, display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>{inc.description}</p>
-        {inc.category_name && <div style={{ marginBottom: 10 }}><span style={{ fontSize: 11, background: '#f0fdf4', color: '#46A53E', padding: '2px 8px', borderRadius: 20, fontWeight: 600 }}>{inc.category_icon} {inc.category_name}</span></div>}
-        <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-          {total > 0 ? (
-            <span style={{ fontSize: 12, fontWeight: 700, color: ts >= 50 ? '#16a34a' : ts >= -10 ? '#d97706' : '#dc2626' }}>
-              {ts >= 50 ? '🟢' : ts >= -10 ? '🟡' : '🔴'} Güven: {ts > 0 ? '+' : ''}{ts} · {total} değerlendirme
-            </span>
-          ) : <span style={{ fontSize: 12, color: '#9ca3af' }}>Henüz değerlendirme yok</span>}
-          <Link to={'/olay/' + inc.id} style={{ fontSize: 12, color: '#9ca3af', marginLeft: 'auto' }}>💬 {inc.comment_count} · 👁 {inc.view_count}</Link>
+      </div>
+
+      {/* SAĞ — Bu sıra neler oluyor */}
+      <div style={{ padding: '16px 14px' }}>
+        <div style={{ fontSize: 14, fontWeight: 700, color: '#111827', marginBottom: 12 }}>Bu sıra neler oluyor?</div>
+        <div style={{ background: 'white', border: '0.5px solid #e5e7eb', borderRadius: 12, overflow: 'hidden' }}>
+          {activeProfiles.map((inc, i) => (
+            <Link key={inc.id} to={'/konu/' + encodeURIComponent(inc.instagram_username)} style={{
+              display: 'flex', alignItems: 'center', gap: 10,
+              padding: '10px 12px', color: 'inherit',
+              borderBottom: i < activeProfiles.length - 1 ? '0.5px solid #f3f4f6' : 'none',
+            }}>
+              <div style={{ width: 38, height: 38, borderRadius: '50%', background: '#e5e7eb', flexShrink: 0, overflow: 'hidden', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                {inc.instagram_avatar || inc.subject_avatar
+                  ? <img src={inc.instagram_avatar || inc.subject_avatar} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                  : <span style={{ fontSize: 16 }}>👤</span>
+                }
+              </div>
+              <div style={{ minWidth: 0 }}>
+                <div style={{ fontSize: 13, fontWeight: 600, color: '#111827', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                  {inc.person_name || inc.instagram_username}
+                </div>
+                <div style={{ fontSize: 11, color: '#9ca3af' }}>@{inc.instagram_username}</div>
+              </div>
+            </Link>
+          ))}
         </div>
       </div>
     </div>
