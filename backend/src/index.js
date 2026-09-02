@@ -106,6 +106,77 @@ app.get('/api/categories/:slug', async (req, res) => {
   } catch (e) { res.status(500).json({ error: e.message }); }
 });
 
+// Instagram doğrulama kontrolü — her gün çalışır
+async function checkInstagramVerifications() {
+  try {
+    const pool = (await import('./db/pool.js')).default;
+    const { rows: users } = await pool.query(
+      'SELECT id, instagram_username FROM users WHERE instagram_verified = true AND instagram_username IS NOT NULL'
+    );
+    
+    console.log(`Instagram kontrolü başladı: ${users.length} kullanıcı`);
+    
+    for (const user of users) {
+      try {
+        const res = await fetch(
+          `https://instagram-public-bulk-scraper.p.rapidapi.com/v1/user_info_web?username=${encodeURIComponent(user.instagram_username)}`,
+          {
+            headers: {
+              'X-RapidAPI-Key': process.env.RAPIDAPI_KEY,
+              'X-RapidAPI-Host': process.env.RAPIDAPI_HOST,
+            }
+          }
+        );
+        const data = await res.json();
+        
+        if (!data.data) {
+          // Profil bulunamadı — doğrulamayı kaldır
+          await pool.query(
+            'UPDATE users SET instagram_verified = false WHERE id = $1',
+            [user.id]
+          );
+          console.log(`${user.instagram_username} profili bulunamadı, doğrulama kaldırıldı`);
+          continue;
+        }
+
+        const bio = data.data.biography || '';
+        const expectedCode = 'eb:' + user.instagram_username.toLowerCase();
+        const cleanBio = bio.replace(/[\u200B-\u200D\uFEFF\u00A0]/g, '').toLowerCase().trim();
+        
+        if (!cleanBio.includes(expectedCode)) {
+          // Bio kodu kaldırılmış — doğrulamayı kaldır
+          await pool.query(
+            'UPDATE users SET instagram_verified = false WHERE id = $1',
+            [user.id]
+          );
+          console.log(`${user.instagram_username} bio kodu kaldırılmış, doğrulama kaldırıldı`);
+        }
+        
+        // Rate limit için bekle
+        await new Promise(r => setTimeout(r, 2000));
+      } catch (e) {
+        console.error(`${user.instagram_username} kontrol hatası:`, e.message);
+      }
+    }
+    console.log('Instagram kontrolü tamamlandı');
+  } catch (e) {
+    console.error('Instagram kontrol hatası:', e.message);
+  }
+}
+
+// Her 24 saatte bir çalıştır
+setInterval(checkInstagramVerifications, 24 * 60 * 60 * 1000);
+// Başlangıçta 5 dakika sonra ilk kontrolü yap
+setTimeout(checkInstagramVerifications, 5 * 60 * 1000);
+
+// Manuel tetikleme endpoint'i (admin)
+app.get('/api/admin/check-instagram', async (req, res) => {
+  const secret = req.headers['x-admin-secret'];
+  if (secret !== process.env.JWT_SECRET) return res.status(401).json({ error: 'Yetkisiz' });
+  checkInstagramVerifications();
+  res.json({ message: 'Kontrol başlatıldı' });
+});
+
 // Subject endpoint
 app.get('/api/subjects/:name', async (req, res) => {
   try {
