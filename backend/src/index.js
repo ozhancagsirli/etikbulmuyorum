@@ -286,6 +286,73 @@ app.delete('/api/portfolio/:id', async (req, res) => {
   } catch(e) { res.status(500).json({ error: e.message }); }
 });
 
+// Toplu Instagram bilgisi çek
+app.post('/api/admin/fetch-instagram-bulk', async (req, res) => {
+  const secret = req.headers['x-admin-secret'];
+  if (secret !== process.env.JWT_SECRET) return res.status(401).json({ error: 'Yetkisiz' });
+  
+  try {
+    const pool = (await import('./db/pool.js')).default;
+    const { rows } = await pool.query(
+      'SELECT id, instagram_username FROM subjects WHERE instagram_username IS NOT NULL AND (instagram_avatar IS NULL OR instagram_avatar = '') ORDER BY id'
+    );
+    
+    console.log(`Toplu çekim başladı: ${rows.length} profil`);
+    res.json({ message: `${rows.length} profil için çekim başlatıldı`, total: rows.length });
+    
+    // Arka planda çek
+    (async () => {
+      let success = 0, fail = 0;
+      for (const row of rows) {
+        try {
+          const r = await fetch(
+            `https://instagram-public-bulk-scraper.p.rapidapi.com/v1/user_info_web?username=${encodeURIComponent(row.instagram_username)}`,
+            { headers: { 'X-RapidAPI-Key': process.env.RAPIDAPI_KEY, 'X-RapidAPI-Host': process.env.RAPIDAPI_HOST } }
+          );
+          const data = await r.json();
+          if (data.data) {
+            const u = data.data;
+            let avatarUrl = u.profile_pic_url_hd || u.profile_pic_url;
+            
+            // Cloudinary'e yükle
+            try {
+              const { v2: cloudinary } = await import('cloudinary');
+              cloudinary.config({
+                cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+                api_key: process.env.CLOUDINARY_API_KEY,
+                api_secret: process.env.CLOUDINARY_API_SECRET,
+              });
+              const uploaded = await cloudinary.uploader.upload(avatarUrl, {
+                folder: 'etikbulmuyorum/instagram',
+                public_id: 'ig_' + row.instagram_username,
+                overwrite: true,
+              });
+              avatarUrl = uploaded.secure_url;
+            } catch(e) {}
+
+            await pool.query(
+              'UPDATE subjects SET instagram_avatar=$1, instagram_verified=$2, instagram_followers=$3, name=COALESCE(NULLIF(name,instagram_username),$4) WHERE id=$5',
+              [avatarUrl, u.is_verified || false, u.edge_followed_by?.count || u.follower_count || 0, u.full_name || row.instagram_username, row.id]
+            );
+            success++;
+            console.log(`✅ ${row.instagram_username} (${success}/${rows.length})`);
+          } else {
+            fail++;
+            console.log(`❌ ${row.instagram_username} bulunamadı`);
+          }
+          // Rate limit için bekle
+          await new Promise(r => setTimeout(r, 2000));
+        } catch(e) {
+          fail++;
+          console.error(`❌ ${row.instagram_username} hata:`, e.message);
+          await new Promise(r => setTimeout(r, 2000));
+        }
+      }
+      console.log(`Toplu çekim tamamlandı: ${success} başarılı, ${fail} başarısız`);
+    })();
+  } catch(e) { res.status(500).json({ error: e.message }); }
+});
+
 // Subject endpoint
 app.get('/api/subjects/:name', async (req, res) => {
   try {

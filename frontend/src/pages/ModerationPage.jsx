@@ -172,6 +172,24 @@ export default function ModerationPage() {
     { key: 'avatar', label: 'Avatar' },
   ];
 
+  const [fetching, setFetching] = useState(false);
+  const [fetchResult, setFetchResult] = useState('');
+
+  async function fetchAllInstagram() {
+    setFetching(true);
+    setFetchResult('');
+    try {
+      const token = localStorage.getItem('accessToken');
+      const r = await fetch(import.meta.env.VITE_API_URL + '/admin/fetch-instagram-bulk', {
+        method: 'POST',
+        headers: { 'x-admin-secret': token }
+      });
+      const d = await r.json();
+      setFetchResult(d.message || 'Başlatıldı');
+    } catch(e) { setFetchResult('Hata: ' + e.message); }
+    setFetching(false);
+  }
+
   return (
     <div style={{ maxWidth: 900, margin: '0 auto' }}>
       <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: 20, marginBottom: 16, flexWrap: 'wrap' }}>
@@ -183,6 +201,13 @@ export default function ModerationPage() {
           </div>
         </div>
         <AddProfileForm />
+      </div>
+      <div style={{ background: 'white', borderRadius: 12, border: '1px solid #e5e7eb', padding: '14px 16px', marginBottom: 16, display: 'flex', alignItems: 'center', gap: 12 }}>
+        <button onClick={fetchAllInstagram} disabled={fetching} style={{ background: '#013C26', color: 'white', padding: '9px 20px', borderRadius: 8, border: 'none', fontWeight: 700, fontSize: 13, cursor: 'pointer' }}>
+          {fetching ? '⏳ Çekiliyor...' : '📸 Tüm Instagram Bilgilerini Çek'}
+        </button>
+        {fetchResult && <span style={{ fontSize: 13, color: '#46A53E', fontWeight: 600 }}>{fetchResult}</span>}
+        <span style={{ fontSize: 12, color: '#94a3b8' }}>Avatarı olmayan tüm profilleri günceller (~2dk)</span>
       </div>
 
       {/* Sekmeler */}
