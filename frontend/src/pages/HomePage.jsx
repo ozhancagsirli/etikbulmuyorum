@@ -127,7 +127,7 @@ export default function HomePage() {
   }, []);
 
   return (
-    <div style={{ background: '#f8fafc', minHeight: '100vh' }}>
+    <div style={{ background: '#f8fafc', minHeight: '100vh', overflowX: 'hidden' }}>
       <style>{`
         @media(max-width:768px){
           .home-grid{grid-template-columns:1fr !important}
@@ -139,7 +139,7 @@ export default function HomePage() {
         }
       `}</style>
 
-      <div style={{ maxWidth: 1000, margin: '0 auto', padding: '20px 16px' }}>
+      <div style={{ maxWidth: 1000, margin: '0 auto', padding: '16px', overflowX: 'hidden' }}>
 
         {/* ORTA — Kategori vitrini */}
         <div>

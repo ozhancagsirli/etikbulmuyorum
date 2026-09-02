@@ -44,7 +44,7 @@ export default function Navbar() {
         }
       `}</style>
       <nav style={{ background: 'white', borderBottom: '1px solid #f1f5f9', position: 'sticky', top: 0, zIndex: 100 }}>
-        <div style={{ maxWidth: 1000, margin: '0 auto', padding: '0 16px', height: 54, display: 'flex', alignItems: 'center', gap: 12 }}>
+        <div style={{ maxWidth: 1000, margin: '0 auto', padding: '0 12px', height: 54, display: 'flex', alignItems: 'center', gap: 8, overflow: 'hidden' }}>
 
           {/* Logo */}
           <Link to="/" style={{ flexShrink: 0 }}>
