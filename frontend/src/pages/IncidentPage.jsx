@@ -206,7 +206,7 @@ export default function IncidentPage() {
 
       {/* Kişinin açıklaması */}
       {incident.instagram_username && user?.instagram_username === incident.instagram_username && (
-        <OwnerResponse incidentId={id} />
+        <OwnerResponse incidentId={id} existingResponse={incident.owner_response} />
       )}
       {incident.owner_response && (
         <div style={{ background: 'white', borderRadius: 16, border: '1px solid #e5e7eb', padding: '20px' }}>
