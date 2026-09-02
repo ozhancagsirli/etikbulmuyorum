@@ -1,3 +1,19 @@
+const CATEGORIES = [
+  { id: 1,  name: '👗 Giyim & Moda' },
+  { id: 2,  name: '💄 Kozmetik & Güzellik' },
+  { id: 3,  name: '🏠 Ev & Dekorasyon' },
+  { id: 4,  name: '📱 Elektronik & Aksesuar' },
+  { id: 5,  name: '🍕 Yemek & Catering' },
+  { id: 6,  name: '💪 Spor & Supplement' },
+  { id: 7,  name: '🥗 Dyetisyen & Sağlık' },
+  { id: 8,  name: '🚗 Araç Bakım & Detailing' },
+  { id: 9,  name: '👶 Anne & Bebek' },
+  { id: 10, name: '📸 Fotoğrafçı & Organizasyon' },
+  { id: 11, name: '💎 Takı & Aksesuar' },
+  { id: 12, name: '🎙️ İçerik Üretici & Influencer' },
+  { id: 13, name: '📌 Diğer' },
+];
+
 const CITIES = [
   // İller
   'Adana','Adıyaman','Afyonkarahisar','Ağrı','Amasya','Ankara','Antalya','Artvin','Aydın','Balıkesir','Bilecik','Bingöl','Bitlis','Bolu','Burdur','Bursa','Çanakkale','Çankırı','Çorum','Denizli','Diyarbakır','Edirne','Elazığ','Erzincan','Erzurum','Eskişehir','Gaziantep','Giresun','Gümüşhane','Hakkari','Hatay','Isparta','Mersin','İstanbul','İzmir','Kars','Kastamonu','Kayseri','Kırklareli','Kırşehir','Kocaeli','Konya','Kütahya','Malatya','Manisa','Kahramanmaraş','Mardin','Muğla','Muş','Nevşehir','Niğde','Ordu','Rize','Sakarya','Samsun','Siirt','Sinop','Sivas','Tekirdağ','Tokat','Trabzon','Tunceli','Şanlıurfa','Uşak','Van','Yozgat','Zonguldak','Aksaray','Bayburt','Karaman','Kırıkkale','Batman','Şırnak','Bartın','Ardahan','Iğdır','Yalova','Karabük','Kilis','Osmaniye','Düzce',
@@ -34,7 +50,7 @@ export default function SubmitPage() {
   const [form, setForm] = useState({
     title: '',
     description: '',
-    categoryId: '19',
+    categoryId: '',
     location: '',
     incidentDate: '',
     isAnonymous: false,
@@ -71,6 +87,7 @@ export default function SubmitPage() {
   function nextStep() {
     if (step === 1) {
       if (!igProfile) return toast.error('Lütfen önce Instagram profilini arayın.');
+      if (!form.categoryId) return toast.error('Lütfen bir kategori seçin.');
       if (!form.title || form.title.length < 3) return toast.error('Başlık en az 3 karakter olmalı.');
     }
     if (step === 2) {
@@ -171,6 +188,25 @@ export default function SubmitPage() {
                 <span style={{ fontSize: 20 }}>✓</span>
               </div>
             )}
+
+            <div>
+              <label style={{ display: 'block', fontWeight: 600, fontSize: 13, marginBottom: 8 }}>Kategori <span style={{ color: '#46A53E' }}>*</span></label>
+              <div style={{ display: 'flex', flexWrap: 'wrap', gap: 7 }}>
+                {CATEGORIES.map(cat => (
+                  <button key={cat.id} type="button"
+                    onClick={() => setForm(f => ({ ...f, categoryId: String(cat.id) }))}
+                    style={{
+                      padding: '7px 13px', borderRadius: 20, fontSize: 12, cursor: 'pointer', fontFamily: 'inherit',
+                      background: form.categoryId === String(cat.id) ? '#013C26' : 'white',
+                      color: form.categoryId === String(cat.id) ? 'white' : '#374151',
+                      border: form.categoryId === String(cat.id) ? '1.5px solid #013C26' : '1.5px solid #e5e7eb',
+                      fontWeight: form.categoryId === String(cat.id) ? 700 : 400,
+                    }}>
+                    {cat.name}
+                  </button>
+                ))}
+              </div>
+            </div>
 
             <div>
               <label style={{ display: 'block', fontWeight: 600, fontSize: 13, marginBottom: 8 }}>Başlık <span style={{ color: '#46A53E' }}>*</span></label>
