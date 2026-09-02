@@ -63,16 +63,7 @@ function ProfileCard({ profile, rank }) {
   );
 }
 
-function CategorySection({ category }) {
-  const [profiles, setProfiles] = useState([]);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    apiFetch('/categories/' + category.slug)
-      .then(d => { setProfiles((d.profiles || []).slice(0, 5)); setLoading(false); })
-      .catch(() => setLoading(false));
-  }, [category.slug]);
-
+function CategorySection({ category, profiles, loading }) {
   if (!loading && profiles.length === 0) return null;
 
   return (
@@ -87,24 +78,25 @@ function CategorySection({ category }) {
         </Link>
       </div>
 
-      {loading ? (
-        <div style={{ height: 120, background: 'white', borderRadius: 12, border: '1px solid #f1f5f9', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#94a3b8', fontSize: 13 }}>
-          Yükleniyor...
-        </div>
-      ) : (
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(5, 1fr)', gap: 8 }}>
-          {profiles.map((p, i) => <ProfileCard key={p.instagram_username || i} profile={p} rank={i + 1} />)}
-          {/* Boş slotlar */}
-          {profiles.length < 5 && Array.from({ length: 5 - profiles.length }).map((_, i) => (
-            <Link key={'empty-' + i} to={'/bildir'} style={{ display: 'block', color: 'inherit' }}>
-              <div style={{ background: '#fafafa', borderRadius: 12, border: '1px dashed #e2e8f0', padding: '14px 10px', textAlign: 'center', height: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 6, minHeight: 120 }}>
-                <span style={{ fontSize: 20, opacity: 0.3 }}>👤</span>
-                <span style={{ fontSize: 10, color: '#d1d5db' }}>Siz olabilirsiniz</span>
-              </div>
-            </Link>
-          ))}
-        </div>
-      )}
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(5, 1fr)', gap: 8 }}>
+        {loading ? (
+          Array.from({ length: 5 }).map((_, i) => (
+            <div key={i} style={{ background: '#f8fafc', borderRadius: 12, border: '1px solid #f1f5f9', minHeight: 120, animation: 'pulse 1.5s infinite' }} />
+          ))
+        ) : (
+          <>
+            {profiles.map((p, i) => <ProfileCard key={p.instagram_username || i} profile={p} rank={i + 1} />)}
+            {profiles.length < 5 && Array.from({ length: 5 - profiles.length }).map((_, i) => (
+              <Link key={'empty-' + i} to={'/bildir'} style={{ display: 'block', color: 'inherit' }}>
+                <div style={{ background: '#fafafa', borderRadius: 12, border: '1px dashed #e2e8f0', padding: '14px 10px', textAlign: 'center', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 6, minHeight: 120 }}>
+                  <span style={{ fontSize: 20, opacity: 0.3 }}>👤</span>
+                  <span style={{ fontSize: 10, color: '#d1d5db' }}>Siz olabilirsiniz</span>
+                </div>
+              </Link>
+            ))}
+          </>
+        )}
+      </div>
     </div>
   );
 }
@@ -113,10 +105,27 @@ export default function HomePage() {
   const navigate = useNavigate();
   const user = useAuthStore(s => s.user);
   const [trending, setTrending] = useState([]);
+  const [categoryData, setCategoryData] = useState({});
+  const [catLoading, setCatLoading] = useState(true);
   const [recentProfiles, setRecentProfiles] = useState([]);
   const [search, setSearch] = useState('');
 
   useEffect(() => {
+    // Tüm kategorileri paralel çek
+    setCatLoading(true);
+    Promise.all(
+      CATEGORIES.map(cat =>
+        apiFetch('/categories/' + cat.slug)
+          .then(d => ({ slug: cat.slug, profiles: (d.profiles || []).slice(0, 5) }))
+          .catch(() => ({ slug: cat.slug, profiles: [] }))
+      )
+    ).then(results => {
+      const data = {};
+      results.forEach(r => { data[r.slug] = r.profiles; });
+      setCategoryData(data);
+      setCatLoading(false);
+    });
+
     apiFetch('/incidents?sort=most_voted&limit=8').then(d => setTrending(d.data || [])).catch(() => {});
     apiFetch('/incidents?sort=newest&limit=20').then(d => {
       const seen = new Set();
@@ -147,7 +156,7 @@ export default function HomePage() {
         {/* ORTA — Kategori vitrini */}
         <div>
           {CATEGORIES.map(cat => (
-            <CategorySection key={cat.slug} category={cat} />
+            <CategorySection key={cat.slug} category={cat} profiles={categoryData[cat.slug] || []} loading={catLoading} />
           ))}
         </div>
 
