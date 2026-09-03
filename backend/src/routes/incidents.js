@@ -105,8 +105,8 @@ router.post('/', authenticate, spamFilter, async (req, res, next) => {
   try {
     const { title, description, categoryId, location, incidentDate, isAnonymous, images, tags, subject, person_name, instagram_username, instagram_avatar, instagram_verified, instagram_followers } = req.body;
     if (!title || title.length < 3) return res.status(422).json({ error: 'Başlık en az 3 karakter olmalı.' });
-    if (!description || description.length < 50) return res.status(422).json({ error: 'Açıklama en az 50 karakter olmalı.' });
-    if (!categoryId) return res.status(422).json({ error: 'Kategori gerekli.' });
+    if (!description || description.length < 10) return res.status(422).json({ error: 'Açıklama en az 10 karakter olmalı.' });
+    // categoryId opsiyonel — subjects tablosundan gelir
     const { rows } = await pool.query(`
       INSERT INTO incidents (author_id, category_id, title, description, location, incident_date, is_anonymous, status, images, tags, subject, person_name, instagram_username, instagram_avatar, instagram_verified, instagram_followers)
       VALUES ($1,$2,$3,$4,$5,$6,$7,'pending',$8,$9,$10,$11,$12,$13,$14,$15)
