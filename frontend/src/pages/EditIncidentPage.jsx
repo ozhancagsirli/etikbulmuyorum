@@ -32,7 +32,7 @@ export default function EditIncidentPage() {
     setSaving(true);
     try {
       await apiFetch('/incidents/' + id, { method: 'PUT', body: JSON.stringify(form) });
-      toast.success('Olay güncellendi, moderasyon bekliyor.');
+      toast.success('Görüş güncellendi, moderasyon bekliyor.');
       navigate('/profil');
     } catch (e) { toast.error(e.message); }
     setSaving(false);
@@ -45,16 +45,13 @@ export default function EditIncidentPage() {
   return (
     <div style={{ maxWidth: 640, margin: '0 auto' }}>
       <div style={{ background: 'white', borderRadius: 16, border: '1px solid #e5e7eb', padding: '28px 32px' }}>
-        <h1 style={{ fontSize: 20, fontWeight: 800, marginBottom: 24, color: '#111827' }}>✏️ Olayı Düzenle</h1>
+        <h1 style={{ fontSize: 20, fontWeight: 800, marginBottom: 24, color: '#111827' }}>✏️ Görüşü Düzenle</h1>
         <p style={{ fontSize: 13, color: '#f59e0b', background: '#fffbeb', padding: '8px 12px', borderRadius: 8, marginBottom: 20, border: '1px solid #fde68a' }}>
           ⚠️ Düzenleme sonrası olay moderasyon onayına gönderilecek.
         </p>
 
         <form onSubmit={handleSave} style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
-          <div>
-            <label style={{ display: 'block', fontWeight: 600, fontSize: 13, marginBottom: 6 }}>Şahıs/Firma Adı</label>
-            <input value={form.subject} onChange={e => setForm(f => ({...f, subject: e.target.value}))} style={inp} />
-          </div>
+
           <div>
             <label style={{ display: 'block', fontWeight: 600, fontSize: 13, marginBottom: 6 }}>Başlık</label>
             <input value={form.title} onChange={e => setForm(f => ({...f, title: e.target.value}))} style={inp} required />
