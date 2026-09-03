@@ -1,3 +1,4 @@
+import React from 'react';
 import { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { formatDistanceToNow } from 'date-fns';
@@ -50,12 +51,13 @@ function ProfilesTab() {
       ) : (
         <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
           {filtered.map((p, i) => (
-            {i === 0 || filtered[i-1].category_name !== p.category_name ? (
+            <React.Fragment key={i}>
+          {(i === 0 || filtered[i-1].category_name !== p.category_name) && (
             <div style={{ fontSize: 11, fontWeight: 700, color: '#94a3b8', textTransform: 'uppercase', letterSpacing: 1, padding: '8px 4px 4px', marginTop: i === 0 ? 0 : 8 }}>
               {p.category_name || 'Kategorisiz'}
             </div>
-          ) : null}
-          <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 12, background: 'white', borderRadius: 10, border: '1px solid #f1f5f9', padding: '10px 14px' }}>
+          )}
+          <div style={{ display: 'flex', alignItems: 'center', gap: 12, background: 'white', borderRadius: 10, border: '1px solid #f1f5f9', padding: '10px 14px' }}>
               <div style={{ width: 40, height: 40, borderRadius: '50%', background: '#f1f5f9', overflow: 'hidden', flexShrink: 0 }}>
                 {p.instagram_avatar
                   ? <img src={p.instagram_avatar} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
@@ -71,6 +73,7 @@ function ProfilesTab() {
                 Sil
               </button>
             </div>
+          </React.Fragment>
           ))}
           {filtered.length === 0 && <div style={{ textAlign: 'center', padding: 40, color: '#94a3b8' }}>Profil bulunamadı.</div>}
         </div>
