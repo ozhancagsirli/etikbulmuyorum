@@ -26,7 +26,7 @@ function ProfilesTab() {
     if (!window.confirm('@' + username + ' profilini silmek istiyor musunuz?')) return;
     try {
       await apiFetch('/subjects/' + username, { method: 'DELETE' });
-      setProfiles(p => p.filter(x => x.instagram_username !== username));
+      setProfiles(prev => prev.filter(x => x.instagram_username !== username));
       toast.success('Profil silindi.');
     } catch(e) { toast.error(e.message); }
   }
