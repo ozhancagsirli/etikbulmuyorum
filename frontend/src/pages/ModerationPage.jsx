@@ -242,7 +242,6 @@ export default function ModerationPage() {
     { key: 'stats',       label: 'İstatistik' },
     { key: 'leaderboard', label: 'Lider' },
     { key: 'users',       label: 'Kullanıcı' },
-    { key: 'avatar', label: 'Avatar' },
     { key: 'profiles', label: 'Profiller' },
   ];
 
@@ -518,9 +517,6 @@ export default function ModerationPage() {
 
         tab === 'appeals' ? (
           <AppealsList />
-        ) :
-        tab === 'avatar' ? (
-          <AvatarManager />
         ) :
         tab === 'profiles' ? (
           <ProfilesTab />
