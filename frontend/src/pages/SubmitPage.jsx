@@ -45,7 +45,7 @@ export default function SubmitPage() {
 
   const [searchParams] = useSearchParams();
   const prefilledUsername = searchParams.get('username');
-  const [step, setStep] = useState(1);
+  const [step, setStep] = useState(prefilledUsername ? 2 : 1);
   const [igUsername, setIgUsername] = useState('');
   const [igProfile, setIgProfile] = useState(null);
   const [igLoading, setIgLoading] = useState(false);
