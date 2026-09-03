@@ -88,7 +88,7 @@ export default function SubmitPage() {
 
   function nextStep() {
     if (step === 1) {
-      if (!igProfile) return toast.error('Lütfen önce Instagram profilini arayın.');
+      if (!igProfile && !prefilledUsername) return toast.error('Lütfen önce Instagram profilini arayın.');
       if (!form.categoryId) return toast.error('Lütfen bir kategori seçin.');
       if (!form.title || form.title.length < 3) return toast.error('Başlık en az 3 karakter olmalı.');
     }
@@ -218,7 +218,7 @@ export default function SubmitPage() {
         )}
 
         {/* ADIM 2 — Detaylar + kanıt */}
-        {step === 2 && (
+        {step === 2 && (igProfile || prefilledUsername) && (
           <div>
             <h2 style={{ fontSize: 18, fontWeight: 800, marginBottom: 4, color: '#111827' }}>Görüşünüzü paylaşın</h2>
             <p style={{ fontSize: 13, color: '#9ca3af', marginBottom: 24 }}>Detaylı açıklayın.</p>
