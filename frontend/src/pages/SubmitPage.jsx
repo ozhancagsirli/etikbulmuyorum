@@ -32,7 +32,7 @@ const CITIES = [
 ];
 
 import { useState, useCallback } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import toast from 'react-hot-toast';
 import { apiFetch } from '../lib/api';
 import { useAuthStore } from '../lib/authStore';
@@ -43,6 +43,8 @@ export default function SubmitPage() {
   const navigate = useNavigate();
   const user = useAuthStore(s => s.user);
 
+  const [searchParams] = useSearchParams();
+  const prefilledUsername = searchParams.get('username');
   const [step, setStep] = useState(1);
   const [igUsername, setIgUsername] = useState('');
   const [igProfile, setIgProfile] = useState(null);
