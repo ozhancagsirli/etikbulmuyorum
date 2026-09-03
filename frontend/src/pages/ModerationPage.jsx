@@ -15,11 +15,9 @@ function ProfilesTab() {
   const [search, setSearch] = useState('');
 
   useEffect(() => {
-    fetch(import.meta.env.VITE_API_URL + '/homepage')
-      .then(r => r.json())
+    apiFetch('/admin/subjects')
       .then(data => {
-        const all = data.flatMap(cat => (cat.profiles || []).map(p => ({ ...p, category: cat.name_tr })));
-        setProfiles(all);
+        setProfiles(Array.isArray(data) ? data : []);
         setLoading(false);
       }).catch(() => setLoading(false));
   }, []);
@@ -55,7 +53,7 @@ function ProfilesTab() {
               </div>
               <div style={{ flex: 1, minWidth: 0 }}>
                 <div style={{ fontSize: 13, fontWeight: 600, color: '#0f172a' }}>{p.name}</div>
-                <div style={{ fontSize: 11, color: '#94a3b8' }}>@{p.instagram_username} · {p.category}</div>
+                <div style={{ fontSize: 11, color: '#94a3b8' }}>@{p.instagram_username} · {p.category_name || 'Kategorisiz'}</div>
               </div>
               {p.claimed && <span style={{ fontSize: 10, background: '#f0fdf4', color: '#16a34a', padding: '2px 7px', borderRadius: 20, border: '1px solid #bbf7d0', fontWeight: 600 }}>Doğrulandı</span>}
               <button onClick={() => deleteProfile(p.instagram_username)} style={{ background: '#fef2f2', color: '#dc2626', border: '1px solid #fecaca', borderRadius: 8, padding: '6px 12px', fontSize: 12, fontWeight: 600, cursor: 'pointer' }}>

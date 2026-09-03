@@ -360,6 +360,26 @@ app.post('/api/admin/fetch-instagram-bulk', async (req, res) => {
   } catch(e) { res.status(500).json({ error: e.message }); }
 });
 
+// Tüm profiller (admin)
+app.get('/api/admin/subjects', async (req, res) => {
+  try {
+    const jwt = await import('jsonwebtoken');
+    const token = req.headers.authorization?.replace('Bearer ', '');
+    if (!token) return res.status(401).json({ error: 'Yetkisiz' });
+    const decoded = jwt.default.verify(token, process.env.JWT_SECRET);
+    const pool = (await import('./db/pool.js')).default;
+    const { rows: userRows } = await pool.query('SELECT role FROM users WHERE id=$1', [decoded.sub]);
+    if (!['admin','moderator'].includes(userRows[0]?.role)) return res.status(401).json({ error: 'Yetkisiz' });
+    const { rows } = await pool.query(`
+      SELECT s.*, c.name_tr as category_name 
+      FROM subjects s 
+      LEFT JOIN categories c ON c.id = s.category_id 
+      ORDER BY s.created_at DESC
+    `);
+    res.json(rows);
+  } catch(e) { res.status(500).json({ error: e.message }); }
+});
+
 // Subject sil (admin)
 app.delete('/api/subjects/:username', async (req, res) => {
   try {
