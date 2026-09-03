@@ -163,7 +163,7 @@ export default function SubjectPage() {
               <div style={{ padding: 24, textAlign: 'center', color: '#9ca3af' }}>Yükleniyor...</div>
             ) : incidents.length === 0 ? (
               <div style={{ padding: 24, textAlign: 'center', color: '#9ca3af', fontSize: 13 }}>
-                Henüz görüş yok. <Link to="/bildir" style={{ color: '#46A53E', fontWeight: 600 }}>İlk görüşü ekle →</Link>
+                Henüz görüş yok. <Link to={"/bildir?username=" + encodeURIComponent(igUsername || decodedName)} style={{ color: '#46A53E', fontWeight: 600 }}>İlk görüşü ekle →</Link>
               </div>
             ) : (
               incidents.map((inc, i) => {
@@ -184,7 +184,7 @@ export default function SubjectPage() {
               })
             )}
             <div style={{ padding: '12px 16px', borderTop: '1px solid #f8fafc' }}>
-              <Link to="/bildir" style={{ fontSize: 13, color: '#46A53E', fontWeight: 600 }}>+ Görüş Bildir</Link>
+              <Link to={"/bildir?username=" + encodeURIComponent(igUsername || decodedName)} style={{ fontSize: 13, color: '#46A53E', fontWeight: 600 }}>+ Görüş Bildir</Link>
             </div>
           </div>
         )}
