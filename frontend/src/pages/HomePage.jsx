@@ -79,10 +79,10 @@ function CategorySection({ category, profiles, loading }) {
           <>
             {profiles.map((p, i) => <ProfileCard key={p.instagram_username || i} profile={p} catIcon={category.icon} />)}
             {profiles.length < 5 && Array.from({ length: 5 - profiles.length }).map((_, i) => (
-              <Link key={'empty-' + i} to={'/bildir'} style={{ display: 'block', color: 'inherit' }}>
+              <Link key={'empty-' + i} to={'/profil-olustur'} style={{ display: 'block', color: 'inherit' }}>
                 <div style={{ background: '#fafafa', borderRadius: 12, border: '1px dashed #e2e8f0', padding: '14px 10px', textAlign: 'center', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 6, minHeight: 120 }}>
                   <span style={{ fontSize: 28, opacity: 0.2 }}>{category.icon}</span>
-                  <span style={{ fontSize: 10, color: '#d1d5db' }}>Siz olabilirsiniz</span>
+                  <span style={{ fontSize: 10, color: '#94a3b8' }}>Siz olabilirsiniz</span>
                 </div>
               </Link>
             ))}
