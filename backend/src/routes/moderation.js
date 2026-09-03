@@ -41,7 +41,7 @@ router.post('/incidents/:id/approve', [param('id').isUUID()], validate, async (r
 
 router.post('/incidents/:id/reject', [
   param('id').isUUID(),
-  body('reason').isString().trim().isLength({ min: 5, max: 500 }),
+  body('reason').optional().isString().trim().isLength({ max: 500 }),
 ], validate, async (req, res, next) => {
   try {
     await pool.query("UPDATE incidents SET status = 'rejected', reject_reason = $2, updated_at = NOW() WHERE id = $1", [req.params.id, req.body.reason]);
