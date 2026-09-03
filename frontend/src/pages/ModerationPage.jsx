@@ -507,6 +507,9 @@ export default function ModerationPage() {
         ) :
         tab === 'avatar' ? (
           <AvatarManager />
+        ) :
+        tab === 'profiles' ? (
+          <ProfilesTab />
         ) : null
       )}
     </div>
