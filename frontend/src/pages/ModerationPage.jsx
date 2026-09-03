@@ -9,6 +9,67 @@ import { useState as useState2 } from 'react';
 import AIAnalysis from '../components/AIAnalysis';
 import { useAuthStore } from '../lib/authStore';
 
+function ProfilesTab() {
+  const [profiles, setProfiles] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [search, setSearch] = useState('');
+
+  useEffect(() => {
+    fetch(import.meta.env.VITE_API_URL + '/homepage')
+      .then(r => r.json())
+      .then(data => {
+        const all = data.flatMap(cat => (cat.profiles || []).map(p => ({ ...p, category: cat.name_tr })));
+        setProfiles(all);
+        setLoading(false);
+      }).catch(() => setLoading(false));
+  }, []);
+
+  async function deleteProfile(username) {
+    if (!window.confirm('@' + username + ' profilini silmek istiyor musunuz?')) return;
+    try {
+      await apiFetch('/subjects/' + username, { method: 'DELETE' });
+      setProfiles(p => p.filter(x => x.instagram_username !== username));
+      toast.success('Profil silindi.');
+    } catch(e) { toast.error(e.message); }
+  }
+
+  const filtered = profiles.filter(p =>
+    !search || p.instagram_username?.includes(search) || p.name?.toLowerCase().includes(search.toLowerCase())
+  );
+
+  return (
+    <div>
+      <input value={search} onChange={e => setSearch(e.target.value)} placeholder="Profil ara..."
+        style={{ width: '100%', padding: '9px 14px', borderRadius: 8, border: '1px solid #e5e7eb', fontSize: 13, marginBottom: 14, boxSizing: 'border-box', fontFamily: 'inherit' }} />
+      {loading ? (
+        <div style={{ textAlign: 'center', padding: 40, color: '#94a3b8' }}>Yükleniyor...</div>
+      ) : (
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+          {filtered.map((p, i) => (
+            <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 12, background: 'white', borderRadius: 10, border: '1px solid #f1f5f9', padding: '10px 14px' }}>
+              <div style={{ width: 40, height: 40, borderRadius: '50%', background: '#f1f5f9', overflow: 'hidden', flexShrink: 0 }}>
+                {p.instagram_avatar
+                  ? <img src={p.instagram_avatar} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                  : <div style={{ width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 18 }}>👤</div>
+                }
+              </div>
+              <div style={{ flex: 1, minWidth: 0 }}>
+                <div style={{ fontSize: 13, fontWeight: 600, color: '#0f172a' }}>{p.name}</div>
+                <div style={{ fontSize: 11, color: '#94a3b8' }}>@{p.instagram_username} · {p.category}</div>
+              </div>
+              {p.claimed && <span style={{ fontSize: 10, background: '#f0fdf4', color: '#16a34a', padding: '2px 7px', borderRadius: 20, border: '1px solid #bbf7d0', fontWeight: 600 }}>Doğrulandı</span>}
+              <button onClick={() => deleteProfile(p.instagram_username)} style={{ background: '#fef2f2', color: '#dc2626', border: '1px solid #fecaca', borderRadius: 8, padding: '6px 12px', fontSize: 12, fontWeight: 600, cursor: 'pointer' }}>
+                Sil
+              </button>
+            </div>
+          ))}
+          {filtered.length === 0 && <div style={{ textAlign: 'center', padding: 40, color: '#94a3b8' }}>Profil bulunamadı.</div>}
+        </div>
+      )}
+    </div>
+  );
+}
+
 function AddProfileForm() {
   const [igUsername, setIgUsername] = useState('');
   const [categoryId, setCategoryId] = useState('');
@@ -170,6 +231,7 @@ export default function ModerationPage() {
     { key: 'leaderboard', label: 'Lider' },
     { key: 'users',       label: 'Kullanıcı' },
     { key: 'avatar', label: 'Avatar' },
+    { key: 'profiles', label: 'Profiller' },
   ];
 
   const [fetching, setFetching] = useState(false);
