@@ -37,7 +37,7 @@ function ProfileCard({ profile, rank }) {
         onMouseLeave={e => e.currentTarget.style.borderColor = '#f1f5f9'}>
 
         {/* Avatar */}
-        <div style={{ width: 48, height: 48, borderRadius: '50%', background: '#f1f5f9', margin: '0 auto 8px', overflow: 'hidden', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 20 }}>
+        <div style={{ width: 64, height: 64, borderRadius: '50%', background: '#f1f5f9', margin: '0 auto 10px', overflow: 'hidden', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 26 }}>
           {avatar
             ? <img src={avatar} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
             : '👤'}
