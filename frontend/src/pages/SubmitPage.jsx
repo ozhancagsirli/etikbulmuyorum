@@ -218,6 +218,15 @@ export default function SubmitPage() {
         )}
 
         {/* ADIM 2 — Detaylar + kanıt */}
+        {(igProfile || prefilledUsername) && (
+          <div style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '10px 14px', background: '#f0fdf4', borderRadius: 10, border: '1px solid #bbf7d0', marginBottom: 12 }}>
+            {igProfile?.profile_pic_url && <img src={igProfile.profile_pic_url} alt="" style={{ width: 36, height: 36, borderRadius: '50%' }} />}
+            <div>
+              <div style={{ fontSize: 12, color: '#6b7280' }}>Hakkında görüş bildiriyorsunuz:</div>
+              <div style={{ fontSize: 14, fontWeight: 700, color: '#013C26' }}>@{igProfile?.username || prefilledUsername}</div>
+            </div>
+          </div>
+        )}
         {step === 2 && (igProfile || prefilledUsername) && (
           <div>
             <h2 style={{ fontSize: 18, fontWeight: 800, marginBottom: 4, color: '#111827' }}>Görüşünüzü paylaşın</h2>
