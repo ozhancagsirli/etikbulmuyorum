@@ -144,7 +144,7 @@ export default function SubmitPage() {
       <div style={{ background: 'white', borderRadius: 16, border: '1px solid #e5e7eb', padding: '28px 28px' }}>
 
         {/* ADIM 1 — Instagram profili + başlık */}
-        {step === 1 && (
+        {step === 1 && !prefilledUsername && (
           <div>
             <h2 style={{ fontSize: 18, fontWeight: 800, marginBottom: 4, color: '#111827' }}>Kim hakkında bildiri yapıyorsunuz?</h2>
             <p style={{ fontSize: 13, color: '#9ca3af', marginBottom: 24 }}>Instagram kullanıcı adını girin, profil otomatik çekilecek.</p>
